@@ -2,7 +2,8 @@
 7ème projet de la formation de [développeur web de OpenClassrooms](https://openclassrooms.com/fr/paths/185-developpeur-web)
 
 ## Scénario
-Développement (Frontend et Backend) d'un réseau social d'entreprise pour une société fictive Groupomania.
+Développement (Frontend et Backend) d'un réseau social d'entreprise pour une société fictive Groupomania.  
+Une grande liberté est donnée pour développer ce projet.
 
 ## Technologies utilisées
 - Backend

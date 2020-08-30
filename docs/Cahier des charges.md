@@ -15,11 +15,12 @@
   - Supprimer les posts/commentaires qu'ils jugent inappropriés.
   - Donner/enlever les droits d'admin à un autre utilisateur
 - Autres
-  - Système de notification
   - Session persistante au rechargement de la page
+  - Système de notification (facultatif)
 
 ## Pages
-- Login/Sign-in
+- Login
+- Sign-in
 - Agora = feed d'actualité
   - Liste des derniers posts
   - Like / Comment

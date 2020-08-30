@@ -1,7 +1,7 @@
 # Organisation de la base de données MySQL
 
 -------------------------------------------------------------------------------------------------
-## User
+## Users
 Liste des utilisateurs  
 
 | Field         | Type           | Null | Key                        | Autre                     |
@@ -21,16 +21,16 @@ Liste des utilisateurs
 
 
 -------------------------------------------------------------------------------------------------
-## Post
+## Posts
 Liste des publications  
 
-| Field         | Type           | Null | Key                        | Autre                     |
-| ------------- | -------------- | ---- | -------------------------- | ------------------------- |
-| id            | MEDIUMINT      | NO   | PRIMARY                    | auto_increment ; unsigned |
-| date          | DATETIME       | NO   | -                          | -                         |
-| type_id       | TINYINT        | NO   | FOREIGN (Ref:Post_type.id) | unsigned                  |
-| content       | TEXT           | NO   | -                          | -                         |
-| user_id       | SMALLINT       | NO   | FOREIGN (Ref:User.id)      | unsigned                  |
+| Field            | Type           | Null | Key                         | Autre                     |
+| ---------------- | -------------- | ---- | --------------------------- | ------------------------- |
+| id               | MEDIUMINT      | NO   | PRIMARY                     | auto_increment ; unsigned |
+| publication_date | DATETIME       | NO   | -                           | -                         |
+| type_id          | TINYINT        | NO   | FOREIGN (Ref:Post_types.id) | unsigned                  |
+| content          | TEXT           | NO   | -                           | -                         |
+| user_id          | SMALLINT       | NO   | FOREIGN (Ref:Users.id)      | unsigned                  |
 
 
 > id : MEDIUMINT unsigned = 16 777 214 posts possibles.  
@@ -40,7 +40,7 @@ Liste des publications
 
 
 -------------------------------------------------------------------------------------------------
-## Post_type
+## Post_types
 Liste des types de publications possibles
 
 | Field         | Type           | Null | Key                        | Autre                     |
@@ -55,16 +55,16 @@ Liste des types de publications possibles
 
 
 -------------------------------------------------------------------------------------------------
-## Comment
+## Comments
 Liste des commentaires des publications
 
-| Field         | Type           | Null | Key                        | Autre                     |
-| ------------- | -------------- | ---- | -------------------------- | ------------------------- |
-| id            | INT            | NO   | PRIMARY                    | auto_increment ; unsigned |
-| date          | DATETIME       | NO   | -                          | -                         |
-| content       | TEXT           | NO   | -                          | -                         |
-| user_id       | SMALLINT       | NO   | FOREIGN (Ref:User.id)      | unsigned                  |
-| post_id       | MEDIUMINT      | NO   | FOREIGN (Ref:Post.id)      | unsigned                  |
+| Field            | Type           | Null | Key                        | Autre                     |
+| ---------------- | -------------- | ---- | -------------------------- | ------------------------- |
+| id               | INT            | NO   | PRIMARY                    | auto_increment ; unsigned |
+| publication_date | DATETIME       | NO   | -                          | -                         |
+| content          | TEXT           | NO   | -                          | -                         |
+| user_id          | SMALLINT       | NO   | FOREIGN (Ref:Users.id)     | unsigned                  |
+| post_id          | MEDIUMINT      | NO   | FOREIGN (Ref:Posts.id)     | unsigned                  |
 
 
 > Possibilité de nombreux commentaires pour chaque post, donc INT choisi pour l'id  
@@ -73,15 +73,15 @@ Liste des commentaires des publications
 
 
 -------------------------------------------------------------------------------------------------
-## Like
+## Likes
 Liste des likes / dislikes des publications
 
 | Field         | Type           | Null | Key                        | Autre                     |
 | ------------- | -------------- | ---- | -------------------------- | ------------------------- |
 | id            | INT            | NO   | PRIMARY                    | auto_increment ; unsigned |
 | rate          | TINYINT        | NO   | -                          | -                         |
-| user_id       | SMALLINT       | NO   | FOREIGN (Ref:User.id)      | unsigned                  |
-| post_id       | MEDIUMINT      | NO   | FOREIGN (Ref:Post.id)      | unsigned                  |
+| user_id       | SMALLINT       | NO   | FOREIGN (Ref:Users.id)     | unsigned                  |
+| post_id       | MEDIUMINT      | NO   | FOREIGN (Ref:Posts.id)     | unsigned                  |
 
 > rate : sera = 1 si like, et = -1 si dislike  
 > user_id : clé étrangère faisant référence à l'utilisateur qui a like/dislike  
@@ -89,20 +89,20 @@ Liste des likes / dislikes des publications
 
 
 -------------------------------------------------------------------------------------------------
-## Notification
+## Notifications
 Liste des notifications.  
 Il y aura une notification si :
   - qqn like/dislique un post du user
   - qqn commente un post du user
   - qqn a répondu à un commentaires du user
 
-| Field         | Type           | Null | Key                             | Autre                     |
-| ------------- | -------------- | ---- | ------------------------------- | ------------------------- |
-| id            | INT            | NO   | PRIMARY                         | auto_increment ; unsigned |
-| user_id       | SMALLINT       | NO   | FOREIGN (Ref:User.id)           | unsigned                  |
-| initiator_id  | SMALLINT       | NO   | FOREIGN (Ref:User.id)           | unsigned                  |
-| post_id       | MEDIUMINT      | NO   | FOREIGN (Ref:Post.id)           | unsigned                  |
-| type_id       | TINYINT        | NO   | FOREIGN (Ref:Notification_type) | unsigned                  |
+| Field         | Type           | Null | Key                              | Autre                     |
+| ------------- | -------------- | ---- | -------------------------------- | ------------------------- |
+| id            | INT            | NO   | PRIMARY                          | auto_increment ; unsigned |
+| user_id       | SMALLINT       | NO   | FOREIGN (Ref:Users.id)           | unsigned                  |
+| initiator_id  | SMALLINT       | NO   | FOREIGN (Ref:Users.id)           | unsigned                  |
+| post_id       | MEDIUMINT      | NO   | FOREIGN (Ref:Posts.id)           | unsigned                  |
+| type_id       | TINYINT        | NO   | FOREIGN (Ref:Notification_types) | unsigned                  |
 
 > user_id :      id de l'utilisateur qui recevra la notification  
 > initiator_id : id de l'utilisateur qui a provoqué la notification (qui a réagi à un post ou un commentaire de l'utilisateur)  
@@ -111,7 +111,7 @@ Il y aura une notification si :
 
 
 -------------------------------------------------------------------------------------------------
-## Notification_type
+## Notification_types
 Liste des types de notifications possibles
 
 | Field         | Type           | Null | Key                        | Autre                     |

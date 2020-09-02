@@ -93,3 +93,19 @@ exports.login = (req, res, next) => {
   });
   connection.end();
 }
+
+
+/**
+ * Récupération de tous les utilisateurs
+ */
+exports.getAllUsers = (req, res, next) => {
+  const connection = database.connect();
+  const sql = "SELECT id, name, pictureurl FROM Users;";
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ results });
+    }
+  })
+}

@@ -19,3 +19,17 @@ exports.newUser = (req, res, next) => {
     next();
   }
 };
+
+// lors du login utilisateur
+const loginSchema = Joi.object({
+  email: Joi.string().trim().email().required(),
+  password: Joi.string().trim().min(8).required()
+});
+exports.login = (req, res, next) => {
+  const {error, value} = loginSchema.validate(req.body);
+  if (error) {
+    res.status(422).json({ error: "email ou mot de passe invalide" });
+  } else {
+    next();
+  }
+};

@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-exports.connexion = () => {
+exports.connect = () => {
   const connection = mysql.createConnection({
     host     : process.env.DB_HOST,
     user     : process.env.DB_USER,

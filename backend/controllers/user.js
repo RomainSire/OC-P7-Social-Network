@@ -75,7 +75,14 @@ exports.login = (req, res, next) => {
             process.env.JWT_KEY,
             { expiresIn: '24h' }
           );
+          
+          // Envoi du token dans un cookie
+          req.session.token = {
+            jwt: newToken,
+            userId: results[0].id
+          };
 
+          // envoi du token dans le body de la réponse
           res.status(200).json({
             userId: results[0].id,
             token: newToken

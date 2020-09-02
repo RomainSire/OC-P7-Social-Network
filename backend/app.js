@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const session = require('express-session');
 
 const userRoutes = require('./routes/user');
 
@@ -20,6 +21,8 @@ app.use((req, res, next) => {
 });
 // Parse le body des requetes en json
 app.use(bodyParser.json());
+// Utilisation de la session pour stocker de manière persistante le JWT coté front
+app.use(session({ secret: process.env.COOKIE_KEY, cookie: { maxAge: 3600000 }})) // cookie stocké pendant 1h
 
 
 /**

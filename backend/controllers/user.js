@@ -2,6 +2,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const cryptojs = require('crypto-js');
 const jwt = require('jsonwebtoken');
+const Cookies = require('cookies');
 
 const database = require('../utils/database');
 
@@ -76,17 +77,18 @@ exports.login = (req, res, next) => {
             { expiresIn: '24h' }
           );
           
-          // Envoi du token dans un cookie
-          req.session.token = {
-            jwt: newToken,
+          // Envoi du token & userId dans un cookie
+          const cookieContent = {
+            token: newToken,
             userId: results[0].id
           };
+          const cryptedCookie = cryptojs.AES.encrypt(JSON.stringify(cookieContent), process.env.COOKIE_KEY).toString();
+          new Cookies(req, res).set('snToken', cryptedCookie, {
+            httpOnly: true,
+            maxAge: 3600000
+          })
 
-          // envoi du token dans le body de la réponse
-          res.status(200).json({
-            userId: results[0].id,
-            token: newToken
-          });
+          res.status(200).json({ message: 'Utilisateur loggé' });
         })
         .catch(error => res.status(500).json({ error })); 
     }
@@ -107,5 +109,6 @@ exports.getAllUsers = (req, res, next) => {
     } else {
       res.status(201).json({ results });
     }
-  })
+  });
+  connection.end();
 }

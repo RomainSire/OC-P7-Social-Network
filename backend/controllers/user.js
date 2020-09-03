@@ -107,8 +107,45 @@ exports.getAllUsers = (req, res, next) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
-      res.status(201).json({ results });
+      res.status(200).json({ results });
     }
   });
   connection.end();
+}
+
+/**
+ * Récupération d'1 seul utilisateur
+ */
+exports.getOneUser = (req, res, next) => {
+  const connection = database.connect();
+  const searchId = connection.escape(req.params.id);
+  const sql = "SELECT id, name, email, pictureurl, outline, isadmin FROM Users WHERE id=" + searchId;
+  connection.query(sql, (error, results, fields) => {
+    // SI : erreur SQL
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+
+    // SI : Utilisateur non trouvé
+    } else if (results.length === 0) {
+      res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
+
+    // SI : Utilisateur trouvé
+    } else {
+      res.status(200).json({
+        id: results[0].id,
+        name: results[0].name,
+        email: results[0].email,
+        pictureurl: results[0].pictureurl,
+        outline: results[0].outline,
+        isadmin: results[0].isadmin
+      });
+    }
+  })
+}
+
+/**
+ * Changer le mot de passe utilisateur
+ */
+exports.changePassword = (req, res, next) => {
+  res.status(200).json({ message: 'route fonctionne' });
 }

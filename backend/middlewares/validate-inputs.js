@@ -33,3 +33,14 @@ exports.login = (req, res, next) => {
     next();
   }
 };
+
+// Vérification d'un id
+const idSchema = Joi.number().integer().positive().required();
+exports.id = (req, res, next) => {
+  const {error, value} = idSchema.validate(req.params.id);
+  if (error) {
+      res.status(422).json({ error: "id invalide" });
+  } else {
+      next();
+  } 
+}

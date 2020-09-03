@@ -147,5 +147,36 @@ exports.getOneUser = (req, res, next) => {
  * Changer le mot de passe utilisateur
  */
 exports.changePassword = (req, res, next) => {
-  res.status(200).json({ message: 'route fonctionne' });
+  // Vérification que l'ancien mot de passe soit correct
+  const connection = database.connect();
+  const searchId = connection.escape(req.params.id);
+  const sql = "SELECT password FROM Users WHERE id=" + searchId;
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      const DBPasswordHash = cryptojs.AES.decrypt(results[0].password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
+      bcrypt.compare(req.body.oldPassword, DBPasswordHash)
+        .then(valid => {
+          if (!valid) {
+            return res.status(401).json({ error: 'Ancien mot de passe incorrect!' });
+          }
+          // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
+          bcrypt.hash(req.body.newPassword, 10)
+            .then(hash => {
+              const newPassword = connection.escape(cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString());
+              const secondSQL = "UPDATE Users SET password=" + newPassword + " WHERE id=" + searchId;
+              connection.query(secondSQL, (error, results, fields) => {
+                if (error) {
+                  res.status(500).json({ "error": error.sqlMessage });
+                } else {
+                  res.status(201).json({ message: 'Mot de passe modifié' });
+                }
+              })
+            })
+            .catch(error => res.status(500).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
+    }
+  })
 }

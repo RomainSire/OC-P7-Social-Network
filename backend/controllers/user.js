@@ -6,7 +6,6 @@ const Cookies = require('cookies');
 
 const database = require('../utils/database');
 
-
 /**
  * Ajout d'un nouvel utilisateur
  */
@@ -41,7 +40,6 @@ exports.newuser = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 }
-
 
 /**
  * Login d'un utilisateur
@@ -96,18 +94,17 @@ exports.login = (req, res, next) => {
   connection.end();
 }
 
-
 /**
  * Récupération de tous les utilisateurs
  */
 exports.getAllUsers = (req, res, next) => {
   const connection = database.connect();
   const sql = "SELECT id, name, pictureurl FROM Users;";
-  connection.query(sql, (error, results, fields) => {
+  connection.query(sql, (error, user, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
-      res.status(200).json({ results });
+      res.status(200).json({ user });
     }
   });
   connection.end();
@@ -140,7 +137,8 @@ exports.getOneUser = (req, res, next) => {
         isadmin: results[0].isadmin
       });
     }
-  })
+  });
+  connection.end();
 }
 
 /**
@@ -178,5 +176,24 @@ exports.changePassword = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
     }
-  })
+  });
+  connection.end();
+}
+
+/**
+ * Changer la photo de profil d'un utilisateur
+ */
+exports.changeProfilePicture = (req, res, next) => {
+  const connection = database.connect();
+  const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+  const userId = connection.escape(req.params.id);
+  const sql = "UPDATE Users SET pictureurl='" + imageUrl + "' WHERE id=" + userId;
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ message: 'Photo de profil modifiée' });
+    }
+  });
+  connection.end();
 }

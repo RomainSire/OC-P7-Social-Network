@@ -16,5 +16,6 @@ router.put('/:id/password', auth, validate.id, credential.sameUser, userCtrl.cha
 router.put('/:id/picture', auth, validate.id, credential.sameUser, multer, userCtrl.changeProfilePicture);
 router.put('/:id/outline', auth, validate.id, validate.outline, credential.sameUser, userCtrl.changeOutline);
 router.put('/:id/admin', auth, validate.id, validate.adminCredential, credential.isAdmin, userCtrl.changeAdmin);
+router.delete('/:id', auth, validate.id, credential.sameUser, userCtrl.deleteAccount);
 
 module.exports = router;

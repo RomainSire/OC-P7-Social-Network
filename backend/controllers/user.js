@@ -83,7 +83,7 @@ exports.login = (req, res, next) => {
           const cryptedCookie = cryptojs.AES.encrypt(JSON.stringify(cookieContent), process.env.COOKIE_KEY).toString();
           new Cookies(req, res).set('snToken', cryptedCookie, {
             httpOnly: true,
-            maxAge: 3600000
+            maxAge: 3600000  // cookie pendant 1 heure
           })
 
           res.status(200).json({ message: 'Utilisateur loggé' });
@@ -229,6 +229,30 @@ exports.changeAdmin = (req, res, next) => {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
       res.status(201).json({ message: 'Droits d\'administrateur modifiée' });
+    }
+  });
+  connection.end();
+}
+
+/**
+ * Supprimer son compte utilisateur
+ */
+exports.deleteAccount = (req,res,next) => {
+  const connection = database.connect();
+  const userId = connection.escape(req.params.id);
+  const sql = "DELETE FROM Users WHERE id=" + userId + ";";
+  console.log(sql);
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      // utilisateur supprimé dans la BDD, il faut ensuite supprimer le cookie permettant d'identifier les requêtes.
+      // pour cela : on écrase le cookie existant avec un cookie vide, et qui a en plus une durée de vie de 1 seconde..
+      new Cookies(req, res).set('snToken', false, {
+        httpOnly: true,
+        maxAge: 1000
+      });
+      res.status(201).json({ message: 'Utilisateur supprimé' });
     }
   });
   connection.end();

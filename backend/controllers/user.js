@@ -215,3 +215,21 @@ exports.changeOutline = (req, res, next) => {
   });
   connection.end();
 }
+
+/**
+ * Donner/enlever les droits d'admin à un utilisateur
+ */
+exports.changeAdmin = (req, res, next) => {
+  const connection = database.connect();
+  const isadmin = connection.escape(req.body.isadmin);
+  const userId = connection.escape(req.params.id);
+  const sql = "UPDATE Users SET isadmin='" + isadmin + "' WHERE id=" + userId;
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ message: 'Droits d\'administrateur modifiée' });
+    }
+  });
+  connection.end();
+}

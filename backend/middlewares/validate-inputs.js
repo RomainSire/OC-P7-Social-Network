@@ -44,3 +44,25 @@ exports.id = (req, res, next) => {
       next();
   } 
 }
+
+// Vérification de la description d'un utilisateur
+const outlineSchema = Joi.string().trim().required();
+exports.outline = (req, res, next) => {
+  const {error, value} = outlineSchema.validate(req.body.outline);
+  if (error) {
+      res.status(422).json({ error: "Description invalide" });
+  } else {
+      next();
+  }
+}
+
+// Lors de l'attribution/retrait du droit utilisateur
+const adminCredentialSchema = Joi.valid(0, 1).required();
+exports.adminCredential = (req, res, next) => {
+  const {error, value} = adminCredentialSchema.validate(req.body.isadmin);
+  if (error) {
+      res.status(422).json({ error: "Données saisies invalides" });
+  } else {
+      next();
+  }
+}

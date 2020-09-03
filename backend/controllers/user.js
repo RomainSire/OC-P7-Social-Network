@@ -100,11 +100,11 @@ exports.login = (req, res, next) => {
 exports.getAllUsers = (req, res, next) => {
   const connection = database.connect();
   const sql = "SELECT id, name, pictureurl FROM Users;";
-  connection.query(sql, (error, user, fields) => {
+  connection.query(sql, (error, users, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
-      res.status(200).json({ user });
+      res.status(200).json({ users });
     }
   });
   connection.end();
@@ -193,6 +193,24 @@ exports.changeProfilePicture = (req, res, next) => {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
       res.status(201).json({ message: 'Photo de profil modifiée' });
+    }
+  });
+  connection.end();
+}
+
+/**
+ * Changer la description ("outline"..) de l'utilisateur
+ */
+exports.changeOutline = (req, res, next) => {
+  const connection = database.connect();
+  const outline = connection.escape(req.body.outline);
+  const userId = connection.escape(req.params.id);
+  const sql = "UPDATE Users SET outline=" + outline + " WHERE id=" + userId;
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ message: 'Description du profil modifiée' });
     }
   });
   connection.end();

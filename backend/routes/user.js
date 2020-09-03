@@ -14,5 +14,6 @@ router.get('/', auth, userCtrl.getAllUsers);
 router.get('/:id', auth, validate.id, userCtrl.getOneUser);
 router.put('/:id/password', auth, validate.id, credential.sameUser, userCtrl.changePassword);
 router.put('/:id/picture', auth, validate.id, credential.sameUser, multer, userCtrl.changeProfilePicture);
+router.put('/:id/outline', auth, validate.id, credential.sameUser, userCtrl.changeOutline);
 
 module.exports = router;

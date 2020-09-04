@@ -3,7 +3,6 @@ SET NAMES utf8;
 -- Suppression des tables déjà existantes (le cas échéant)
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Posts;
-DROP TABLE IF EXISTS Post_types;
 DROP TABLE IF EXISTS Comments;
 DROP TABLE IF EXISTS Likes;
 DROP TABLE IF EXISTS Notifications;
@@ -27,24 +26,12 @@ CREATE TABLE Users (
 -- Création de la table des publications
 CREATE TABLE Posts (
   id MEDIUMINT unsigned NOT NULL AUTO_INCREMENT,
-  publication_date DATETIME NOT NULL,
-  type_id TINYINT unsigned NOT NULL,
-  content TEXT NOT NULL,
+  publication_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_id SMALLINT unsigned NOT NULL,
+  imageurl VARCHAR(255),
+  content TEXT,
   PRIMARY KEY(id)
 ) ENGINE=InnoDB;
-
-
--- Création de la table des différents types de publication
-CREATE TABLE Post_types (
-  id TINYINT unsigned NOT NULL AUTO_INCREMENT,
-  name VARCHAR(10) NOT NULL,
-  PRIMARY KEY(id)
-) ENGINE=InnoDB;
--- ajout des lignes à cette table
-LOCK TABLES Post_types WRITE;
-INSERT INTO Post_types VALUES (1,'text'),(2,'image');
-UNLOCK TABLES;
 
 
 -- Création de la table des commentaires
@@ -92,7 +79,6 @@ UNLOCK TABLES;
 
 
 -- Création des clés étrangères qui lient les différentes tables
-ALTER TABLE Posts ADD CONSTRAINT fk_Posts_Post_types_id FOREIGN KEY (type_id) REFERENCES Post_types (id);
 ALTER TABLE Posts ADD CONSTRAINT fk_Posts_Users_id FOREIGN KEY (user_id) REFERENCES Users (id);
 ALTER TABLE Comments ADD CONSTRAINT fk_Comments_Users_id FOREIGN KEY (user_id) REFERENCES Users (id);
 ALTER TABLE Comments ADD CONSTRAINT fk_Comments_Posts_id FOREIGN KEY (post_id) REFERENCES Posts (id);

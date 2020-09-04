@@ -28,30 +28,16 @@ Liste des publications
 | ---------------- | -------------- | ---- | --------------------------- | ------------------------- |
 | id               | MEDIUMINT      | NO   | PRIMARY                     | auto_increment ; unsigned |
 | publication_date | DATETIME       | NO   | -                           | -                         |
-| type_id          | TINYINT        | NO   | FOREIGN (Ref:Post_types.id) | unsigned                  |
-| content          | TEXT           | NO   | -                           | -                         |
 | user_id          | SMALLINT       | NO   | FOREIGN (Ref:Users.id)      | unsigned                  |
+| imageurl         | VARCHAR(255)   | YES  | -                           | -                         |
+| content          | TEXT           | YES  | -                           | -                         |
+
 
 
 > id : MEDIUMINT unsigned = 16 777 214 posts possibles.  
-> type_id : clé étrangère faisant référence au type de la publication  
 > user_id : clé étrangère faisant référence à l'utilisateur qui a posté  
-> content : contiendra soit du texte, soit l'url de l'image (format texte)
-
-
--------------------------------------------------------------------------------------------------
-## Post_types
-Liste des types de publications possibles
-
-| Field         | Type           | Null | Key                        | Autre                     |
-| ------------- | -------------- | ---- | -------------------------- | ------------------------- |
-| id            | TINYINT        | NO   | PRIMARY                    | auto_increment ; unsigned |
-| name          | VARCHAR(10)    | NO   | -                          | -                         |
-
-
-> Pour l'instant la table ne contiendra que 2 lignes:  
-> 1 : 'text'  
-> 2 : 'image'
+> imageurl : contiendra l'url de l'image
+> content : contiendra le texte de la publication
 
 
 -------------------------------------------------------------------------------------------------

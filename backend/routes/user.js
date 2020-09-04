@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const userCtrl = require('../controllers/user');
 const validate = require('../middlewares/validate-inputs');
 const auth = require('../middlewares/auth');
 const credential = require('../middlewares/credential');
+const userCtrl = require('../controllers/user');
 const multer = require('../middlewares/multer-config');
-
 
 router.post('/new', validate.newUser, userCtrl.newuser);
 router.post('/login', validate.login, userCtrl.login);

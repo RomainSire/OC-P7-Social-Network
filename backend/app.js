@@ -4,6 +4,7 @@ require('dotenv').config();
 const path = require('path');
 
 const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post');
 
 // Lancement de Express
 const app = express();
@@ -26,5 +27,6 @@ app.use(bodyParser.json());
  */
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/user', userRoutes);
+app.use('/api/post', postRoutes);
 
 module.exports = app;

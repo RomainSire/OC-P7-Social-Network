@@ -66,3 +66,25 @@ exports.adminCredential = (req, res, next) => {
       next();
   }
 }
+
+// Lors de la publication d'un post
+const postContentSchema = Joi.string().trim();
+exports.postContent = (req, res, next) => {
+  // SI le content est défini : validation du content
+  if (req.body.content) {
+    const {error, value} = postContentSchema.validate(req.body.content);
+    if (error) {
+      res.status(422).json({ error: "Données saisies invalides" });
+    } else {
+      next();
+    }
+  
+  // SI ni la photo, ni le content est défini : requête rejettée
+  } else if (!req.body.content || !req.file) {
+    res.status(422).json({ error: "Envoyer au moins une image ou un texte !" });
+  
+  // SI le content n'est pas défini, et l'image est définie : validation déjà effectuée par multer!
+  } else {
+    next();
+  }
+};

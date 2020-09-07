@@ -52,3 +52,20 @@ exports.getCommentsofPost = (req, res, next) => {
 
   connection.end();
 }
+
+/**
+ * Suppression d'un commentaire
+ */
+exports.deleteComment = (req, res, next) => {
+  const connection = database.connect();
+  const commentId = connection.escape(parseInt(req.params.id, 10));
+  const sql = "DELETE FROM Posts WHERE id=" + commentId + ";";
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ message: 'Commentaire supprimée' });
+    }
+  });
+  connection.end();
+}

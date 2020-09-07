@@ -241,7 +241,6 @@ exports.deleteAccount = (req,res,next) => {
   const connection = database.connect();
   const userId = connection.escape(req.params.id);
   const sql = "DELETE FROM Users WHERE id=" + userId + ";";
-  console.log(sql);
   connection.query(sql, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });

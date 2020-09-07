@@ -50,3 +50,20 @@ exports.getAllPosts = (req, res, next) => {
   connection.end();
 }
 
+
+/**
+ * Suppression d'un post
+ */
+exports.deletePost = (req, res, next) => {
+  const connection = database.connect();
+  const postId = connection.escape(parseInt(req.params.id, 10));
+  const sql = "DELETE FROM Posts WHERE id=" + postId + ";";
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ message: 'Publication supprimée' });
+    }
+  });
+  connection.end();
+}

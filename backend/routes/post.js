@@ -7,5 +7,7 @@ const validate = require('../middlewares/validate-inputs');
 const multer = require('../middlewares/multer-config');
 
 router.post('/', auth, multer, validate.postContent, postCtrl.newPost);
+router.get('/', auth, postCtrl.getAllPosts);
+router.delete('/', auth, postCtrl.deletePost);
 
 module.exports = router;

@@ -36,7 +36,7 @@ Liste des publications
 
 > id : MEDIUMINT unsigned = 16 777 214 posts possibles.  
 > user_id : clé étrangère faisant référence à l'utilisateur qui a posté  
-> imageurl : contiendra l'url de l'image
+> imageurl : contiendra l'url de l'image  
 > content : contiendra le texte de la publication
 
 

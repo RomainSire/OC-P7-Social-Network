@@ -27,3 +27,26 @@ exports.newPost = (req, res, next) => {
 
   connection.end();
 }
+
+
+/**
+ * Récupération de tous les posts
+ */
+exports.getAllPosts = (req, res, next) => {
+  const connection = database.connect();
+
+  const sql = "SELECT Posts.id AS postId, Posts.publication_date AS postDate, Posts.imageurl AS postImage, Posts.content as postContent, Users.id AS userId, Users.name AS userName, Users.pictureurl AS userPicture\
+  FROM Posts\
+  INNER JOIN Users ON Posts.user_id = Users.id ";
+
+  connection.query(sql, (error, posts, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(200).json({ posts });
+    }
+  });
+
+  connection.end();
+}
+

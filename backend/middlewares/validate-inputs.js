@@ -88,3 +88,17 @@ exports.postContent = (req, res, next) => {
     next();
   }
 };
+
+// Lors de la publication d'un commentaire
+const commentSchema = Joi.object({
+  postId: Joi.number().integer().positive().required(),
+  content: Joi.string().trim().required()
+});
+exports.comment = (req, res, next) => {
+  const {error, value} = commentSchema.validate(req.body);
+  if (error) {
+    res.status(422).json({ error: "Commentaire invalide" });
+  } else {
+    next();
+  }
+};

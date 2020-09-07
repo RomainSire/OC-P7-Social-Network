@@ -37,7 +37,7 @@ CREATE TABLE Posts (
 -- Création de la table des commentaires
 CREATE TABLE Comments (
   id INT unsigned NOT NULL AUTO_INCREMENT,
-  publication_date DATETIME NOT NULL,
+  publication_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   content TEXT NOT NULL,
   user_id SMALLINT unsigned NOT NULL,
   post_id MEDIUMINT unsigned NOT NULL,

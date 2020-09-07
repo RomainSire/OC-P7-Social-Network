@@ -102,3 +102,14 @@ exports.comment = (req, res, next) => {
     next();
   }
 };
+
+// Lors de la récupération des commentaires d'un post
+const postIdSchema = Joi.number().integer().positive().required();
+exports.postId = (req, res, next) => {
+  const {error, value} = postIdSchema.validate(req.body.postId);
+  if (error) {
+      res.status(422).json({ error: "id de la publication invalide" });
+  } else {
+      next();
+  }
+}

@@ -112,4 +112,18 @@ exports.postId = (req, res, next) => {
   } else {
       next();
   }
-}
+};
+
+// Lors d'un like/dislike
+const likeSchema = Joi.object({
+  postId: Joi.number().integer().positive().required(),
+  rate: Joi.valid(-1, 0, 1).required()
+});
+exports.like = (req, res, next) => {
+  const {error, value} = likeSchema.validate(req.body);
+  if (error) {
+      res.status(422).json({ error: "Données d'entrée invalides" });
+  } else {
+      next();
+  }
+};

@@ -27,7 +27,7 @@ CREATE TABLE Users (
 CREATE TABLE Posts (
   id MEDIUMINT unsigned NOT NULL AUTO_INCREMENT,
   publication_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  user_id SMALLINT unsigned NOT NULL,
+  user_id SMALLINT unsigned,
   imageurl VARCHAR(255),
   content TEXT,
   PRIMARY KEY(id)
@@ -39,7 +39,7 @@ CREATE TABLE Comments (
   id INT unsigned NOT NULL AUTO_INCREMENT,
   publication_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   content TEXT NOT NULL,
-  user_id SMALLINT unsigned NOT NULL,
+  user_id SMALLINT unsigned,
   post_id MEDIUMINT unsigned NOT NULL,
   PRIMARY KEY(id)
 ) ENGINE=InnoDB;
@@ -59,7 +59,7 @@ CREATE TABLE Likes (
 CREATE TABLE Notifications (
   id INT unsigned NOT NULL AUTO_INCREMENT,
   user_id SMALLINT unsigned NOT NULL,
-  initiator_id SMALLINT unsigned NOT NULL,
+  initiator_id SMALLINT unsigned,
   post_id MEDIUMINT unsigned NOT NULL,
   type_id TINYINT unsigned NOT NULL,
   PRIMARY KEY(id)
@@ -79,12 +79,12 @@ UNLOCK TABLES;
 
 
 -- Création des clés étrangères qui lient les différentes tables
-ALTER TABLE Posts ADD CONSTRAINT fk_Posts_Users_id FOREIGN KEY (user_id) REFERENCES Users (id);
-ALTER TABLE Comments ADD CONSTRAINT fk_Comments_Users_id FOREIGN KEY (user_id) REFERENCES Users (id);
-ALTER TABLE Comments ADD CONSTRAINT fk_Comments_Posts_id FOREIGN KEY (post_id) REFERENCES Posts (id);
-ALTER TABLE Likes ADD CONSTRAINT fk_Likes_Users_id FOREIGN KEY (user_id) REFERENCES Users (id);
-ALTER TABLE Likes ADD CONSTRAINT fk_Likes_Posts_id FOREIGN KEY (post_id) REFERENCES Posts (id);
-ALTER TABLE Notifications ADD CONSTRAINT fk_Notifications_Users_id FOREIGN KEY (user_id) REFERENCES Users (id);
-ALTER TABLE Notifications ADD CONSTRAINT fk_Notifications_Initiator_id FOREIGN KEY (initiator_id) REFERENCES Users (id);
-ALTER TABLE Notifications ADD CONSTRAINT fk_Notifications_Posts_id FOREIGN KEY (post_id) REFERENCES Posts (id);
-ALTER TABLE Notifications ADD CONSTRAINT fk_Notifications_Notifications_types_id FOREIGN KEY (type_id) REFERENCES Notification_types (id);
+ALTER TABLE Posts ADD CONSTRAINT fk_Posts_Users_id FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE Comments ADD CONSTRAINT fk_Comments_Users_id FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE Comments ADD CONSTRAINT fk_Comments_Posts_id FOREIGN KEY (post_id) REFERENCES Posts (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Likes ADD CONSTRAINT fk_Likes_Users_id FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Likes ADD CONSTRAINT fk_Likes_Posts_id FOREIGN KEY (post_id) REFERENCES Posts (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Notifications ADD CONSTRAINT fk_Notifications_Users_id FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Notifications ADD CONSTRAINT fk_Notifications_Initiator_id FOREIGN KEY (initiator_id) REFERENCES Users (id) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE Notifications ADD CONSTRAINT fk_Notifications_Posts_id FOREIGN KEY (post_id) REFERENCES Posts (id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Notifications ADD CONSTRAINT fk_Notifications_Notifications_types_id FOREIGN KEY (type_id) REFERENCES Notification_types (id) ON DELETE CASCADE ON UPDATE CASCADE;

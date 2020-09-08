@@ -18,25 +18,42 @@ exports.newuser = (req, res, next) => {
       const name = connection.escape(req.body.name);
       const email = connection.escape(req.body.email);
       const password = connection.escape(cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString());
+      let isAdmin;
 
-      // Requete SQL
-      const sql = "\
-      INSERT INTO Users (name, email, password, isadmin)\
-      VALUES (" + name + ", " + email + ", " + password + ", 0);";
-      
-      // Envoi de la requete et réponse au frontend en fonction des erreurs SQL
-      connection.query(sql, (error, results, fields) => {
+      // Requete SQL préliminaire. But: s'il n'y a pas encore d'utilisateur, le premier User créé sera administrateur.
+      const preliminarySql = "SELECT COUNT(*) AS numberOfUsers FROM Users;";
+
+      connection.query(preliminarySql, (error, result, fields) => {
         if (error) {
-          if (error.errno === 1062) { // ERREUR : email déjà utilisé dans la base
-            res.status(403).json({ "error": "L'email est déjà utilisé !" });
-          } else { // Autre erreur SQL
-            res.status(500).json({ "error": error.sqlMessage });
+          connection.end();
+          res.status(500).json({ "error": error.sqlMessage });
+        } else {
+          if (result[0].numberOfUsers === 0) {
+            isAdmin = 1;
+          } else {
+            isAdmin = 0;
           }
-        } else { // Pas d'erreur : utilisateur ajouté
-          res.status(201).json({ message: 'Utilisateur créé' });
+          
+          // Requete SQL principale
+          const sql = "\
+          INSERT INTO Users (name, email, password, isadmin)\
+          VALUES (" + name + ", " + email + ", " + password + ", " + isAdmin + ");";
+          
+          // Envoi de la requete et réponse au frontend en fonction des erreurs SQL
+          connection.query(sql, (error, results, fields) => {
+            if (error) {
+              if (error.errno === 1062) { // ERREUR : email déjà utilisé dans la base
+                res.status(403).json({ "error": "L'email est déjà utilisé !" });
+              } else { // Autre erreur SQL
+                res.status(500).json({ "error": error.sqlMessage });
+              }
+            } else { // Pas d'erreur : utilisateur ajouté
+              res.status(201).json({ message: 'Utilisateur créé' });
+            }
+          });
+          connection.end();
         }
       });
-      connection.end();
     })
     .catch(error => res.status(500).json({ error }));
 }

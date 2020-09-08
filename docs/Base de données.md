@@ -28,7 +28,7 @@ Liste des publications
 | ---------------- | -------------- | ---- | --------------------------- | ------------------------- |
 | id               | MEDIUMINT      | NO   | PRIMARY                     | auto_increment ; unsigned |
 | publication_date | DATETIME       | NO   | -                           | -                         |
-| user_id          | SMALLINT       | NO   | FOREIGN (Ref:Users.id)      | unsigned                  |
+| user_id          | SMALLINT       | YES  | FOREIGN (Ref:Users.id)      | unsigned                  |
 | imageurl         | VARCHAR(255)   | YES  | -                           | -                         |
 | content          | TEXT           | YES  | -                           | -                         |
 
@@ -49,7 +49,7 @@ Liste des commentaires des publications
 | id               | INT            | NO   | PRIMARY                    | auto_increment ; unsigned |
 | publication_date | DATETIME       | NO   | -                          | -                         |
 | content          | TEXT           | NO   | -                          | -                         |
-| user_id          | SMALLINT       | NO   | FOREIGN (Ref:Users.id)     | unsigned                  |
+| user_id          | SMALLINT       | YES  | FOREIGN (Ref:Users.id)     | unsigned                  |
 | post_id          | MEDIUMINT      | NO   | FOREIGN (Ref:Posts.id)     | unsigned                  |
 
 
@@ -86,7 +86,7 @@ Il y aura une notification si :
 | ------------- | -------------- | ---- | -------------------------------- | ------------------------- |
 | id            | INT            | NO   | PRIMARY                          | auto_increment ; unsigned |
 | user_id       | SMALLINT       | NO   | FOREIGN (Ref:Users.id)           | unsigned                  |
-| initiator_id  | SMALLINT       | NO   | FOREIGN (Ref:Users.id)           | unsigned                  |
+| initiator_id  | SMALLINT       | YES  | FOREIGN (Ref:Users.id)           | unsigned                  |
 | post_id       | MEDIUMINT      | NO   | FOREIGN (Ref:Posts.id)           | unsigned                  |
 | type_id       | TINYINT        | NO   | FOREIGN (Ref:Notification_types) | unsigned                  |
 

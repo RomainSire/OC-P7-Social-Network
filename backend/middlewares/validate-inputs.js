@@ -80,7 +80,7 @@ exports.postContent = (req, res, next) => {
     }
   
   // SI ni la photo, ni le content est défini : requête rejettée
-  } else if (!req.body.content || !req.file) {
+  } else if (!req.body.content && !req.file) {
     res.status(422).json({ error: "Envoyer au moins une image ou un texte !" });
   
   // SI le content n'est pas défini, et l'image est définie : validation déjà effectuée par multer!

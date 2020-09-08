@@ -38,3 +38,28 @@ exports.rate = (req, res, next) => {
     }
   });
 }
+
+/**
+ * Récupérer tous les like / dislike d'une publication
+ */
+exports.getLikesOfPost = (req, res, next) => {
+  const connection = database.connect();
+
+  const cryptedCookie = new Cookies(req, res).get('snToken');
+  const userId = connection.escape(JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId);
+  const postId = connection.escape(req.body.postId);
+
+  const sql = "SELECT\
+  (SELECT COUNT(*) FROM Likes WHERE (post_id=" + postId + " AND rate=1)) AS LikesNumber,\
+  (SELECT COUNT(*) FROM Likes WHERE (post_id=" + postId + " AND rate=-1)) AS DislikesNumber,\
+  (SELECT rate FROM Likes WHERE (post_id=1 AND user_id=" + userId + ")) AS currentUserReaction";
+
+  connection.query(sql, (error, result, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ likes: result[0] });
+    }
+  });
+  connection.end();
+}

@@ -6,5 +6,6 @@ const likeCtrl = require('../controllers/like');
 const validate = require('../middlewares/validate-inputs');
 
 router.post('/', auth, validate.like, likeCtrl.rate);
+router.get('/', auth, validate.postId, likeCtrl.getLikesOfPost);
 
 module.exports = router;

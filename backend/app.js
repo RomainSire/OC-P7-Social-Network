@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const path = require('path');
+const fs = require('fs');
+const morgan = require('morgan');
 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
@@ -14,6 +16,10 @@ const app = express();
 /**
  * MIDDLEWARES
  */
+// Log toutes les requêtes passées au serveur
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+app.use(morgan(':method :url :status [:date[clf]] (REQ: :req[content-length]) (RES: :res[content-length])', { stream: accessLogStream }));
+
 // Configuration cors
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -23,6 +29,7 @@ app.use((req, res, next) => {
 });
 // Parse le body des requetes en json
 app.use(bodyParser.json());
+
 
 /**
  * ROUTES

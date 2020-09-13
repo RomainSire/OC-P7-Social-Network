@@ -65,7 +65,7 @@ exports.login = (req, res, next) => {
   const connection = database.connect();
 
   const researchedEmail = connection.escape(req.body.email);
-  const sql = "SELECT id, email, password FROM Users WHERE email=" + researchedEmail;
+  const sql = "SELECT id, email, password, name, pictureurl FROM Users WHERE email=" + researchedEmail;
 
   connection.query(sql, (error, results, fields) => {
     // SI : erreur SQL
@@ -103,7 +103,12 @@ exports.login = (req, res, next) => {
             maxAge: 3600000  // cookie pendant 1 heure
           })
 
-          res.status(200).json({ message: 'Utilisateur loggé' });
+          res.status(200).json({
+            message: 'Utilisateur loggé',
+            userId: results[0].id,
+            name: results[0].name,
+            pictureUrl: results[0].pictureurl,
+          });
         })
         .catch(error => res.status(500).json({ error })); 
     }

@@ -7,13 +7,13 @@
     </div>
 
     <!-- Si l'utilisateur n'est pas encore loggé -->
-    <nav *ngIf="!userService.user" class="header--nav">
+    <nav *ngIf="!authService.user" class="header--nav">
       <a href="#">Se connecter</a>
       <a href="#">S'inscrire</a>
     </nav>
 
     <!-- Si l'utilisateur est loggé -->
-    <nav *ngIf="userService.user" class="header--nav">
+    <nav *ngIf="authService.user" class="header--nav">
       <a href="#" aria-label="Équipe">
         <i class="fas fa-users"></i>
       </a>
@@ -21,9 +21,9 @@
         <i class="fas fa-bolt"></i>
       </a>
       <a class="header--nav--profile" href="#">
-        <img src="./assets/aSupprimer.jpg" alt="Photo de profil">
+        <img [src]="authService.user.pictureUrl" alt="Photo de profil">
         <div>
-          <p>James Bond</p>
+          <p>{{authService.user.name}}</p>
           <p>Voir mon profil</p>
         </div>
       </a>

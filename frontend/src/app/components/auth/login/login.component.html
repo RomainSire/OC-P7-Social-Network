@@ -1,16 +1,16 @@
 <main>
   <div class="login">
-    <form class="login--form" #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <form class="login--form" [formGroup]='signInForm' (ngSubmit)="onSubmit()">
       <h1>Se connecter</h1>
       <fieldset>
         <label for="email">Email</label>
-        <input id="email" type="email" name="email" required ngModel>
+        <input id="email" type="email" formControlName="email">
       </fieldset>
       <fieldset>
         <label for="password">Mot de passe</label>
-        <input id="password" type="password"  name="password" required ngModel>
+        <input id="password" type="password" formControlName="password">
       </fieldset>
-      <button class="btn" type="submit">Se connecter</button>
+      <button class="btn" type="submit" [disabled]="signInForm.invalid">Se connecter</button>
     </form>
     <p>Pas encore inscrit ? <a href="#">Créer un compte</a></p>
   </div>

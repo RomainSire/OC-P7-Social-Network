@@ -9,7 +9,7 @@ import { User } from "../interfaces/user";
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class AuthService {
   user: User;
 
   private userUrl = 'http://localhost:3000/api/user';
@@ -25,7 +25,7 @@ export class UserService {
 
   /** Log a message with the MessageService */
   private log(message: string) {
-    this.messagesService.add(`UserService: ${message}`);
+    this.messagesService.add(`AuthService: ${message}`);
   }
 
   /**
@@ -39,9 +39,6 @@ export class UserService {
         this.log(`Erreur lors du Login: ${err.statusText}`);
         return of(err);
       }))
-      .subscribe(data => {
-        this.user = data;
-      });
   }
 
 }

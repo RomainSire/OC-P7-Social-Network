@@ -2,7 +2,7 @@
   padding: 1rem 2%;
   margin-bottom: 1rem;
   border-bottom: 5px solid #145db4;
-  background: #F8D5B4;
+  background: #DAE9FB;
   color: #145db4;
   font-family: 'Baloo Chettan 2', cursive;
   font-size: 1.2rem;
@@ -43,6 +43,7 @@
       img {
         width: 60px;
         border-radius: 50%;
+        border: 2px solid #145db4;
         margin-right: 1rem;
       }
       p:last-child {

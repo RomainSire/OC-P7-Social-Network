@@ -1,15 +1,15 @@
 <header class="header">
   <div class="main-wrapper header--wrapper">
     <div>
-      <a href="#" aria-label="Retour vers la page d'accueil">
+      <a routerLink="/home" aria-label="Retour vers la page d'accueil">
         <img  class="header--logo" src="./assets/logo.svg" alt="Groupomania">
       </a>
     </div>
 
     <!-- Si l'utilisateur n'est pas encore loggé -->
     <nav *ngIf="!authService.user" class="header--nav">
-      <a href="#">Se connecter</a>
-      <a href="#">S'inscrire</a>
+      <a routerLink="/login">Se connecter</a>
+      <a routerLink="/signin">S'inscrire</a>
     </nav>
 
     <!-- Si l'utilisateur est loggé -->

@@ -35,10 +35,10 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     const email = this.signInForm.get('email').value;
     const password = this.signInForm.get('password').value;
-    this.messagesService.add(`Paramètres saisis: { email: ${email}, password: ${password} }`);
     this.authService.loginUser(email, password)
       .subscribe(data => {
         this.authService.user = data;
+        this.messagesService.add(`Connecté en tant que: ${this.authService.user.name}, avec l'ID: ${this.authService.user.userId}`);
         this.router.navigate(['/home']);
       })
   }

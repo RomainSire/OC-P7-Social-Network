@@ -1,0 +1,55 @@
+main {
+  position: relative;
+  min-height: 70vh;
+}
+.login {
+  // centrer le formulaire sur la page
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+
+  &--form {
+    border: 1px solid #145db4;
+    border-radius: 5px;
+    background: #fff;
+    padding: 1.5em 2em;
+
+    fieldset {
+      border: none;
+      margin: 1em 0;
+    }
+
+    label {
+      display: block;
+    }
+
+    input {
+      border: none;
+      border-bottom: 1px solid #145db4;
+      &:focus {
+        border: none;
+        border-bottom: 3px solid #145db4;
+      }
+    }
+
+    .btn {
+      display: block;
+      margin: auto;
+      padding: 0.7em 1.5em;
+      background: #F8D5B4;
+      border: 1px solid #145db4;
+      border-radius: 5px;
+    }
+  }
+  p {
+    text-align: center;
+    margin-top: 0.5em;
+  }
+  a {
+    color: #145db4;
+    font-weight: bold;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

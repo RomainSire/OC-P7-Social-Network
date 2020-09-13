@@ -5,7 +5,15 @@
         <img  class="header--logo" src="./assets/logo.svg" alt="Groupomania">
       </a>
     </div>
-    <nav class="header--nav">
+
+    <!-- Si l'utilisateur n'est pas encore loggé -->
+    <nav *ngIf="!userService.user" class="header--nav">
+      <a href="#">Se connecter</a>
+      <a href="#">S'inscrire</a>
+    </nav>
+
+    <!-- Si l'utilisateur est loggé -->
+    <nav *ngIf="userService.user" class="header--nav">
       <a href="#" aria-label="Équipe">
         <i class="fas fa-users"></i>
       </a>

@@ -11,6 +11,7 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { SigninComponent } from './components/auth/signin/signin.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { HomeComponent } from './components/home/home.component';
+import { LogoffComponent } from './components/auth/logoff/logoff.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { HomeComponent } from './components/home/home.component';
     LoginComponent,
     SigninComponent,
     MessagesComponent,
-    HomeComponent
+    HomeComponent,
+    LogoffComponent
   ],
   imports: [
     BrowserModule,

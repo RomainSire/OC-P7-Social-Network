@@ -117,6 +117,13 @@ exports.login = (req, res, next) => {
 }
 
 /**
+ * Réponse à la vérification qu'un utilisateur est bien loggé (arrive après le middleware d'authentification..!)
+ */
+exports.isAuth = (req, res, next) => {
+  res.status(200).json({ message: "utilisateur bien authentifié" });
+}
+
+/**
  * Récupération de tous les utilisateurs
  */
 exports.getAllUsers = (req, res, next) => {

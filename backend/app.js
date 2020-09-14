@@ -37,12 +37,7 @@ app.use(morgan(':method :url :status [:date[clf]] (REQ: :req[content-length]) (R
 // DEVELOPEMENT : log de la requete en console
 app.use((req, res, next) => {
   const cryptedCookie = new Cookies(req, res).get('snToken');
-  let cookie;
-  if (cryptedCookie) {
-    cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
-  } else {
-    cookie = undefined;
-  }
+  const cookie = cryptedCookie ? JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)) : undefined;
   const toBeDisplayed = {
     date: new Date().toString(),
     method: req.method,

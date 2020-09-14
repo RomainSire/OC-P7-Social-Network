@@ -1,12 +1,6 @@
-main {
-  position: relative;
-  min-height: 70vh;
-}
 .login {
-  // centrer le formulaire sur la page
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+  max-width: 500px;
+  margin: 2em auto;
 
   &--form {
     border: 1px solid #145db4;
@@ -24,6 +18,7 @@ main {
     }
 
     input {
+      width: 100%;
       border: none;
       border-bottom: 1px solid #145db4;
       &:focus {

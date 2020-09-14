@@ -1,1 +1,21 @@
-<p>signin works!</p>
+<main>
+  <div class="login">
+    <form class="login--form" [formGroup]='signInForm' (ngSubmit)="onSubmit()">
+      <h1>Créer un compte</h1>
+      <fieldset>
+        <label for="name">Nom</label>
+        <input id="name" type="name" formControlName="name">
+      </fieldset>
+      <fieldset>
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email">
+      </fieldset>
+      <fieldset>
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" formControlName="password">
+      </fieldset>
+      <button class="btn" type="submit" [disabled]="signInForm.invalid">Se connecter</button>
+    </form>
+    <p>Vous avez déjà un compte ? <a routerLink="/login">Identifiez vous !</a></p>
+  </div>
+</main>

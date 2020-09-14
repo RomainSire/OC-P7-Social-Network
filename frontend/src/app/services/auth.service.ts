@@ -14,10 +14,6 @@ export class AuthService {
 
   private userUrl = 'http://localhost:3000/api/user';
 
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
-
   constructor(
     private httpClient: HttpClient,
     private messagesService: MessagesService
@@ -34,11 +30,16 @@ export class AuthService {
    * @param password mot de passe de l'utilisateur
    */
   loginUser(email: string, password: string) {
-    return this.httpClient.post<User>(`${this.userUrl}/login`, {email, password}, this.httpOptions)
+    return this.httpClient.post<User>(`${this.userUrl}/login`, {email, password}, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur lors du Login: ${err.statusText}`);
         return of(err);
       }))
+  }
+
+
+  createNewUser() {
+    
   }
 
 }

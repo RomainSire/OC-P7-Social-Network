@@ -65,7 +65,7 @@ exports.login = (req, res, next) => {
   const connection = database.connect();
 
   const researchedEmail = connection.escape(req.body.email);
-  const sql = "SELECT id, email, password, name, pictureurl FROM Users WHERE email=" + researchedEmail;
+  const sql = "SELECT id, email, password, name, pictureurl, isadmin FROM Users WHERE email=" + researchedEmail;
 
   connection.query(sql, (error, results, fields) => {
     // SI : erreur SQL
@@ -108,6 +108,7 @@ exports.login = (req, res, next) => {
             userId: results[0].id,
             name: results[0].name,
             pictureUrl: results[0].pictureurl,
+            isAdmin: results[0].isadmin
           });
         })
         .catch(error => res.status(500).json({ error })); 
@@ -117,10 +118,53 @@ exports.login = (req, res, next) => {
 }
 
 /**
+ * Logout d'un utilisateur
+ */
+exports.logout = (req, res, next) => {
+  // on remplace le cookie par un vide
+  new Cookies(req, res).set('snToken', "", {
+    httpOnly: true,
+    maxAge: 1  // 1ms (= suppression quasi instantannée)
+  })
+  res.status(200).json({ message: "utilisateur déconnecté" });
+}
+
+/**
  * Réponse à la vérification qu'un utilisateur est bien loggé (arrive après le middleware d'authentification..!)
  */
 exports.isAuth = (req, res, next) => {
   res.status(200).json({ message: "utilisateur bien authentifié" });
+}
+
+/**
+ * Renvoie les infos d'un utilisateur, en fonction de l'Id utilisateur stocké dans le cookie
+ */
+exports.getCurrentUser = (req, res, next) => {
+  const connection = database.connect();
+  const cryptedCookie = new Cookies(req, res).get('snToken');
+  const cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
+  const searchId = connection.escape(cookie.userId);
+  const sql = "SELECT id, name, pictureurl, isadmin FROM Users WHERE id=" + searchId;
+  connection.query(sql, (error, results, fields) => {
+    // SI : erreur SQL
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+
+    // SI : Utilisateur non trouvé
+    } else if (results.length === 0) {
+      res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
+
+    // SI : Utilisateur trouvé
+    } else {
+      res.status(200).json({
+        userId: results[0].id,
+        name: results[0].name,
+        pictureUrl: results[0].pictureurl,
+        isAdmin: results[0].isadmin
+      });
+    }
+  });
+  connection.end();
 }
 
 /**

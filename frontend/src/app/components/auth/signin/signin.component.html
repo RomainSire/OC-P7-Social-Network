@@ -14,6 +14,10 @@
         <label for="password">Mot de passe</label>
         <input id="password" type="password" formControlName="password">
       </fieldset>
+      <fieldset>
+        <label for="passwordConfirmation">Confirmer le mot de passe</label>
+        <input id="passwordConfirmation" type="password" formControlName="passwordConfirmation">
+      </fieldset>
       <button class="btn" type="submit" [disabled]="signInForm.invalid">Se connecter</button>
     </form>
     <p>Vous avez déjà un compte ? <a routerLink="/login">Identifiez vous !</a></p>

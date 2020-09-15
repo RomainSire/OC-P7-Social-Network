@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   logoutUser() {
-    return this.httpClient.get('http://localhost:3000/api/user/logout', { withCredentials: true })
+    return this.httpClient.get(`${this.userUrl}/logout`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
@@ -52,19 +52,19 @@ export class AuthService {
       })
   }
 
-
-  createNewUser() {
-    
-  }
-
   getCurrentUserInfo() {
-    return this.httpClient.get('http://localhost:3000/api/user/currentuser', { withCredentials: true })
+    return this.httpClient.get(`${this.userUrl}/currentuser`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
   }
 
-
-
+  createNewUser(name: string, email: string, password: string) {
+    return this.httpClient.post(`${this.userUrl}/new`, {name, email, password}, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
 }

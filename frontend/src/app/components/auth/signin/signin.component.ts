@@ -59,6 +59,9 @@ export class SigninComponent implements OnInit {
             .subscribe(data => {
               if (data.message === "Utilisateur loggé") {
                 this.authService.user = data;
+                if (data.pictureUrl === null) {
+                  this.authService.user.pictureUrl = "./assets/anonymousUser.svg"
+                }
                 this.messagesService.add(`Connecté en tant que: ${this.authService.user.name}, avec l'ID: ${this.authService.user.userId}`);
                 this.router.navigate(['/home']);
               } else {

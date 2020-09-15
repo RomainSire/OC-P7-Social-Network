@@ -25,6 +25,9 @@
         border: none;
         border-bottom: 3px solid #145db4;
       }
+      &:invalid {
+        border-bottom: 3px solid #c52d22;
+      }
     }
 
     .btn {

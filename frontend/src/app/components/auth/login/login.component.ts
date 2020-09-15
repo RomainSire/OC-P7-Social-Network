@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit {
           this.messagesService.add(`Connecté en tant que: ${this.authService.user.name}, avec l'ID: ${this.authService.user.userId}`);
           this.router.navigate(['/home']);          
         } else {
-          console.log(data);
           this.messagesService.add(`Erreur de connexion: ${data.error.error}`);
         }
       })

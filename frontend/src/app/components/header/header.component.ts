@@ -13,6 +13,15 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.authService.getCurrentUserInfo()
+      .subscribe(data => {
+        if (data.userId) {
+          this.authService.user = data;
+        }
+      })
   }
 
+  onLogout() {
+    this.authService.logoutUser();
+  }
 }

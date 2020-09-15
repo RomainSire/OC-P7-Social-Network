@@ -14,20 +14,16 @@
 
     <!-- Si l'utilisateur est loggé -->
     <nav *ngIf="authService.user" class="header--nav">
-      <a href="#" aria-label="Équipe">
+      <a href="#" aria-label="Équipe" title="Voir l'équipe">
         <i class="fas fa-users"></i>
       </a>
-      <a href="#" aria-label="Notifications">
+      <a href="#" aria-label="Notifications" title="Mes notifications">
         <i class="fas fa-bolt"></i>
       </a>
-      <a class="header--nav--profile" href="#">
+      <a class="header--nav--profile" href="#" title="Mon profil">
         <img [src]="authService.user.pictureUrl" alt="Photo de profil">
-        <div>
-          <p>{{authService.user.name}}</p>
-          <p>Voir mon profil</p>
-        </div>
       </a>
-      <a routerLink="/logoff" aria-label="Se déconnecter">
+      <a routerLink="/logoff" aria-label="Se déconnecter" title="Se déconnecter" (click)="onLogout()">
         <i class="fas fa-power-off"></i>
       </a>
     </nav>

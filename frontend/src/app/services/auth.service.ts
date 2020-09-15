@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { MessagesService } from "./messages.service";
 import { User } from "../interfaces/user";
@@ -16,7 +17,8 @@ export class AuthService {
 
   constructor(
     private httpClient: HttpClient,
-    private messagesService: MessagesService
+    private messagesService: MessagesService,
+    private router: Router
   ) { }
 
   /** Log a message with the MessageService */
@@ -37,9 +39,32 @@ export class AuthService {
       }))
   }
 
+  logoutUser() {
+    return this.httpClient.get('http://localhost:3000/api/user/logout', { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+      .subscribe(() => {
+        this.user = undefined;
+        this.log(`Déconnecté`);
+        this.router.navigate(['/login']);
+      })
+  }
+
 
   createNewUser() {
     
   }
+
+  getCurrentUserInfo() {
+    return this.httpClient.get('http://localhost:3000/api/user/currentuser', { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
+
+
 
 }

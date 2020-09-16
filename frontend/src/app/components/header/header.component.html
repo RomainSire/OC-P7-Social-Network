@@ -20,7 +20,7 @@
       <a href="#" aria-label="Notifications" title="Mes notifications">
         <i class="fas fa-bolt"></i>
       </a>
-      <a class="header--nav--profile" href="#" title="Mon profil">
+      <a [routerLink]="'/profile/' + authService.user.userId" class="header--nav--profile" title="Mon profil">
         <img [src]="authService.user.pictureUrl" alt="Photo de profil">
       </a>
       <a routerLink="/logoff" aria-label="Se déconnecter" title="Se déconnecter" (click)="onLogout()">

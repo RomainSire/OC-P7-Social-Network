@@ -5,7 +5,9 @@
     <input id="search-user" type="text" placeholder="Rechercher un collègue">
   </section>
   <section class="users--display">
-    <a href="#" class="users--display--card" *ngFor="let user of users">
+    <a *ngFor="let user of users"
+      [routerLink]="'/profile/' + user.id"
+      class="users--display--card" >
       <img [src]="user.pictureurl" [alt]="user.name">
       <p>{{user.name}}</p>
     </a>

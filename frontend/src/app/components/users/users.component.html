@@ -1,1 +1,13 @@
-<p>users works!</p>
+<main class="main-wrapper users">
+  <h1>Notre équipe</h1>
+  <section class="users--search">
+    <label for="search-user" aria-label="Rechercher un collègue"><i class="fas fa-search"></i></label>
+    <input id="search-user" type="text" placeholder="Rechercher un collègue">
+  </section>
+  <section class="users--display">
+    <a href="#" class="users--display--card" *ngFor="let user of users">
+      <img [src]="user.pictureurl" [alt]="user.name">
+      <p>{{user.name}}</p>
+    </a>
+  </section>
+</main>

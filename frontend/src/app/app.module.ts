@@ -12,6 +12,7 @@ import { SigninComponent } from './components/auth/signin/signin.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { HomeComponent } from './components/home/home.component';
 import { UsersComponent } from './components/users/users.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { UsersComponent } from './components/users/users.component';
     SigninComponent,
     MessagesComponent,
     HomeComponent,
-    UsersComponent
+    UsersComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

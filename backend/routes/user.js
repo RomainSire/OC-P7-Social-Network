@@ -14,7 +14,7 @@ router.get('/isauth', auth, userCtrl.isAuth);
 router.get('/currentuser', auth, userCtrl.getCurrentUser);
 router.get('/', auth, userCtrl.getAllUsers);
 router.get('/:id', auth, validate.id, userCtrl.getOneUser);
-router.put('/:id/password', auth, validate.id, credential.sameUser, userCtrl.changePassword);
+router.put('/:id/password', auth, validate.id, validate.changePassword, credential.sameUser, userCtrl.changePassword);
 router.put('/:id/picture', auth, validate.id, credential.sameUser, multer, userCtrl.changeProfilePicture);
 router.put('/:id/outline', auth, validate.id, validate.outline, credential.sameUser, userCtrl.changeOutline);
 router.put('/:id/admin', auth, validate.id, validate.adminCredential, credential.isAdmin, userCtrl.changeAdmin);

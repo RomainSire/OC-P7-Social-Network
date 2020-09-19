@@ -225,11 +225,13 @@ exports.changePassword = (req, res, next) => {
   connection.query(sql, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
+      connection.end();
     } else {
       const DBPasswordHash = cryptojs.AES.decrypt(results[0].password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
       bcrypt.compare(req.body.oldPassword, DBPasswordHash)
         .then(valid => {
           if (!valid) {
+            connection.end();
             return res.status(401).json({ error: 'Ancien mot de passe incorrect!' });
           }
           // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
@@ -239,8 +241,10 @@ exports.changePassword = (req, res, next) => {
               const secondSQL = "UPDATE Users SET password=" + newPassword + " WHERE id=" + searchId;
               connection.query(secondSQL, (error, results, fields) => {
                 if (error) {
+                  connection.end();
                   res.status(500).json({ "error": error.sqlMessage });
                 } else {
+                  connection.end();
                   res.status(201).json({ message: 'Mot de passe modifié' });
                 }
               })
@@ -250,7 +254,6 @@ exports.changePassword = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
     }
   });
-  connection.end();
 }
 
 /**

@@ -37,4 +37,20 @@ export class UsersService {
         return of(err);
       }))
   }
+
+  updateOutline(id: number, outline: string) {
+    return this.httpClient.put(`${this.userUrl}/${id}/outline`, {outline}, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
+
+  updatePassword(id: number, oldPassword: string, newPassword: string) {
+    return this.httpClient.put(`${this.userUrl}/${id}/password`, {oldPassword, newPassword}, { withCredentials: true })
+    .pipe(catchError(err => {
+      this.log(`Erreur: ${err.statusText}`);
+      return of(err);
+    }))
+  }
 }

@@ -29,8 +29,8 @@ export class SigninComponent implements OnInit {
     this.signInForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.pattern(/[A-Za-zÀ-ÖØ-öø-ÿ ]{3,50}/)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]],
-      passwordConfirmation: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
+      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]],
+      passwordConfirmation: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]]
     },{validator: this.checkIfMatchingPasswords('password', 'passwordConfirmation')});
   }
 

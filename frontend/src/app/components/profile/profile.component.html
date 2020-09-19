@@ -41,14 +41,14 @@
     <div class="profile--bottom" *ngIf="userDetails.id === authService.user.userId">
       <div>
         <h2>Changer de mot de passe</h2>
-        <form (submit)="onChangePassword($event)">
+        <form  [formGroup]='passwordChangeForm' (ngSubmit)="onChangePassword()">
           <label for="password">Mot de passe actuel
-            <input type="password" id="password" name="oldPassword">
+            <input type="password" id="password" formControlName="oldPassword">
           </label>
           <label for="password">Nouveau mot de passe
-            <input type="password" id="password" name="newPassword">
+            <input type="password" id="password" formControlName="newPassword">
           </label>
-          <button type="submit" class="btn">Enregistrer</button>
+          <button type="submit" class="btn"  [disabled]="passwordChangeForm.invalid">Enregistrer</button>
         </form>
       </div>
       <div>

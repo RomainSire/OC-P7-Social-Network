@@ -56,6 +56,20 @@ exports.outline = (req, res, next) => {
   }
 }
 
+// Lors du changement de mot de passe
+const changePasswordSchema = Joi.object({
+  oldPassword: Joi.string().trim().min(8).required(),
+  newPassword: Joi.string().trim().min(8).required()
+});
+exports.changePassword = (req, res, next) => {
+  const {error, value} = changePasswordSchema.validate(req.body);
+  if (error) {
+    res.status(422).json({ error: "Données saisies invalides" });
+  } else {
+    next();
+  }
+};
+
 // Lors de l'attribution/retrait du droit utilisateur
 const adminCredentialSchema = Joi.valid(0, 1).required();
 exports.adminCredential = (req, res, next) => {

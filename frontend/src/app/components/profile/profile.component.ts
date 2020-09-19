@@ -105,7 +105,6 @@ export class ProfileComponent implements OnInit {
           } else {
             this.messagesService.add(`Erreur: ${data.error.error}`);
           }
-          
         })
     }
   }
@@ -122,11 +121,20 @@ export class ProfileComponent implements OnInit {
     console.log("Delete!");
   }
 
-  onGrantAdmin() {
-    console.log("droits d'admin donné")
+  /**
+   * Donner / Supprimer les droits d'admin
+   */
+  onChangeAdmin(isAdmin) {
+    this.usersService.updateAdminRights(this.userDetails.id, isAdmin)
+      .subscribe(data => {
+        console.log(data);
+        if (data.message === "Droits d'administrateur modifiée") {
+          this.messagesService.add(`Les droits d'administration ont bien été modifiés`);
+        } else {
+          this.messagesService.add(`Erreur: ${data.error.error}`);
+        }
+        this.getUser();
+      })
   }
-  onRemoveAdmin() {
-    console.log("droits d'admin supprimé");
-    
-  }
+
 }

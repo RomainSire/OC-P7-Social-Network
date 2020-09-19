@@ -32,8 +32,8 @@
           <h2 class="mt">Droits d'administration</h2>
           <p *ngIf="this.userDetails.isadmin === 1">{{userDetails.name}} est admin</p>
           <p *ngIf="this.userDetails.isadmin === 0">{{userDetails.name}} n'est pas admin</p>
-          <button class="btn btn-admin" (click)="onGrantAdmin()">Donner les droits d'admin</button>
-          <button class="btn btn-admin btn-admin__danger" (click)="onRemoveAdmin()">Retirer les droits d'admin</button>
+          <button class="btn btn-admin" (click)="onChangeAdmin(1)" *ngIf="this.userDetails.isadmin === 0">Donner les droits d'admin</button>
+          <button class="btn btn-admin btn-admin__danger" (click)="onChangeAdmin(0)" *ngIf="this.userDetails.isadmin === 1">Retirer les droits d'admin</button>
         </div>
       </div>
     </div>

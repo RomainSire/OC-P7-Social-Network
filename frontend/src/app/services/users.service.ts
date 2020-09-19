@@ -48,9 +48,17 @@ export class UsersService {
 
   updatePassword(id: number, oldPassword: string, newPassword: string) {
     return this.httpClient.put(`${this.userUrl}/${id}/password`, {oldPassword, newPassword}, { withCredentials: true })
-    .pipe(catchError(err => {
-      this.log(`Erreur: ${err.statusText}`);
-      return of(err);
-    }))
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
+
+  updateAdminRights(id: number, isadmin: number) {
+    return this.httpClient.put(`${this.userUrl}/${id}/admin`, {isadmin}, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
   }
 }

@@ -61,4 +61,12 @@ export class UsersService {
         return of(err);
       }))
   }
+
+  deleteUser(id: number) {
+    return this.httpClient.delete(`${this.userUrl}/${id}`, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
 }

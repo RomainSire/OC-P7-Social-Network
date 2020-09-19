@@ -118,7 +118,15 @@ export class ProfileComponent implements OnInit {
     document.getElementById('delete-confirm').classList.remove("profile--delete-confirm__hidden");
   }
   onDeleteConfirmed() {
-    console.log("Delete!");
+    this.usersService.deleteUser(this.userDetails.id)
+      .subscribe(data => {
+        if (data.message === "Utilisateur supprimé") {
+          this.messagesService.add(`Vous avez bien supprimé votre compte`);
+          this.router.navigate(['/login']);
+        } else {
+          this.messagesService.add(`Erreur: ${data.error.error}`);
+        }
+      })
   }
 
   /**
@@ -127,7 +135,6 @@ export class ProfileComponent implements OnInit {
   onChangeAdmin(isAdmin) {
     this.usersService.updateAdminRights(this.userDetails.id, isAdmin)
       .subscribe(data => {
-        console.log(data);
         if (data.message === "Droits d'administrateur modifiée") {
           this.messagesService.add(`Les droits d'administration ont bien été modifiés`);
         } else {

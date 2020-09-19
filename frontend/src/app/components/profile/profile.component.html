@@ -1,1 +1,64 @@
-<p>profile works!</p>
+<main class="main-wrapper">
+  <div class="profile">
+    <h1>{{userDetails.name}}</h1>
+    <hr>
+    <div class="profile--top">
+      <div class="profile--image">
+        <h2>Photo de profil</h2>
+        <img [src]="userDetails.pictureurl" alt="Photo de profil de {{userDetails.name}}">
+        <form *ngIf="userDetails.id === authService.user.userId">
+          <label for="picture" class="btn label-file" aria-label="Changer sa photo de profil">Changer ma photo de profil</label>
+          <input 
+            type="file"
+            accept="image/*"
+            name="picture"
+            id="picture"
+            class="input-file"
+            (change)="onChangeProfilePicture($event)">
+        </form>
+      </div>
+      <div class="profile--description">
+        <h2>E-mail</h2>
+        <p class="profile--email">{{userDetails.email}}</p>
+        <h2 class="mt">Description</h2>
+        <p>{{userDetails.outline}}</p>
+        <form (submit)="onUpdateOutline($event)" *ngIf="userDetails.id === authService.user.userId">
+          <textarea name="outline" placeholder="Votre nouvelle description"></textarea>
+          <button type="submit" class="btn description-btn">
+            Changer ma description
+          </button>
+        </form>
+        <div *ngIf="authService.user.isAdmin === 1">
+          <h2 class="mt">Droits d'administration</h2>
+          <p *ngIf="this.userDetails.isadmin === 1">{{userDetails.name}} est admin</p>
+          <p *ngIf="this.userDetails.isadmin === 0">{{userDetails.name}} n'est pas admin</p>
+          <button class="btn btn-admin" (click)="onGrantAdmin()">Donner les droits d'admin</button>
+          <button class="btn btn-admin btn-admin__danger" (click)="onRemoveAdmin()">Retirer les droits d'admin</button>
+        </div>
+      </div>
+    </div>
+    <hr *ngIf="userDetails.id === authService.user.userId">
+    <div class="profile--bottom" *ngIf="userDetails.id === authService.user.userId">
+      <div>
+        <h2>Changer de mot de passe</h2>
+        <form (submit)="onChangePassword($event)">
+          <label for="password">Mot de passe actuel
+            <input type="password" id="password" name="oldPassword">
+          </label>
+          <label for="password">Nouveau mot de passe
+            <input type="password" id="password" name="newPassword">
+          </label>
+          <button type="submit" class="btn">Enregistrer</button>
+        </form>
+      </div>
+      <div>
+        <h2>Supprimer mon compte</h2>
+        <button class="btn btn-danger" (click)="onDeleteClicked()">Supprimer</button>
+        <div id="delete-confirm" class="profile--delete-confirm profile--delete-confirm__hidden">
+          <p>Êtes-vous vraiment sûr?<br>(impossible de revenir en arrière)</p>
+          <button class="btn btn-danger" (click)="onDeleteConfirmed()">Oui, supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

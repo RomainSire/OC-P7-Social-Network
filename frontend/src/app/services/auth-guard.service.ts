@@ -17,12 +17,14 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(): Observable<boolean>|Promise<boolean>|boolean {
     return this.httpClient.get('http://localhost:3000/api/user/isauth', { withCredentials: true })
-      .pipe(catchError(err => {
-        this.router.navigate(['/login']);
-        return of(false);
-      }))
-      .pipe(map(res => {
-        return true;
-      }))
+      .pipe(
+        catchError(err => {
+          this.router.navigate(['/login']);
+          return of(false);
+        }),
+        map(res => {
+          return true;
+        })
+      )
   }
 }

@@ -8,7 +8,7 @@
     <a *ngFor="let user of users"
       [routerLink]="'/profile/' + user.id"
       class="users--display--card" >
-      <img [src]="user.pictureurl" [alt]="user.name">
+      <img [src]="user.pictureurl" alt="Photo de profil de {{user.name}}">
       <p>{{user.name}}</p>
     </a>
   </section>

@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { MessagesService } from "./messages.service";
-import { User } from "../interfaces/user";
+import { User } from "../models/User";
 
 @Injectable({
   providedIn: 'root'

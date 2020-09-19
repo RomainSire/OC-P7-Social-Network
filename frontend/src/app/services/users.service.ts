@@ -29,4 +29,12 @@ export class UsersService {
         return of(err);
       }))
   }
+
+  getOneUser(id: number) {
+    return this.httpClient.get(`${this.userUrl}/${id}`, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
 }

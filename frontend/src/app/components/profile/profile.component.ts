@@ -66,53 +66,6 @@ export class ProfileComponent implements OnInit {
 
 
   /**
-   * Mise à jour de la photo de profil utilisateur
-   */
-  onChangeProfilePicture(event) {
-    this.imageChangedEvent = event;
-    this.initialImage = event.target.files[0];
-  }
-  imageCropped(event: ImageCroppedEvent) {
-      this.croppedImage = event.base64;
-  }
-  imageLoaded() {
-      // show cropper
-  }
-  loadImageFailed() {
-    this.messagesService.add(`Erreur lors du chargement de l'image`);
-  }
-  base64ToFile(dataurl, filename) {
-    const arr = dataurl.split(',')
-    const mime = arr[0].match(/:(.*?);/)[1]
-    const bstr = atob(arr[1])
-    let n = bstr.length
-    const u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type:mime});
-  }
-
-  onCroppedImageDone() {    
-    const base64Image = this.croppedImage;
-    const image = this.base64ToFile(base64Image, this.initialImage.name);
-    
-    const uploadData = new FormData();
-    uploadData.append('image', image);
-    this.usersService.updatePicture(this.userDetails.id, uploadData)
-      .subscribe(data => {        
-        if (data.message === "Photo de profil modifiée") {
-          this.getUser();
-          this.authService.getCurrentUserInfo();
-          this.messagesService.add(`Votre photo de profil a bien été modifiée`);
-        } else {
-          this.messagesService.add(`Une erreur s'est produite`);
-        }
-      })
-  }
-
-
-  /**
    * Mise à jour de la description du profil utilisateur
    */
   onUpdateOutline(event: any) {
@@ -182,6 +135,56 @@ export class ProfileComponent implements OnInit {
           this.messagesService.add(`Erreur: ${data.error.error}`);
         }
         this.getUser();
+      })
+  }
+
+
+  /**
+   * Mise à jour de la photo de profil utilisateur
+   * Utilisation de la librairie "ngx-image-cropper"
+   */
+  // Nouveau fichier sélectionné
+  onChangeProfilePicture(event) {
+    this.imageChangedEvent = event;
+    this.initialImage = event.target.files[0];
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.base64;
+  }
+  imageLoaded() {
+    document.getElementById('cropper').classList.remove('hidden');
+  }
+  loadImageFailed() {
+    this.messagesService.add(`Erreur lors du chargement de l'image`);
+  }
+  // Transformation de l'image base64 (donnée par "ngx-image-cropper") en fichier exploitable
+  base64ToFile(dataurl, filename) {
+    const arr = dataurl.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[1])
+    let n = bstr.length
+    const u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+  }
+  // à la validation, après le redimensionnement de l'image = envoi du fichier vers le backend
+  onCroppedImageDone() {    
+    const base64Image = this.croppedImage;
+    const image = this.base64ToFile(base64Image, this.initialImage.name);
+    const uploadData = new FormData();
+    uploadData.append('image', image);
+    this.usersService.updatePicture(this.userDetails.id, uploadData)
+      .subscribe(data => {        
+        if (data.message === "Photo de profil modifiée") {
+          this.getUser();
+          this.authService.getCurrentUserInfo();
+          this.messagesService.add(`Votre photo de profil a bien été modifiée`);
+        } else {
+          this.messagesService.add(`Une erreur s'est produite`);
+        }
+        document.getElementById('cropper').classList.add('hidden');
       })
   }
 }

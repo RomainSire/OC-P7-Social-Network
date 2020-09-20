@@ -69,4 +69,12 @@ export class UsersService {
         return of(err);
       }))
   }
+
+  updatePicture(id: number, uploadData: FormData) {
+    return this.httpClient.put(`${this.userUrl}/${id}/picture`, uploadData, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
 }

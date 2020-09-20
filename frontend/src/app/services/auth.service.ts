@@ -58,6 +58,14 @@ export class AuthService {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
+      .subscribe(data => {
+        if (data.userId) {
+          this.user = data;
+          if (data.pictureUrl === null) {
+            this.user.pictureUrl = "./assets/anonymousUser.svg"
+          }
+        }
+      })
   }
 
   createNewUser(name: string, email: string, password: string) {

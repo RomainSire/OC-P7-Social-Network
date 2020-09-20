@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { UserDetails } from "../../models/UserDetails";
@@ -25,7 +24,7 @@ export class ProfileComponent implements OnInit {
     public authService: AuthService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private messagesService: MessagesService,
+    private messagesService: MessagesService
   ) { }
 
   ngOnInit(): void {
@@ -63,11 +62,20 @@ export class ProfileComponent implements OnInit {
   /**
    * Mise à jour de la photo de profil utilisateur
    */
-  onChangeProfilePicture(fileInput: any) {
-    if (fileInput.target.files && fileInput.target.files[0]) {
-      console.log(fileInput.target.files[0]);
-      // Envoyer le fichier au backend dans un formdata
-    } 
+  onChangeProfilePicture(event) {
+    const image = event.target.files[0];
+    const uploadData = new FormData();
+    uploadData.append('image', image);
+    this.usersService.updatePicture(this.userDetails.id, uploadData)
+      .subscribe(data => {
+        if (data.message === "Photo de profil modifiée") {
+          this.getUser();
+          this.authService.getCurrentUserInfo();
+          this.messagesService.add(`Votre photo de profil a bien été modifiée`);
+        } else {
+          this.messagesService.add(`Une erreur s'est produite`);
+        }
+      })
   }
 
 
@@ -143,5 +151,4 @@ export class ProfileComponent implements OnInit {
         this.getUser();
       })
   }
-
 }

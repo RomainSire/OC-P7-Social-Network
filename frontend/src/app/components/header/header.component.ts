@@ -14,14 +14,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getCurrentUserInfo()
-      .subscribe(data => {
-        if (data.userId) {
-          this.authService.user = data;
-          if (data.pictureUrl === null) {
-            this.authService.user.pictureUrl = "./assets/anonymousUser.svg"
-          }
-        }
-      })
   }
 
   onLogout() {

@@ -11,7 +11,6 @@
           <input 
             type="file"
             accept="image/*"
-            name="picture"
             id="picture"
             class="input-file"
             (change)="onChangeProfilePicture($event)">
@@ -61,4 +60,20 @@
       </div>
     </div>
   </div>
+
+  <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="1 / 1"
+      format="png"
+      resizeToWidth="400"
+      (imageCropped)="imageCropped($event)"
+      (imageLoaded)="imageLoaded()"
+      (cropperReady)="cropperReady()"
+      (loadImageFailed)="loadImageFailed()"
+  ></image-cropper>
+
+  <img [src]="croppedImage" />
+  <button (click)="onCroppedImageDone()">Valider</button>
+
 </main>

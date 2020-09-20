@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 import { UserDetails } from "../../models/UserDetails";
 import { UsersService } from "../../services/users.service";
@@ -17,6 +18,11 @@ export class ProfileComponent implements OnInit {
   userDetails: UserDetails;
   id: number;
   passwordChangeForm: FormGroup;
+
+  initialImage: any = '';
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+
 
   constructor(
     private route: ActivatedRoute,
@@ -63,11 +69,38 @@ export class ProfileComponent implements OnInit {
    * Mise à jour de la photo de profil utilisateur
    */
   onChangeProfilePicture(event) {
-    const image = event.target.files[0];
+    this.imageChangedEvent = event;
+    this.initialImage = event.target.files[0];
+  }
+  imageCropped(event: ImageCroppedEvent) {
+      this.croppedImage = event.base64;
+  }
+  imageLoaded() {
+      // show cropper
+  }
+  loadImageFailed() {
+    this.messagesService.add(`Erreur lors du chargement de l'image`);
+  }
+  base64ToFile(dataurl, filename) {
+    const arr = dataurl.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[1])
+    let n = bstr.length
+    const u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+  }
+
+  onCroppedImageDone() {    
+    const base64Image = this.croppedImage;
+    const image = this.base64ToFile(base64Image, this.initialImage.name);
+    
     const uploadData = new FormData();
     uploadData.append('image', image);
     this.usersService.updatePicture(this.userDetails.id, uploadData)
-      .subscribe(data => {
+      .subscribe(data => {        
         if (data.message === "Photo de profil modifiée") {
           this.getUser();
           this.authService.getCurrentUserInfo();

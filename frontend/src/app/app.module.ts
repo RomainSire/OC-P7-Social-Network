@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- for NgModel
 import { HttpClientModule } from '@angular/common/http';
+import { ImageCropperModule } from "ngx-image-cropper";
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -32,6 +33,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
+    ImageCropperModule
   ],
   providers: [],
   bootstrap: [AppComponent]

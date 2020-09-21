@@ -61,7 +61,7 @@ exports.getLikesOfPost = (req, res, next) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
-      res.status(201).json({ likes: result[0] });
+      res.status(200).json({ likes: result[0] });
     }
   });
   connection.end();

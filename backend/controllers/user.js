@@ -15,9 +15,9 @@ exports.newuser = (req, res, next) => {
       const connection = database.connect();
 
       // Cryptage et échappement SQL des données utilisateurs
-      const name = connection.escape(req.body.name);
-      const email = connection.escape(req.body.email);
-      const password = connection.escape(cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString());
+      const name = req.body.name;
+      const email = req.body.email;
+      const password = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
       let isAdmin;
 
       // Requete SQL préliminaire. But: s'il n'y a pas encore d'utilisateur, le premier User créé sera administrateur.
@@ -25,9 +25,11 @@ exports.newuser = (req, res, next) => {
 
       connection.query(preliminarySql, (error, result, fields) => {
         if (error) {
+          console.log(error);
           connection.end();
           res.status(500).json({ "error": error.sqlMessage });
         } else {
+          console.log(result);
           if (result[0].numberOfUsers === 0) {
             isAdmin = 1;
           } else {
@@ -37,10 +39,11 @@ exports.newuser = (req, res, next) => {
           // Requete SQL principale
           const sql = "\
           INSERT INTO Users (name, email, password, isadmin)\
-          VALUES (" + name + ", " + email + ", " + password + ", " + isAdmin + ");";
+          VALUES (?, ?, ?, ?);";
+          const sqlParams = [name, email, password, isAdmin];
           
           // Envoi de la requete et réponse au frontend en fonction des erreurs SQL
-          connection.query(sql, (error, results, fields) => {
+          connection.execute(sql, sqlParams, (error, results, fields) => {
             if (error) {
               if (error.errno === 1062) { // ERREUR : email déjà utilisé dans la base
                 res.status(403).json({ "error": "L'email est déjà utilisé !" });
@@ -64,10 +67,11 @@ exports.newuser = (req, res, next) => {
 exports.login = (req, res, next) => {
   const connection = database.connect();
 
-  const researchedEmail = connection.escape(req.body.email);
-  const sql = "SELECT id, email, password, name, pictureurl, isadmin FROM Users WHERE email=" + researchedEmail;
-
-  connection.query(sql, (error, results, fields) => {
+  const researchedEmail = req.body.email;
+  const sql = "SELECT id, email, password, name, pictureurl, isadmin FROM Users WHERE email= ?";
+  const sqlParams = [researchedEmail];
+  // requête préparée de mysql2
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     // SI : erreur SQL
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
@@ -143,9 +147,10 @@ exports.getCurrentUser = (req, res, next) => {
   const connection = database.connect();
   const cryptedCookie = new Cookies(req, res).get('snToken');
   const cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
-  const searchId = connection.escape(cookie.userId);
-  const sql = "SELECT id, name, pictureurl, isadmin FROM Users WHERE id=" + searchId;
-  connection.query(sql, (error, results, fields) => {
+  const searchId = cookie.userId;
+  const sql = "SELECT id, name, pictureurl, isadmin FROM Users WHERE id=?";
+  const sqlParams = [searchId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     // SI : erreur SQL
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
@@ -188,9 +193,10 @@ exports.getAllUsers = (req, res, next) => {
  */
 exports.getOneUser = (req, res, next) => {
   const connection = database.connect();
-  const searchId = connection.escape(req.params.id);
-  const sql = "SELECT id, name, email, pictureurl, outline, isadmin FROM Users WHERE id=" + searchId;
-  connection.query(sql, (error, results, fields) => {
+  const searchId = req.params.id;
+  const sql = "SELECT id, name, email, pictureurl, outline, isadmin FROM Users WHERE id=?";
+  const sqlParams = [searchId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     // SI : erreur SQL
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
@@ -220,9 +226,10 @@ exports.getOneUser = (req, res, next) => {
 exports.changePassword = (req, res, next) => {
   // Vérification que l'ancien mot de passe soit correct
   const connection = database.connect();
-  const searchId = connection.escape(req.params.id);
-  const sql = "SELECT password FROM Users WHERE id=" + searchId;
-  connection.query(sql, (error, results, fields) => {
+  const searchId = req.params.id;
+  const sql = "SELECT password FROM Users WHERE id=?";
+  const sqlParams = [searchId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
       connection.end();
@@ -237,9 +244,10 @@ exports.changePassword = (req, res, next) => {
           // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
           bcrypt.hash(req.body.newPassword, 10)
             .then(hash => {
-              const newPassword = connection.escape(cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString());
-              const secondSQL = "UPDATE Users SET password=" + newPassword + " WHERE id=" + searchId;
-              connection.query(secondSQL, (error, results, fields) => {
+              const newPassword = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
+              const sql2 = "UPDATE Users SET password=? WHERE id=?";
+              const sqlParams2 = [newPassword, searchId];
+              connection.execute(sql2, sqlParams2, (error, results, fields) => {
                 if (error) {
                   connection.end();
                   res.status(500).json({ "error": error.sqlMessage });
@@ -262,9 +270,10 @@ exports.changePassword = (req, res, next) => {
 exports.changeProfilePicture = (req, res, next) => {
   const connection = database.connect();
   const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-  const userId = connection.escape(req.params.id);
-  const sql = "UPDATE Users SET pictureurl='" + imageUrl + "' WHERE id=" + userId;
-  connection.query(sql, (error, results, fields) => {
+  const userId = req.params.id;
+  const sql = "UPDATE Users SET pictureurl=? WHERE id=?";
+  const sqlParams = [imageUrl, userId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
@@ -279,10 +288,11 @@ exports.changeProfilePicture = (req, res, next) => {
  */
 exports.changeOutline = (req, res, next) => {
   const connection = database.connect();
-  const outline = connection.escape(req.body.outline);
-  const userId = connection.escape(req.params.id);
-  const sql = "UPDATE Users SET outline=" + outline + " WHERE id=" + userId;
-  connection.query(sql, (error, results, fields) => {
+  const outline = req.body.outline;
+  const userId = req.params.id;
+  const sql = "UPDATE Users SET outline=? WHERE id=?";
+  const sqlParams = [outline, userId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
@@ -297,10 +307,11 @@ exports.changeOutline = (req, res, next) => {
  */
 exports.changeAdmin = (req, res, next) => {
   const connection = database.connect();
-  const isadmin = connection.escape(req.body.isadmin);
-  const userId = connection.escape(req.params.id);
-  const sql = "UPDATE Users SET isadmin='" + isadmin + "' WHERE id=" + userId;
-  connection.query(sql, (error, results, fields) => {
+  const isadmin = req.body.isadmin;
+  const userId = req.params.id;
+  const sql = "UPDATE Users SET isadmin=? WHERE id=?";
+  const sqlParams = [isadmin, userId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
@@ -315,9 +326,10 @@ exports.changeAdmin = (req, res, next) => {
  */
 exports.deleteAccount = (req,res,next) => {
   const connection = database.connect();
-  const userId = connection.escape(req.params.id);
-  const sql = "DELETE FROM Users WHERE id=" + userId + ";";
-  connection.query(sql, (error, results, fields) => {
+  const userId = req.params.id;
+  const sql = "DELETE FROM Users WHERE id=?";
+  const sqlParams = [userId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {

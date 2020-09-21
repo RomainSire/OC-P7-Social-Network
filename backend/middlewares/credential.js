@@ -25,9 +25,10 @@ exports.isAdmin = (req, res, next) => {
   const connection = database.connect();
   const cryptedCookie = new Cookies(req, res).get('snToken');
   const cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
-  const userId = connection.escape(cookie.userId);
-  const sql = "SELECT isadmin FROM Users WHERE id=" + userId;
-  connection.query(sql, (error, results, fields) => {
+  const userId = cookie.userId;
+  const sql = "SELECT isadmin FROM Users WHERE id=?";
+  const sqlParams = [userId]
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
@@ -38,7 +39,6 @@ exports.isAdmin = (req, res, next) => {
       }
     }
   });
-  connection.end();
 }
 
 /**
@@ -49,21 +49,22 @@ exports.deletePost = (req, res, next) => {
   const connection = database.connect();
   const cryptedCookie = new Cookies(req, res).get('snToken');
   const cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
-  const userId = connection.escape(cookie.userId);
-  const sql = "SELECT isadmin FROM Users WHERE id=" + userId;
-  connection.query(sql, (error, results, fields) => {
+  const userId = cookie.userId;
+  const sql = "SELECT isadmin FROM Users WHERE id=?";
+  const sqlParams = [userId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
       if (results[0].isadmin === 1) {
         // l'utilisateur est administrateur
-        connection.end();
         next();
       } else {
         // l'utilisateur n'est pas admin, vérification si c'est l'auteur du post
-        const postId = connection.escape(req.params.id);
-        const secondSql = "SELECT user_id FROM Posts WHERE id=" + postId;
-        connection.query(secondSql, (error, results, fields) => {
+        const postId = req.params.id;
+        const sql2 = "SELECT user_id FROM Posts WHERE id=?";
+        const sqlParams2 = [postId];
+        connection.execute(sql2, sqlParams2, (error, results, fields) => {
           if (error) {
             res.status(500).json({ "error": error.sqlMessage });
           } else if (results.length === 0) {
@@ -94,8 +95,9 @@ exports.deleteComment = (req, res, next) => {
   const cryptedCookie = new Cookies(req, res).get('snToken');
   const cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
   const userId = connection.escape(cookie.userId);
-  const sql = "SELECT isadmin FROM Users WHERE id=" + userId;
-  connection.query(sql, (error, results, fields) => {
+  const sql = "SELECT isadmin FROM Users WHERE id=?";
+  const sqlParams = [userId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
@@ -106,8 +108,9 @@ exports.deleteComment = (req, res, next) => {
       } else {
         // l'utilisateur n'est pas admin, vérification si c'est l'auteur du commentaire
         const commentId = connection.escape(req.params.id);
-        const secondSql = "SELECT user_id FROM Comments WHERE id=" + commentId;
-        connection.query(secondSql, (error, results, fields) => {
+        const sql2 = "SELECT user_id FROM Comments WHERE id=?";
+        const sqlParams2 = [commentId];
+        connection.execute(sql2, sqlParams2, (error, results, fields) => {
           if (error) {
             res.status(500).json({ "error": error.sqlMessage });
           } else if (results.length === 0) {

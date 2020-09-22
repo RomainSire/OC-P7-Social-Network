@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { PublicationsService } from "../../services/publications.service";
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  posts: any;
+
+  constructor(
+    private publicationsService: PublicationsService
+  ) { }
 
   ngOnInit(): void {
+    this.publicationsService.getAllPublications()
+      .subscribe(response => {
+        console.log(response.posts);
+        this.posts = response.posts;
+      })
   }
 
 }

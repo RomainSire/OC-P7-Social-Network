@@ -84,7 +84,8 @@ exports.getAllPosts = (req, res, next) => {
   // 1: récupération de tous les posts
   const sql = "SELECT Posts.id AS postId, Posts.publication_date AS postDate, Posts.imageurl AS postImage, Posts.content as postContent, Users.id AS userId, Users.name AS userName, Users.pictureurl AS userPicture\
   FROM Posts\
-  INNER JOIN Users ON Posts.user_id = Users.id ";
+  INNER JOIN Users ON Posts.user_id = Users.id\
+  ORDER BY postDate DESC";
   connection.execute(sql, (error, rawPosts, fields) => {
     if (error) {
       connection.end();

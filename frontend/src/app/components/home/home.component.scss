@@ -1,0 +1,100 @@
+.publications {
+  &--add {
+    margin: 1em 0;
+    padding: 1em 2em;
+    background: #fff;
+    border: 1px solid #145db4;
+    border-radius: 10px;
+  }
+
+  &--list {
+    article {
+      background: #fff;
+      border: 1px solid #145db4;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 2em auto;
+      max-width: 800px;
+      header {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        padding: 1em;
+        img {
+          width: 80px;
+          margin-right: 20px;
+        }
+        .name {
+          font-weight: bold;
+          color: #145db4;
+        }
+        .date {
+          font-style: italic;
+        }
+      }
+      main {
+        img {
+          width: 100%;
+        }
+        .content {
+          padding: 1em 2em;
+          text-align: justify;
+        }
+      }
+      footer {
+        .likes {
+          button {
+            padding: 0.5em;
+            width: 50%;
+            background: #DAE9FB88;
+            border: none;
+            border-top: 1px solid #145db4;
+            border-bottom: 1px solid #145db4;
+            color: #888;
+            cursor: pointer;
+            &:hover {
+              background: #bedbff;
+            }
+            &:first-child {
+              border-right: 1px solid #145db4;
+            }
+            .fas {
+              font-size: 1.2em;
+            }
+          }
+          .alreadyLiked {
+            color:#35b53d;
+          }
+          .alreadyDisliked {
+            color: #e64949;
+          }
+        }
+        .comments {
+          padding: 1em 2em;
+          clear: both;
+          &--comment {
+            margin: 0.7em 0;
+            display: flex;
+            flex-flow: row nowrap;
+          }
+          img {
+            width: 60px;
+            border-radius: 50%;
+            float: left;
+            margin-right: 1em;
+          }
+          p {
+            text-align: justify;
+          }
+          .title {
+            font-style: italic;
+            span {
+              color: #145db4;
+            }
+          }
+        }
+      }
+    }
+    
+  }
+}

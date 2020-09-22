@@ -1,10 +1,64 @@
 .publications {
+  h1 {
+    text-align: center;
+  }
   &--add {
-    margin: 1em 0;
+    max-width: 800px;
+    margin: 1em auto;
     padding: 1em 2em;
     background: #fff;
     border: 1px solid #145db4;
     border-radius: 10px;
+    textarea {
+      width: 100%;
+      height: 7em;
+      margin: 1em 0;
+      padding: 1em;
+      resize: none;
+    }
+    .buttons {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+      .btn {
+        display: block;
+        padding: 0.5em 1.5em;
+        border: 1px solid #145db4;
+        border-radius: 10px;
+        background: #DAE9FB88;
+        cursor: pointer;
+        &:hover {
+          background: #bedbff;
+        }
+      }
+    }
+    input {
+      display: none;
+    }
+
+    .cropper {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: #fff;
+  
+      &.hidden {
+        display: none;
+      }
+  
+      button {
+        position: fixed;
+        right: 5%;
+        bottom: 5%;
+      }
+    }
+    .image-preview {
+      width: 100%;
+      margin-top: 1em;
+    }
   }
 
   &--list {
@@ -90,6 +144,39 @@
             font-style: italic;
             span {
               color: #145db4;
+            }
+          }
+          &--add {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            align-items: center;
+            img {
+              flex-shrink: 0;
+            }
+            input {
+              flex-grow: 2;
+              min-width: 0;
+              padding: 0 1em;
+              border: 1px solid #145db4;
+              height: 3rem;
+              border-top-left-radius: 10px;
+              border-bottom-left-radius: 10px;
+            }
+            button {
+              background: #DAE9FB88;
+              border: 1px solid #145db4;
+              border-left: none;
+              height: 3rem;
+              width: 3rem;
+              font-size: 1.2em;
+              color: #888;
+              border-top-right-radius: 10px;
+              border-bottom-right-radius: 10px;
+              cursor: pointer;
+              &:hover {
+                background: #bedbff;
+              }
             }
           }
         }

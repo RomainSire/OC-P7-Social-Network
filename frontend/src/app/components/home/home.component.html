@@ -1,77 +1,97 @@
-<main class="main-wrapper">
+<main class="main-wrapper publications">
   <h1>Dernières publications</h1>
-  <div class="publications">
-    <section class="publications--add">
-      <form>
-        <h2>Exprimez-vous...</h2>
-        <p>
-          <label for="addPub-image">Choisir une image</label>
-          <input type="file" name="addPub-image" id="addPub-image">
-        </p>
-        <p>
-          <textarea name="addPub-content" placeholder="Ajouter un texte"></textarea>
-        </p>
-        <button type="submit">Publier !</button>
-      </form>
-    </section>
-    <section class="publications--list">
-      <article *ngFor="let post of posts">
-        <header>
-          <div>
-            <a routerLink="/profile/{{post.userId}}">
-              <img
-                [src]="post.userPicture===null ? './assets/anonymousUser.svg' : post.userPicture"
-                alt="Photo de profil de {{post.userName}}">
-            </a>
-          </div>
-          <div>
-            <p class="name">
-              <a routerLink="/profile/{{post.userId}}">{{post.userName}}</a>
-            </p>
-            <p class="date">
-              Publié le {{post.postDate | date: "dd/MM/y à HH:mm" : "UTC+2"}}
-            </p>
-          </div>
-        </header>
-        <main>
-          <div *ngIf="post.postImage !== null" class="picture">
-            <img [src]="post.postImage" alt="Photo de la publication">
-          </div>
-          <div *ngIf="post.postContent !== null" class="content">
-            <p>{{post.postContent}}</p>
-          </div>
-        </main>
-        <footer>
-          <div class="likes">
-            <button [ngClass]="post.likes.currentUserReaction === 1 ? 'alreadyLiked' : ''" aria-label="like la publication">
-              <i class="fas fa-thumbs-up"></i>
-              {{post.likes.LikesNumber}}
-            </button>
-            <button [ngClass]="post.likes.currentUserReaction === -1 ? 'alreadyDisliked' : ''" aria-label="dislike la publication">
-              <i class="fas fa-thumbs-down"></i>
-              {{post.likes.DislikesNumber}}
-            </button>
-          </div>
-          <div class="comments">
-            <h3>Commentaires</h3>
-            <div *ngFor="let comment of post.comments" class="comments--comment">
-              <div>
-                <img [src]="comment.userPicture" alt="Photo de profil de {{comment.userName}}">
-              </div>
-              <div>
-                <p class="title">
-                  <span>{{comment.userName}}</span> le {{comment.commentDate | date: "dd/MM/y à HH:mm" : "UTC+2"}}
-                </p>
-                <p>
-                  {{comment.commentContent}}
-                </p>
-              </div>
+  <section class="publications--add">
+    <form>
+      <h2>Exprimez-vous...</h2>
+      <p>
+        <img [src]="croppedImage" class="image-preview"/>
+      </p>
+      <p>
+        <textarea name="addPub-content" placeholder="Ajouter un texte"></textarea>
+      </p>
+      <p class="buttons">
+        <label for="addPub-image" class="btn">Choisir une image
+          <input type="file" id="addPub-image" (change)="fileChangeEvent($event)">
+        </label>
+        <button type="submit" class="btn">Publier !</button>
+      </p>
+    </form>
+    <!-- div de redimensionnement de l'image -->
+    <div id="cropper" class="cropper hidden">
+      <image-cropper
+        class="profile--cropper--preview"
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="false"
+        format="png"
+        resizeToWidth="800"
+        (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded()"
+        (loadImageFailed)="loadImageFailed()"
+    ></image-cropper>
+    <button class="btn" (click)="onCroppedImageDone()">Ok</button>
+    </div>
+  </section>
+  <section class="publications--list">
+    <article *ngFor="let post of posts">
+      <header>
+        <div>
+          <a routerLink="/profile/{{post.userId}}">
+            <img
+              [src]="post.userPicture===null ? './assets/anonymousUser.svg' : post.userPicture"
+              alt="Photo de profil de {{post.userName}}">
+          </a>
+        </div>
+        <div>
+          <p class="name">
+            <a routerLink="/profile/{{post.userId}}">{{post.userName}}</a>
+          </p>
+          <p class="date">
+            Publié le {{post.postDate | date: "dd/MM/y à HH:mm" : "UTC+2"}}
+          </p>
+        </div>
+      </header>
+      <main>
+        <div *ngIf="post.postImage !== null" class="picture">
+          <img [src]="post.postImage" alt="Photo de la publication">
+        </div>
+        <div *ngIf="post.postContent !== null" class="content">
+          <p>{{post.postContent}}</p>
+        </div>
+      </main>
+      <footer>
+        <div class="likes">
+          <button [ngClass]="post.likes.currentUserReaction === 1 ? 'alreadyLiked' : ''" aria-label="like la publication">
+            <i class="fas fa-thumbs-up"></i>
+            {{post.likes.LikesNumber}}
+          </button>
+          <button [ngClass]="post.likes.currentUserReaction === -1 ? 'alreadyDisliked' : ''" aria-label="dislike la publication">
+            <i class="fas fa-thumbs-down"></i>
+            {{post.likes.DislikesNumber}}
+          </button>
+        </div>
+        <div class="comments">
+          <h3>Commentaires</h3>
+          <div *ngFor="let comment of post.comments" class="comments--comment">
+            <div>
+              <img [src]="comment.userPicture" alt="Photo de profil de {{comment.userName}}">
+            </div>
+            <div>
+              <p class="title">
+                <span>{{comment.userName}}</span> le {{comment.commentDate | date: "dd/MM/y à HH:mm" : "UTC+2"}}
+              </p>
+              <p>
+                {{comment.commentContent}}
+              </p>
             </div>
           </div>
-        </footer>
-      </article>
-    </section>
-  </div>
-
+          <form class="comments--add">
+            <img [src]="authService.user.pictureUrl" alt="Votre photo de profil">
+            <input type="text" placeholder="Votre commentaire">
+            <button type="submit" aria-label="Envoyer"><i class="fas fa-plus-circle"></i></button>
+          </form>
+        </div>
+      </footer>
+    </article>
+  </section>
 </main>
 

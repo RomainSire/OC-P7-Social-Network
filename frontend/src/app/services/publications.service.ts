@@ -32,4 +32,12 @@ export class PublicationsService {
       }))
   }
 
+  newPublication(formData: FormData) {
+    return this.httpClient.post(`${this.postsUrl}`, formData, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
+
 }

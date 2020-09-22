@@ -21,16 +21,16 @@
       flex-flow: row nowrap;
       justify-content: space-between;
       align-items: center;
-      .btn {
-        display: block;
-        padding: 0.5em 1.5em;
-        border: 1px solid #145db4;
-        border-radius: 10px;
-        background: #DAE9FB88;
-        cursor: pointer;
-        &:hover {
-          background: #bedbff;
-        }
+    }
+    .btn {
+      display: block;
+      padding: 0.5em 1.5em;
+      border: 1px solid #145db4;
+      border-radius: 10px;
+      background: #DAE9FB88;
+      cursor: pointer;
+      &:hover {
+        background: #bedbff;
       }
     }
     input {

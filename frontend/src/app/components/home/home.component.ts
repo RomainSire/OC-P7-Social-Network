@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
 
   posts: any;
 
+  initialImage: any = '';
   imageChangedEvent: any = '';
   croppedImage: any = '';
 
@@ -43,6 +44,7 @@ export class HomeComponent implements OnInit {
   // A - Ajout d'une photo
   fileChangeEvent(event: any): void {
     this.imageChangedEvent = event;
+    this.initialImage = event.target.files[0];
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
@@ -67,6 +69,33 @@ export class HomeComponent implements OnInit {
   }
   onCroppedImageDone() {
     document.getElementById('cropper').classList.add('hidden');
+  }
+  onSubmitNewPost(event) {
+    const content = event.target[0].value;
+    const base64Image = this.croppedImage;
+    const formData = new FormData();
+    if (!content && !base64Image) {
+      return this.messagesService.add(`Vous devez publier un texte ou une image, ou les 2!`);
+    }
+    if (base64Image) {
+      const image = this.base64ToFile(base64Image, this.initialImage.name);
+      formData.append('image', image);
+    }
+    formData.append('content', content);
+    
+    this.publicationsService.newPublication(formData)
+      .subscribe(data => {
+        if (data.message === 'Publication ajoutée') {
+          this.getPosts();
+          this.messagesService.add(`Publication ajoutée`);
+          // reset du formulaire
+          event.target[0].value = "";
+          this.croppedImage = undefined;
+        } else {
+          this.messagesService.add(`Une erreur s'est produite`);
+        }
+        
+      })
   }
 
 }

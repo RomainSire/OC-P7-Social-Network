@@ -1,7 +1,7 @@
 <main class="main-wrapper publications">
   <h1>Dernières publications</h1>
   <section class="publications--add">
-    <form>
+    <form (submit)="onSubmitNewPost($event)">
       <h2>Exprimez-vous...</h2>
       <p>
         <img [src]="croppedImage" class="image-preview"/>

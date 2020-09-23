@@ -94,7 +94,22 @@ export class HomeComponent implements OnInit {
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
         }
-        
+      })
+  }
+
+  /**
+   * Suppression d'une publication
+   */
+  onDeletePublication(event) {
+    const postId = event.target[0].value;
+    this.publicationsService.deletePublication(postId)
+      .subscribe(data => {
+        if (data.message === 'Publication supprimée') {
+          this.getPosts();
+          this.messagesService.add(`Publication supprimée`);
+        } else {
+          this.messagesService.add(`Une erreur s'est produite`);
+        }
       })
   }
 

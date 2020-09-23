@@ -72,11 +72,15 @@
       header {
         display: flex;
         flex-flow: row nowrap;
+        justify-content: space-between;
         align-items: center;
         padding: 1em;
         img {
           width: 80px;
           margin-right: 20px;
+        }
+        .text {
+          flex-grow: 2;
         }
         .name {
           font-weight: bold;
@@ -84,6 +88,22 @@
         }
         .date {
           font-style: italic;
+        }
+        .delete-post {
+          button {
+            padding: 0.5em 0.7em;
+            border: 1px solid #e65050;
+            border-radius: 10px;
+            background: #e6505011;
+            cursor: pointer;
+            &:hover {
+              background: #e6505055;
+            }
+          }
+          .fas {
+            font-size: 1.2em;
+            color: #e65050;
+          }
         }
       }
       main {

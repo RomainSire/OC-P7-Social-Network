@@ -41,7 +41,7 @@
               alt="Photo de profil de {{post.userName}}">
           </a>
         </div>
-        <div>
+        <div class="text">
           <p class="name">
             <a routerLink="/profile/{{post.userId}}">{{post.userName}}</a>
           </p>
@@ -49,6 +49,13 @@
             Publié le {{post.postDate | date: "dd/MM/y à HH:mm" : "UTC+2"}}
           </p>
         </div>
+        <form
+          class="delete-post"
+          *ngIf="post.userId === authService.user.userId || authService.user.isAdmin === 1"
+          (submit)="onDeletePublication($event)">
+          <input type="hidden" name="PostId" [value]="post.postId">
+          <button type="submit"><i class="fas fa-trash"></i></button>
+        </form>
       </header>
       <main>
         <div *ngIf="post.postImage !== null" class="picture">
@@ -73,7 +80,9 @@
           <h3>Commentaires</h3>
           <div *ngFor="let comment of post.comments" class="comments--comment">
             <div>
-              <img [src]="comment.userPicture" alt="Photo de profil de {{comment.userName}}">
+              <img
+                [src]="comment.userPicture===null ? './assets/anonymousUser.svg' : comment.userPicture"
+                alt="Photo de profil de {{comment.userName}}">
             </div>
             <div>
               <p class="title">

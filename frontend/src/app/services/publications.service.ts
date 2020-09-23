@@ -40,4 +40,12 @@ export class PublicationsService {
       }))
   }
 
+  deletePublication(postId: Number) {
+    return this.httpClient.delete(`${this.postsUrl}/${postId}`, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
+
 }

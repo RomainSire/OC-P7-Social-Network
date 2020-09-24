@@ -1,5 +1,8 @@
 <main class="main-wrapper publications">
   <h1>Dernières publications</h1>
+
+  <!-- AJOUT D'UNE PUBLICATION -->
+
   <section class="publications--add">
     <form (submit)="onSubmitNewPost($event)">
       <h2>Exprimez-vous...</h2>
@@ -31,8 +34,12 @@
     <button class="btn" (click)="onCroppedImageDone()">Ok</button>
     </div>
   </section>
+
+  <!-- LISTE DES DERNIERES PUBLICATIONS -->
+
   <section class="publications--list">
     <article *ngFor="let post of posts">
+      <!-- Header Publication : photo de profil, nom, date, et delete -->
       <header>
         <div>
           <a routerLink="/profile/{{post.userId}}">
@@ -57,6 +64,7 @@
           <button type="submit"><i class="fas fa-trash"></i></button>
         </form>
       </header>
+      <!-- Main Publication : Photo et/ou contenu -->
       <main>
         <div *ngIf="post.postImage !== null" class="picture">
           <img [src]="post.postImage" alt="Photo de la publication">
@@ -65,6 +73,7 @@
           <p>{{post.postContent}}</p>
         </div>
       </main>
+      <!-- Footer Publication : likes et commentaires -->
       <footer>
         <div class="likes">
           <button [ngClass]="post.likes.currentUserReaction === 1 ? 'alreadyLiked' : ''" aria-label="like la publication">
@@ -93,9 +102,10 @@
               </p>
             </div>
           </div>
-          <form class="comments--add">
+          <form class="comments--add" (submit)="onAddComment($event)">
             <img [src]="authService.user.pictureUrl" alt="Votre photo de profil">
             <input type="text" placeholder="Votre commentaire">
+            <input type="hidden" name="postId" [value]="post.postId">
             <button type="submit" aria-label="Envoyer"><i class="fas fa-plus-circle"></i></button>
           </form>
         </div>

@@ -4,6 +4,9 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { PublicationsService } from "../../services/publications.service";
 import { AuthService } from "../../services/auth.service";
 import { MessagesService } from "../../services/messages.service";
+import { CommentsService } from "../../services/comments.service";
+
+import { Post } from "../../models/Post";
 
 @Component({
   selector: 'app-home',
@@ -12,7 +15,7 @@ import { MessagesService } from "../../services/messages.service";
 })
 export class HomeComponent implements OnInit {
 
-  posts: any;
+  posts: [Post];
 
   initialImage: any = '';
   imageChangedEvent: any = '';
@@ -21,7 +24,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private publicationsService: PublicationsService,
     public authService: AuthService,
-    private messagesService: MessagesService
+    private messagesService: MessagesService,
+    private commentsService: CommentsService
   ) { }
 
   ngOnInit(): void {
@@ -35,6 +39,8 @@ export class HomeComponent implements OnInit {
     this.publicationsService.getAllPublications()
       .subscribe(response => {
         this.posts = response.posts;
+        console.log(this.posts);
+        
       })
   }
 
@@ -113,4 +119,21 @@ export class HomeComponent implements OnInit {
       })
   }
 
+
+  /**
+   * Ajout d'un commentaire
+   */
+  onAddComment(event) {
+    const content = event.target[0].value;
+    const postId = event.target[1].value;
+    this.commentsService.newComment(postId, content)
+      .subscribe(data => {
+        if (data.message === 'Commentaire ajoutée') {
+          this.getPosts();
+          this.messagesService.add(`Votre commentaire a bien été ajouté`);
+        } else {
+          this.messagesService.add(`Une erreur s'est produite`);
+        }
+      })
+  }
 }

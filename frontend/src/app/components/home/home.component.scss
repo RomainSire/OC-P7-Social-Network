@@ -116,9 +116,16 @@
       }
       footer {
         .likes {
+          form {
+            display: inline-block;
+            width: 50%;
+            &:first-child {
+              border-right: 1px solid #145db4;
+            }
+          }
           button {
             padding: 0.5em;
-            width: 50%;
+            width: 100%;
             background: #DAE9FB88;
             border: none;
             border-top: 1px solid #145db4;
@@ -128,9 +135,7 @@
             &:hover {
               background: #bedbff;
             }
-            &:first-child {
-              border-right: 1px solid #145db4;
-            }
+            
             .fas {
               font-size: 1.2em;
             }

@@ -76,14 +76,22 @@
       <!-- Footer Publication : likes et commentaires -->
       <footer>
         <div class="likes">
-          <button [ngClass]="post.likes.currentUserReaction === 1 ? 'alreadyLiked' : ''" aria-label="like la publication">
-            <i class="fas fa-thumbs-up"></i>
-            {{post.likes.LikesNumber}}
-          </button>
-          <button [ngClass]="post.likes.currentUserReaction === -1 ? 'alreadyDisliked' : ''" aria-label="dislike la publication">
-            <i class="fas fa-thumbs-down"></i>
-            {{post.likes.DislikesNumber}}
-          </button>
+          <form (submit)="onlike($event)">
+            <input type="hidden" name="postId" [value]="post.postId">
+            <input type="hidden" name="rate" [value]="post.likes.currentUserReaction === 1 ? 0 : 1">
+            <button type="submit" [ngClass]="post.likes.currentUserReaction === 1 ? 'alreadyLiked' : ''" aria-label="like la publication">
+              <i class="fas fa-thumbs-up"></i>
+              {{post.likes.LikesNumber}}
+            </button>
+          </form>
+          <form (submit)="onlike($event)">
+            <input type="hidden" name="postId" [value]="post.postId">
+            <input type="hidden" name="rate" [value]="post.likes.currentUserReaction === -1 ? 0 : -1">
+            <button type="submit" [ngClass]="post.likes.currentUserReaction === -1 ? 'alreadyDisliked' : ''" aria-label="dislike la publication">
+              <i class="fas fa-thumbs-down"></i>
+              {{post.likes.DislikesNumber}}
+            </button>
+          </form>
         </div>
         <div class="comments">
           <h3>Commentaires</h3>

@@ -5,6 +5,7 @@ import { PublicationsService } from "../../services/publications.service";
 import { AuthService } from "../../services/auth.service";
 import { MessagesService } from "../../services/messages.service";
 import { CommentsService } from "../../services/comments.service";
+import { LikesService } from "../../services/likes.service";
 
 import { Post } from "../../models/Post";
 
@@ -25,7 +26,8 @@ export class HomeComponent implements OnInit {
     private publicationsService: PublicationsService,
     public authService: AuthService,
     private messagesService: MessagesService,
-    private commentsService: CommentsService
+    private commentsService: CommentsService,
+    private likesService: LikesService
   ) { }
 
   ngOnInit(): void {
@@ -145,6 +147,23 @@ export class HomeComponent implements OnInit {
         if (data.message === 'Commentaire supprimée') {
           this.getPosts();
           this.messagesService.add(`Votre commentaire a bien été ajouté`);
+        } else {
+          this.messagesService.add(`Une erreur s'est produite`);
+        }
+      })
+  }
+
+  /**
+   * Like/dislike/annulation d'une publication
+   */
+  onlike(event) {
+    const postId = event.target[0].value;
+    const rate = parseInt(event.target[1].value,10);
+    this.likesService.newRatePublication(postId, rate)
+      .subscribe(data => {
+        if (data.message === 'Like ou dislike pris en compte') {
+          this.getPosts();
+          this.messagesService.add(`Votre like ou dislike a bien été pris en compte'`);
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
         }

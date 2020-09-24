@@ -112,7 +112,6 @@
         }
         .content {
           padding: 1em 2em;
-          text-align: justify;
         }
       }
       footer {
@@ -150,6 +149,27 @@
             margin: 0.7em 0;
             display: flex;
             flex-flow: row nowrap;
+            justify-content: space-between;
+            &--fluid {
+              flex-grow: 2;
+            }
+            &--delete {
+              button {
+                margin-left: 0.5em;
+                padding: 0.5em 0.7em;
+                border: 1px solid #e65050;
+                border-radius: 10px;
+                background: #e6505011;
+                cursor: pointer;
+                &:hover {
+                  background: #e6505055;
+                }
+              }
+              .fas {
+                font-size: 1.2em;
+                color: #e65050;
+              }
+            }
           }
           img {
             width: 60px;
@@ -157,15 +177,13 @@
             float: left;
             margin-right: 1em;
           }
-          p {
-            text-align: justify;
-          }
           .title {
             font-style: italic;
             span {
               color: #145db4;
             }
           }
+          
           &--add {
             display: flex;
             flex-flow: row nowrap;

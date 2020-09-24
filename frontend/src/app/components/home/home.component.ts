@@ -39,8 +39,6 @@ export class HomeComponent implements OnInit {
     this.publicationsService.getAllPublications()
       .subscribe(response => {
         this.posts = response.posts;
-        console.log(this.posts);
-        
       })
   }
 
@@ -129,6 +127,22 @@ export class HomeComponent implements OnInit {
     this.commentsService.newComment(postId, content)
       .subscribe(data => {
         if (data.message === 'Commentaire ajoutée') {
+          this.getPosts();
+          this.messagesService.add(`Votre commentaire a bien été ajouté`);
+        } else {
+          this.messagesService.add(`Une erreur s'est produite`);
+        }
+      })
+  }
+
+  /**
+   * Suppression d'un commentaire
+   */
+  onDeleteComment(event) {
+    const commentId = event.target[0].value;
+    this.commentsService.deleteComment(commentId)
+      .subscribe(data => {
+        if (data.message === 'Commentaire supprimée') {
           this.getPosts();
           this.messagesService.add(`Votre commentaire a bien été ajouté`);
         } else {

@@ -30,4 +30,12 @@ export class CommentsService {
         return of(err);
       }))
   }
+
+  deleteComment(commentId) {
+    return this.httpClient.delete(`${this.commentUrl}/${commentId}`, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
 }

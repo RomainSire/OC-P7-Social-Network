@@ -93,7 +93,7 @@
                 [src]="comment.userPicture===null ? './assets/anonymousUser.svg' : comment.userPicture"
                 alt="Photo de profil de {{comment.userName}}">
             </div>
-            <div>
+            <div class="comments--comment--fluid">
               <p class="title">
                 <span>{{comment.userName}}</span> le {{comment.commentDate | date: "dd/MM/y à HH:mm" : "UTC+2"}}
               </p>
@@ -101,6 +101,13 @@
                 {{comment.commentContent}}
               </p>
             </div>
+            <form
+              class="comments--comment--delete"
+              *ngIf="comment.userId === authService.user.userId || authService.user.isAdmin === 1"
+              (submit)="onDeleteComment($event)">
+              <input type="hidden" name="PostId" [value]="comment.commentId">
+              <button type="submit"><i class="fas fa-trash"></i></button>
+            </form>
           </div>
           <form class="comments--add" (submit)="onAddComment($event)">
             <img [src]="authService.user.pictureUrl" alt="Votre photo de profil">

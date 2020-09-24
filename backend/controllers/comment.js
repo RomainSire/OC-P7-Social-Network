@@ -60,7 +60,7 @@ exports.getCommentsofPost = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
   const connection = database.connect();
   const commentId = parseInt(req.params.id, 10);
-  const sql = "DELETE FROM Posts WHERE id=?;";
+  const sql = "DELETE FROM Comments WHERE id=?;";
   const sqlParams = [commentId];
   connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {

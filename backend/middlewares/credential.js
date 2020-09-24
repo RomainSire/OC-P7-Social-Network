@@ -107,7 +107,7 @@ exports.deleteComment = (req, res, next) => {
         next();
       } else {
         // l'utilisateur n'est pas admin, vérification si c'est l'auteur du commentaire
-        const commentId = connection.escape(req.params.id);
+        const commentId = req.params.id;
         const sql2 = "SELECT user_id FROM Comments WHERE id=?";
         const sqlParams2 = [commentId];
         connection.execute(sql2, sqlParams2, (error, results, fields) => {

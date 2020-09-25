@@ -16,11 +16,13 @@ import { Post } from "../../models/Post";
 })
 export class HomeComponent implements OnInit {
 
-  posts: [Post];
+  posts: Post[]; // Posts affichés
+  postsBatch: number = 2; // Nombre de post supplémentaires chargés, lorsqu'on arrive en bas de page
 
-  initialImage: any = '';
+
+  initialImage: any = ''; // Image avant le crop/resize
   imageChangedEvent: any = '';
-  croppedImage: any = '';
+  croppedImage: any = ''; // Image après le crop/resize (envoyée au backend)
 
   constructor(
     private publicationsService: PublicationsService,
@@ -31,16 +33,24 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getPosts();
+    this.getPostsFromStart(this.postsBatch);
   }
 
   /**
    * Récupérer tous les posts, avec leurs commentaires et leur likes/dislikes
    */
-  getPosts(): void {
-    this.publicationsService.getAllPublications()
+  getPostsFromStart(numberOfPosts: number) {
+    this.publicationsService.getPublications(numberOfPosts, 0)
       .subscribe(response => {
         this.posts = response.posts;
+      })
+  }
+  getOtherPosts(limit: number, offset: number): void {
+    this.publicationsService.getPublications(limit, offset)
+      .subscribe(response => {
+        const oldPosts: Post[] = this.posts;
+        const newPosts: Post[] = response.posts;
+        this.posts = oldPosts.concat(newPosts);
       })
   }
 
@@ -92,7 +102,7 @@ export class HomeComponent implements OnInit {
     this.publicationsService.newPublication(formData)
       .subscribe(data => {
         if (data.message === 'Publication ajoutée') {
-          this.getPosts();
+          this.getPostsFromStart(this.posts.length);
           this.messagesService.add(`Publication ajoutée`);
           // reset du formulaire
           event.target[0].value = "";
@@ -111,7 +121,7 @@ export class HomeComponent implements OnInit {
     this.publicationsService.deletePublication(postId)
       .subscribe(data => {
         if (data.message === 'Publication supprimée') {
-          this.getPosts();
+          this.getPostsFromStart(this.posts.length);
           this.messagesService.add(`Publication supprimée`);
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
@@ -129,7 +139,7 @@ export class HomeComponent implements OnInit {
     this.commentsService.newComment(postId, content)
       .subscribe(data => {
         if (data.message === 'Commentaire ajoutée') {
-          this.getPosts();
+          this.getPostsFromStart(this.posts.length);
           this.messagesService.add(`Votre commentaire a bien été ajouté`);
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
@@ -145,7 +155,7 @@ export class HomeComponent implements OnInit {
     this.commentsService.deleteComment(commentId)
       .subscribe(data => {
         if (data.message === 'Commentaire supprimée') {
-          this.getPosts();
+          this.getPostsFromStart(this.posts.length);
           this.messagesService.add(`Votre commentaire a bien été ajouté`);
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
@@ -162,11 +172,16 @@ export class HomeComponent implements OnInit {
     this.likesService.newRatePublication(postId, rate)
       .subscribe(data => {
         if (data.message === 'Like ou dislike pris en compte') {
-          this.getPosts();
+          this.getPostsFromStart(this.posts.length);
           this.messagesService.add(`Votre like ou dislike a bien été pris en compte'`);
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
         }
       })
+  }
+
+  onScroll() {
+    console.log('scrolled!!');
+    this.getOtherPosts(this.postsBatch, this.posts.length)
   }
 }

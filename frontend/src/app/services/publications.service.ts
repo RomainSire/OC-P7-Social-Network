@@ -24,8 +24,8 @@ export class PublicationsService {
   }
 
 
-  getAllPublications() {
-    return this.httpClient.get(`${this.postsUrl}`, { withCredentials: true })
+  getPublications(limit: number, offset: number) {
+    return this.httpClient.get(`${this.postsUrl}/${limit}/${offset}`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);

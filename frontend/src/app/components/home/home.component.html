@@ -127,5 +127,14 @@
       </footer>
     </article>
   </section>
+
+  <div
+      class="search-results"
+      infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()"
+    ></div>
+
 </main>
 

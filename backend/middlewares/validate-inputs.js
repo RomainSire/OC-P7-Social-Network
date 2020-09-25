@@ -103,6 +103,20 @@ exports.postContent = (req, res, next) => {
   }
 };
 
+// Lors de la récupération d'un partie des publications
+const getPostsSchema = Joi.object({
+  limit: Joi.number().integer().positive().required(),
+  offset: Joi.number().integer().min(0).required()
+});
+exports.getSomePosts = (req, res, next) => {
+  const {error, value} = getPostsSchema.validate(req.params);
+  if (error) {
+    res.status(422).json({ error: "Données saisies invalides" });
+  } else {
+    next();
+  }
+};
+
 // Lors de la publication d'un commentaire
 const commentSchema = Joi.object({
   postId: Joi.number().integer().positive().required(),

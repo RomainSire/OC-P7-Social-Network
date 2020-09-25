@@ -106,6 +106,42 @@ exports.getAllPosts = (req, res, next) => {
   });
 }
 
+/**
+ * Récupération de plusieurs posts (avec limit et offset)
+ */
+exports.getSomePosts = (req, res, next) => {
+  const connection = database.connect();
+  // 1: récupération des posts recherchés
+  const limit = parseInt(req.params.limit);
+  const offset = parseInt(req.params.offset);
+  const sql = "SELECT Posts.id AS postId, Posts.publication_date AS postDate, Posts.imageurl AS postImage, Posts.content as postContent, Users.id AS userId, Users.name AS userName, Users.pictureurl AS userPicture\
+  FROM Posts\
+  INNER JOIN Users ON Posts.user_id = Users.id\
+  ORDER BY postDate DESC\
+  LIMIT ? OFFSET ?;";
+  const sqlParams = [limit, offset];
+  connection.execute(sql, sqlParams, (error, rawPosts, fields) => {
+    if (error) {
+      connection.end();
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      // 2: Pour chaque post, on va chercher tous les commentaires du post
+      getCommentsOfEachPosts(rawPosts, connection)
+        .then(postsWithoutLikes => {
+          // 3: Pour chaque post, on rajoute les likes/dislikes
+          const cryptedCookie = new Cookies(req, res).get('snToken');
+          const userId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
+          getLikesOfEachPosts(postsWithoutLikes, userId, connection)
+            .then(posts => {
+              res.status(200).json({ posts });
+            }) // pas besoin de catch, les erreurs sont gérée par les fonctions getCommentsOfEachPosts() et getLikesOfEachPosts()
+        })
+    }
+  });
+}
+
+
+
 
 /**
  * Suppression d'un post

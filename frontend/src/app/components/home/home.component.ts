@@ -39,12 +39,14 @@ export class HomeComponent implements OnInit {
   /**
    * Récupérer tous les posts, avec leurs commentaires et leur likes/dislikes
    */
+  //Récupérer tous les posts depuis le début jusqu'au chargtement actuel
   getPostsFromStart(numberOfPosts: number) {
     this.publicationsService.getPublications(numberOfPosts, 0)
       .subscribe(response => {
         this.posts = response.posts;
       })
   }
+  // charger de nouveaux posts petit à petit
   getOtherPosts(limit: number, offset: number): void {
     this.publicationsService.getPublications(limit, offset)
       .subscribe(response => {
@@ -52,6 +54,14 @@ export class HomeComponent implements OnInit {
         const newPosts: Post[] = response.posts;
         this.posts = oldPosts.concat(newPosts);
       })
+  }
+
+  /**
+   * Récupération des posts au scroll de la page (pour infinite scroll)
+   */
+  onScroll() {
+    console.log('scrolled!!');
+    this.getOtherPosts(this.postsBatch, this.posts.length)
   }
 
   /**
@@ -180,8 +190,4 @@ export class HomeComponent implements OnInit {
       })
   }
 
-  onScroll() {
-    console.log('scrolled!!');
-    this.getOtherPosts(this.postsBatch, this.posts.length)
-  }
 }

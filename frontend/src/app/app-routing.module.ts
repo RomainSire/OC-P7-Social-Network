@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'home', canActivate:[AuthGuardService], component: HomeComponent },
   { path: 'users', canActivate:[AuthGuardService], component: UsersComponent },
   { path: 'profile/:id', canActivate:[AuthGuardService], component: ProfileComponent },
+  { path: '**', redirectTo: 'home' }
 ];
 
 

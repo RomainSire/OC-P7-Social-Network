@@ -12,7 +12,9 @@ html {
 }
 body {
   margin: 0;
-  background: $color-back-background;
+  // background: $color-back-background;
+  background: linear-gradient(#bbbd, #bbbd),
+              no-repeat top /100% fixed url("./assets/bg.jpg");
   color: $color-main-text;
   font-family: $font-body;
 }

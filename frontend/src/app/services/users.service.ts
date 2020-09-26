@@ -5,6 +5,12 @@ import { HttpClient } from '@angular/common/http';
 
 import { MessagesService } from "./messages.service";
 
+interface User {
+  id: number;
+  name: string;
+  pictureurl: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +38,18 @@ export class UsersService {
 
   getOneUser(id: number) {
     return this.httpClient.get(`${this.userUrl}/${id}`, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+  }
+
+  searchUsers(term: string) {
+    if (!term.trim()) {
+      // if not search term, return empty array.
+      return this.getAllUsers();
+    }
+    return this.httpClient.get(`${this.userUrl}/search?name=${term}`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);

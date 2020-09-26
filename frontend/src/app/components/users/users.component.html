@@ -2,13 +2,19 @@
   <h1>Notre équipe</h1>
   <section class="users--search">
     <label for="search-user" aria-label="Rechercher un collègue"><i class="fas fa-search"></i></label>
-    <input id="search-user" type="text" placeholder="Rechercher un collègue">
+    <input 
+      id="search-user"
+      type="text"
+      placeholder="Rechercher un collègue"
+      #searchBox
+      (input)="searchUser(searchBox.value)">
   </section>
   <section class="users--display">
     <a *ngFor="let user of users"
       [routerLink]="'/profile/' + user.id"
       class="users--display--card" >
-      <img [src]="user.pictureurl" alt="Photo de profil de {{user.name}}">
+      <img [src]="user.pictureurl===null ? './assets/anonymousUser.svg' : user.pictureurl "
+      alt="Photo de profil de {{user.name}}">
       <p>{{user.name}}</p>
     </a>
   </section>

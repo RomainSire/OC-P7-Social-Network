@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
           if (data.pictureUrl === null) {
             this.authService.user.pictureUrl = "./assets/anonymousUser.svg"
           }
-          this.messagesService.add(`Connecté en tant que: ${this.authService.user.name}, avec l'ID: ${this.authService.user.userId}`);
+          this.messagesService.add(`Bienvenue ${this.authService.user.name} !`);
           this.router.navigate(['/home']);
         } else {
           this.messagesService.add(`Erreur de connexion: ${data.error.error}`);

@@ -20,7 +20,7 @@ export class PublicationsService {
 
   /** Log a message with the MessageService */
   private log(message: string) {
-    this.messagesService.add(`PublicationsService: ${message}`);
+    this.messagesService.add(message);
   }
 
 

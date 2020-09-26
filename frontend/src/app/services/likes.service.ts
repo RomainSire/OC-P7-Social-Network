@@ -21,7 +21,7 @@ export class LikesService {
 
   /** Log a message with the MessageService */
   private log(message: string) {
-    this.messagesService.add(`LikesService: ${message}`);
+    this.messagesService.add(message);
   }
 
   newRatePublication(postId: number, rate: number) {

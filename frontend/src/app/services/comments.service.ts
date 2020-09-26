@@ -20,7 +20,7 @@ export class CommentsService {
 
   /** Log a message with the MessageService */
   private log(message: string) {
-    this.messagesService.add(`CommentsService: ${message}`);
+    this.messagesService.add(message);
   }
 
   newComment(postId: number, content: string) {

@@ -23,7 +23,7 @@ export class AuthService {
 
   /** Log a message with the MessageService */
   private log(message: string) {
-    this.messagesService.add(`AuthService: ${message}`);
+    this.messagesService.add(`Authentification: ${message}`);
   }
 
   /**
@@ -47,7 +47,7 @@ export class AuthService {
       }))
       .subscribe(() => {
         this.user = undefined;
-        this.log(`Déconnecté`);
+        this.log(`Vous êtes déconnecté`);
         this.router.navigate(['/login']);
       })
   }

@@ -25,7 +25,7 @@ export class UsersService {
 
   /** Log a message with the MessageService */
   private log(message: string) {
-    this.messagesService.add(`UserService: ${message}`);
+    this.messagesService.add(message);
   }
 
   getAllUsers() {

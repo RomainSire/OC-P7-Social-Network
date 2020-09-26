@@ -76,9 +76,8 @@ export class ProfileComponent implements OnInit {
           if (data.message === "Description du profil modifiée") {
             this.getUser();
             event.target[0].value = "";
-            this.messagesService.add(`Votre description de passe a bien été modifiée`);
           } else {
-            this.messagesService.add(`Une erreur s'est produite`);
+            this.messagesService.add(`Erreur: impossible de modifier votre description`);
           }
         })
     }
@@ -130,7 +129,6 @@ export class ProfileComponent implements OnInit {
     this.usersService.updateAdminRights(this.userDetails.id, isAdmin)
       .subscribe(data => {
         if (data.message === "Droits d'administrateur modifiée") {
-          this.messagesService.add(`Les droits d'administration ont bien été modifiés`);
         } else {
           this.messagesService.add(`Erreur: ${data.error.error}`);
         }
@@ -180,7 +178,6 @@ export class ProfileComponent implements OnInit {
         if (data.message === "Photo de profil modifiée") {
           this.getUser();
           this.authService.getCurrentUserInfo();
-          this.messagesService.add(`Votre photo de profil a bien été modifiée`);
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
         }

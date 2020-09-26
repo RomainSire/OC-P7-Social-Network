@@ -150,9 +150,8 @@ export class HomeComponent implements OnInit {
       .subscribe(data => {
         if (data.message === 'Commentaire ajoutée') {
           this.getPostsFromStart(this.posts.length);
-          this.messagesService.add(`Votre commentaire a bien été ajouté`);
         } else {
-          this.messagesService.add(`Une erreur s'est produite`);
+          this.messagesService.add(`Erreur: impossible d'ajouter ce commentaire`);
         }
       })
   }
@@ -166,9 +165,8 @@ export class HomeComponent implements OnInit {
       .subscribe(data => {
         if (data.message === 'Commentaire supprimée') {
           this.getPostsFromStart(this.posts.length);
-          this.messagesService.add(`Votre commentaire a bien été ajouté`);
         } else {
-          this.messagesService.add(`Une erreur s'est produite`);
+          this.messagesService.add(`Erreur: impossible de supprimer ce commentaire`);
         }
       })
   }
@@ -183,9 +181,8 @@ export class HomeComponent implements OnInit {
       .subscribe(data => {
         if (data.message === 'Like ou dislike pris en compte') {
           this.getPostsFromStart(this.posts.length);
-          this.messagesService.add(`Votre like ou dislike a bien été pris en compte'`);
         } else {
-          this.messagesService.add(`Une erreur s'est produite`);
+          this.messagesService.add(`Erreur: votre like/dislike n'a pas été pris en compte`);
         }
       })
   }

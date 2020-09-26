@@ -1,10 +1,12 @@
+@import "../../../variables.scss";
+
 .header {
   padding: 1rem 0;
   margin-bottom: 1rem;
-  border-bottom: 5px solid #145db4;
-  background: #DAE9FB;
-  color: #145db4;
-  font-family: 'Baloo Chettan 2', cursive;
+  border-bottom: 5px solid $color-primary;
+  background: $color-primary-lighter;
+  color: $color-primary;
+  font-family: $font-headers;
   font-size: 1.2rem;
 
   &--wrapper {
@@ -44,7 +46,7 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      border: 2px solid #145db4;
+      border: 2px solid $color-primary;
     }
 
   }

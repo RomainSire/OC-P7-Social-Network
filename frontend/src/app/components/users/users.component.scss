@@ -1,3 +1,5 @@
+@import "../../../variables.scss";
+
 .users {
   h1 {
     text-align: center;
@@ -11,15 +13,15 @@
     padding: 0.5em 1em;
     max-width: 650px;
 
-    border: 2px solid #145db4;
+    border: 2px solid $color-primary;
     border-radius: 2em;
-    background: #fff;
+    background: $color-cards-background;
     overflow: hidden;
 
     label {
       font-size: 1.3em;
       margin-right: 1em;
-      color: #145db4;
+      color: $color-primary;
     }
     input {
       width: 100%;
@@ -44,8 +46,8 @@
       margin: 1em 1.5em;
       padding: 0.5em;
       border-radius: 10px;
-      box-shadow: 0 0 10px #bbb;
-      background: #fff;
+      box-shadow: $shadow;
+      background: $color-cards-background;
       transition: transform 200ms;
       &:hover {
         transform: scale(1.03);

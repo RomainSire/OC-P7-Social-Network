@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 *,
 *::before,
 *::after {
@@ -10,24 +12,24 @@ html {
 }
 body {
   margin: 0;
-  background: #eee;
-  color: #333;
-  font-family: "Roboto", sans-serif;
+  background: $color-back-background;
+  color: $color-main-text;
+  font-family: $font-body;
 }
 textarea {
-  font-family: "Roboto", sans-serif;
+  font-family: $font-body;
 }
 p {
   margin: 0;
 }
 h1, h2, h3, h4 {
   margin: 0;
-  font-family: 'Baloo Chettan 2', cursive;
+  font-family: $font-headers;
   line-height: 1.15;
 }
 h1 {
   font-size: 2rem;
-  color: #145db4ff;
+  color: $color-primary;
 }
 a {
   color: inherit;

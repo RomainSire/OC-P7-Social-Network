@@ -1,10 +1,11 @@
+@import "../../../variables.scss";
+
 .profile {
   margin: 2rem 0;
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 0 10px #bbb;
-  background: #fff;
-
+  box-shadow: $shadow;
+  background: $color-cards-background;
   h1 {
     margin-bottom: 1rem;
     text-align: center;
@@ -17,25 +18,28 @@
     display: block;
     margin: auto;
     padding: 0.7em 1.5em;
-    background: #DAE9FB;
-    border: 1px solid #145db4;
+    background: $color-primary-lighter;
+    border: 1px solid $color-primary;
     border-radius: 5px;
     &:hover {
-      box-shadow: inset 0 0 10px #aaa;
+      background: $color-primary-light;
     }
   }
   .btn-danger {
-    background: #c52d2255;
+    background: $color-danger-lighter;
     &:hover {
-      box-shadow:  0 0 10px rgb(255, 0, 0);
-      color: red;
+      background: $color-danger-light;
+      color: $color-danger;
     }
   }
   .btn-admin {
     width: 100%;
     margin: 0.5em 0;
     &__danger{
-      background: #c52d2255;
+      background: $color-danger-lighter;
+      &:hover {
+        background: $color-danger-light;
+      }
     }
   }
   .label-file {
@@ -63,7 +67,7 @@
     img {
       width: 100%;
       max-width: 350px;
-      border: 1px solid #145db4;
+      border: 1px solid $color-primary;
     }
   }
 
@@ -72,7 +76,7 @@
     max-width: 350px;
     form {
       margin-top: 2em;
-      border: 1px solid #145db4;
+      border: 1px solid $color-primary;
       border-radius: 10px;
       overflow: hidden;
     }
@@ -102,14 +106,14 @@
     input {
       width: 100%;
       border: none;
-      border-bottom: 1px solid #145db4;
+      border-bottom: 1px solid $color-primary;
       margin-bottom: 1em;
       &:focus {
         border: none;
-        border-bottom: 3px solid #145db4;
+        border-bottom: 3px solid $color-primary;
       }
       &:invalid {
-        border-bottom: 3px solid #c52d22;
+        border-bottom: 3px solid $color-danger;
       }
     }
   }

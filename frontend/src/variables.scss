@@ -1,0 +1,26 @@
+// Couleurs
+$color-main-text: #333;
+$color-back-background: #eee;
+$color-cards-background: #fff;
+
+$color-primary: #234982;
+$color-primary-light: lighten($color-primary, 45%);
+$color-primary-lighter: lighten($color-primary, 55%);
+
+$color-danger: #d1515a;
+$color-danger-light: lighten($color-danger, 30%);
+$color-danger-lighter: lighten($color-danger, 40%);
+
+$color-like-neutral: #888;
+$color-like-like: $color-primary;
+$color-like-dislike: $color-danger;
+
+$color-add-comment: $color-like-neutral;
+
+
+// Fonts
+$font-headers: 'Baloo Chettan 2', cursive;
+$font-body: "Roboto", sans-serif;
+
+// Shadow
+$shadow: 0 0 10px #aaa;

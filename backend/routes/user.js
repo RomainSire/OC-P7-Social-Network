@@ -13,6 +13,7 @@ router.get('/logout', userCtrl.logout);
 router.get('/isauth', auth, userCtrl.isAuth);
 router.get('/currentuser', auth, userCtrl.getCurrentUser);
 router.get('/', auth, userCtrl.getAllUsers);
+router.get('/search', auth, validate.searchUser, userCtrl.searchUsers);
 router.get('/:id', auth, validate.id, userCtrl.getOneUser);
 router.put('/:id/password', auth, validate.id, validate.changePassword, credential.sameUser, userCtrl.changePassword);
 router.put('/:id/picture', auth, validate.id, credential.sameUser, multer, userCtrl.changeProfilePicture);

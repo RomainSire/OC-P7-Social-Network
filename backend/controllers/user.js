@@ -221,6 +221,24 @@ exports.getOneUser = (req, res, next) => {
 }
 
 /**
+ * Recherche d'utilisateurs
+ */
+exports.searchUsers = (req, res, next) => {
+  const connection = database.connect();
+  const searchTerm = "%" + req.query.name + "%";
+  const sql = "SELECT id, name, pictureurl FROM Users WHERE name LIKE ?;";
+  const sqlParams = [searchTerm];
+  connection.execute(sql, sqlParams, (error, users, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(200).json({ users });
+    }
+  });
+  connection.end();
+}
+
+/**
  * Changer le mot de passe utilisateur
  */
 exports.changePassword = (req, res, next) => {

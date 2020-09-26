@@ -45,6 +45,17 @@ exports.id = (req, res, next) => {
   } 
 }
 
+// Lors d'une recherche d'utilisateur
+const searchUserSchema = Joi.string().trim();
+exports.searchUser = (req, res, next) => {
+  const {error, value} = searchUserSchema.validate(req.query.name);
+  if (error) {
+      res.status(422).json({ error: "Données saisies invalides" });
+  } else {
+      next();
+  } 
+}
+
 // Vérification de la description d'un utilisateur
 const outlineSchema = Joi.string().trim().required();
 exports.outline = (req, res, next) => {

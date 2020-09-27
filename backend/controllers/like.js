@@ -2,6 +2,7 @@ require('dotenv').config();
 const Cookies = require('cookies');
 const cryptojs = require('crypto-js');
 const database = require('../utils/database');
+const notification = require('../utils/notifications');
 
 /**
  * Rate une publication
@@ -33,7 +34,13 @@ exports.rate = (req, res, next) => {
         if (error) {
           res.status(500).json({ "error": error.sqlMessage });
         } else {
-          res.status(201).json({ message: 'Like ou dislike pris en compte' });
+          notification.addReaction(userId, postId)
+            .then(data => {
+              res.status(201).json({ message: 'Like ou dislike pris en compte' });
+            })
+            .catch(err => {
+              res.status(500).json({ "error": err });
+            })
         }
       });
       connection.end();

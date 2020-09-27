@@ -55,7 +55,7 @@ export class AuthService {
   getCurrentUserInfo() {
     return this.httpClient.get(`${this.userUrl}/currentuser`, { withCredentials: true })
       .pipe(catchError(err => {
-        this.log(`Erreur: ${err.statusText}`);
+        this.log(`Veuillez vous identifier`);
         return of(err);
       }))
       .subscribe(data => {

@@ -100,8 +100,8 @@ exports.getAllPosts = (req, res, next) => {
           getLikesOfEachPosts(postsWithoutLikes, userId, connection)
             .then(posts => {
               res.status(200).json({ posts });
-            }) // pas besoin de catch, les erreurs sont gérée par les fonctions getCommentsOfEachPosts() et getLikesOfEachPosts()
-        })
+            })
+        }) // pas besoin de catch, les erreurs sont gérée par les fonctions getCommentsOfEachPosts() et getLikesOfEachPosts()
     }
   });
 }

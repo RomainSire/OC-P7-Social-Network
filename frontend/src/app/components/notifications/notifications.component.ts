@@ -17,4 +17,11 @@ export class NotificationsComponent implements OnInit {
     this.notificationsService.getNotifications();
   }
 
+  onDeleteAll() {
+    this.notificationsService.deleteAllNotifications()
+      .subscribe(data => {
+        this.notificationsService.getNotifications();
+      })
+  }
+
 }

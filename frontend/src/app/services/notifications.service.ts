@@ -40,7 +40,15 @@ export class NotificationsService {
       })
   }
 
-  deleteOneNotification(notificationId) {
+  deleteOneNotification(notificationId: number) {
 
+  }
+
+  deleteAllNotifications() {
+    return this.httpClient.delete(`${this.notificationsUrl}`, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
   }
 }

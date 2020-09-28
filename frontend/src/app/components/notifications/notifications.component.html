@@ -2,9 +2,9 @@
   <h1>Notifications</h1>
   <div class="container">
     <section class="notifications--delete-all">
-      <button class="btn--danger">Supprimer tout</button>
+      <button class="btn--danger" (click)="onDeleteAll()">Supprimer tout</button>
     </section>
-    <section class="notifications--list">
+    <section class="notifications--list" *ngIf="notificationsService.notifications.length > 0">
       <!-- Penser à ajouter le lien vers le post ! -->
       <a href="#"
         *ngFor="let notification of notificationsService.notifications">
@@ -14,6 +14,7 @@
         <button class="btn--danger"><i class="fas fa-trash"></i></button>
       </a>
     </section>
+    <p *ngIf="notificationsService.notifications.length === 0">Vous n'avez pas de nouvelles notifications</p>
   </div>
 </main>
 

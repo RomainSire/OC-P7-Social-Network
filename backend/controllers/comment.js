@@ -24,6 +24,7 @@ exports.newComment = (req, res, next) => {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
       notification.addComment(userId, postId)
+        .then(notification.addAnswer(userId, postId))
         .then(data => {
           res.status(201).json({ message: 'Commentaire ajoutée' });
         })
@@ -32,7 +33,6 @@ exports.newComment = (req, res, next) => {
         })
     }
   });
-
   connection.end();
 }
 

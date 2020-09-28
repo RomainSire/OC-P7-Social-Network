@@ -53,5 +53,32 @@ exports.addComment = (initiatorId, postId) => {
  * @param {number} postId Id du post
  */
 exports.addAnswer = (initiatorId, postId) => {
-
+  const connection = database.connect();
+  // Récupération de la liste des utilisateurs, en excluant les doublons, et en excluant l'auteur de la publication (qui sera notifié avec addComment()!)
+  const sql = "SELECT DISTINCT user_id FROM Comments WHERE (post_id = ? AND user_id != (SELECT user_id FROM Posts WHERE id = ?) );";
+  const sqlParams = [postId, postId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
+    if (error) {
+      connection.end();
+      return Promise.reject({ "error": error.sqlMessage });
+    } else {
+      return Promise.all(results.map(result => {
+        const userId = result.user_id;
+        console.log(userId);
+        const sql2 = "INSERT INTO Notifications (user_id, initiator_id, post_id, type_id)\
+        VALUES (?, ?, ?, (SELECT id FROM `Notification_types` WHERE name = 'answer' ));";
+        const sqlParams2 = [userId, initiatorId, postId];
+        return new Promise((resolve, reject) => {
+          connection.execute(sql2, sqlParams2, (error, result, fields) => {
+            if (error) {
+              reject({ "error": error.sqlMessage });
+            } else {
+              resolve({ 'message': 'Notification ajoutée' });
+            }
+          });
+        })
+      }))
+    }
+  });
+  // connection.end();
 }

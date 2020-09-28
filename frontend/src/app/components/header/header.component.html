@@ -17,8 +17,9 @@
       <a routerLink="/users" aria-label="Équipe" title="Voir l'équipe">
         <i class="fas fa-users"></i>
       </a>
-      <a routerLink="/notifs" aria-label="Notifications" title="Mes notifications">
+      <a routerLink="/notifs" aria-label="Notifications" title="Mes notifications" class="header--nav--notifs">
         <i class="fas fa-bolt"></i>
+        <div class="header--nav--notifs--number" *ngIf="notificationsService.notifications.length > 0">{{notificationsService.notifications.length}}</div>
       </a>
       <a routerLink="/profile/{{authService.user.userId}}" class="header--nav--profile" title="Mon profil">
         <img [src]="authService.user.pictureUrl" alt="Photo de profil">

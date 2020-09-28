@@ -37,6 +37,24 @@
         transform: translateY(0.3rem);
       }
     }
+    &--notifs {
+      position: relative;
+      &--number {
+        position: absolute;
+        top: -1em;
+        right: -1em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 1.5em;
+        height: 1.5em;
+        font-size: 0.8rem;
+        background-color: $color-danger-light;
+        color: $color-danger;
+        border: 1px solid $color-danger;
+        border-radius: 50%;
+      }
+    }
 
     .fas {
       font-size: 1.2em;

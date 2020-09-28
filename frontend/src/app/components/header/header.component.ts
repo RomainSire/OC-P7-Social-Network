@@ -11,7 +11,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private notificationsService: NotificationsService
+    public notificationsService: NotificationsService
   ) { }
 
   ngOnInit(): void {

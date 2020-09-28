@@ -34,7 +34,7 @@ exports.rate = (req, res, next) => {
         if (error) {
           res.status(500).json({ "error": error.sqlMessage });
         } else {
-          notification.addReaction(userId, postId)
+          notification.addReaction(userId, postId) // ajout de la notification (= 3ème requête..)
             .then(data => {
               res.status(201).json({ message: 'Like ou dislike pris en compte' });
             })

@@ -2,9 +2,10 @@ require('dotenv').config();
 const Cookies = require('cookies');
 const cryptojs = require('crypto-js');
 const database = require('../utils/database');
+const notification = require('../utils/notifications')
 
 /**
- * Ajout d'une nouvelle publication
+ * Ajout d'un nouveau commentaire
  */
 exports.newComment = (req, res, next) => {
   const connection = database.connect();
@@ -22,7 +23,13 @@ exports.newComment = (req, res, next) => {
     if (error) {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
-      res.status(201).json({ message: 'Commentaire ajoutée' });
+      notification.addComment(userId, postId)
+        .then(data => {
+          res.status(201).json({ message: 'Commentaire ajoutée' });
+        })
+        .catch(err => {
+          res.status(500).json({ "error": err });
+        })
     }
   });
 

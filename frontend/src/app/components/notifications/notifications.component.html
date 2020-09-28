@@ -7,7 +7,7 @@
     <section class="notifications--list">
       <!-- Penser à ajouter le lien vers le post ! -->
       <a href="#"
-        *ngFor="let notification of authService.notifications">
+        *ngFor="let notification of notificationsService.notifications">
         <p *ngIf="notification.type === 'reaction'">{{notification.initiator}} a réagi à votre post</p>
         <p *ngIf="notification.type === 'comment'">{{notification.initiator}} a commenté votre post</p>
         <p *ngIf="notification.type === 'answer'">{{notification.initiator}} a répondu à votre commentaire</p>

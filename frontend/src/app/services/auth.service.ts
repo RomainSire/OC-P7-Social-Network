@@ -5,23 +5,25 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { MessagesService } from "./messages.service";
+import { NotificationsService } from "./notifications.service";
+
 import { User } from "../models/User";
-import { Notification } from "../models/Notification";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   user: User;
-  notifications: Notification[];
+  
 
   private userUrl = 'http://localhost:3000/api/user';
-  private notificationsUrl = 'http://localhost:3000/api/notif';
 
   constructor(
     private httpClient: HttpClient,
     private messagesService: MessagesService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationsService
   ) { }
 
   /** Log a message with the MessageService */
@@ -48,7 +50,7 @@ export class AuthService {
           }
           this.messagesService.add(`Bienvenue ${this.user.name} !`);
           this.router.navigate(['/home']);
-          this.getNotifications();
+          this.notificationService.getNotifications();
         } else {
           this.log(data.error.error);
         }
@@ -92,17 +94,5 @@ export class AuthService {
       }))
   }
 
-  getNotifications() {
-    return this.httpClient.get(`${this.notificationsUrl}`, { withCredentials: true })
-      .pipe(catchError(err => {
-        this.log(`Erreur: ${err.statusText}`);
-        return of(err);
-      }))
-      .subscribe(data => {
-        if (data.notifications) {
-          this.notifications = data.notifications;
-          console.log(this.notifications);
-        }
-      })
-  }
+  
 }

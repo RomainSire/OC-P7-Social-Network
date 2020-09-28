@@ -54,9 +54,10 @@ exports.addComment = (initiatorId, postId) => {
  */
 exports.addAnswer = (initiatorId, postId) => {
   const connection = database.connect();
-  // Récupération de la liste des utilisateurs, en excluant les doublons, et en excluant l'auteur de la publication (qui sera notifié avec addComment()!)
-  const sql = "SELECT DISTINCT user_id FROM Comments WHERE (post_id = ? AND user_id != (SELECT user_id FROM Posts WHERE id = ?) );";
-  const sqlParams = [postId, postId];
+  // Récupération de la liste des utilisateurs, en excluant :
+  // les doublons, l'auteur de la publication (qui sera notifié avec addComment()!), et l'initiateur !
+  const sql = "SELECT DISTINCT user_id FROM Comments WHERE (post_id = ? AND user_id != (SELECT user_id FROM Posts WHERE id = ?) AND user_id != ?);";
+  const sqlParams = [postId, postId, initiatorId];
   connection.execute(sql, sqlParams, (error, results, fields) => {
     if (error) {
       connection.end();

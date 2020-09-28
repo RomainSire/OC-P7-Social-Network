@@ -6,14 +6,17 @@ import { Router } from '@angular/router';
 
 import { MessagesService } from "./messages.service";
 import { User } from "../models/User";
+import { Notification } from "../models/Notification";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   user: User;
+  notifications: Notification[];
 
   private userUrl = 'http://localhost:3000/api/user';
+  private notificationsUrl = 'http://localhost:3000/api/notif';
 
   constructor(
     private httpClient: HttpClient,
@@ -37,6 +40,19 @@ export class AuthService {
         this.log(`Erreur lors du Login: ${err.statusText}`);
         return of(err);
       }))
+      .subscribe(data => {
+        if (data.message === "Utilisateur loggé") {
+          this.user = data;
+          if (data.pictureUrl === null) {
+            this.user.pictureUrl = "./assets/anonymousUser.svg"
+          }
+          this.messagesService.add(`Bienvenue ${this.user.name} !`);
+          this.router.navigate(['/home']);
+          this.getNotifications();
+        } else {
+          this.log(data.error.error);
+        }
+      });
   }
 
   logoutUser() {
@@ -74,5 +90,19 @@ export class AuthService {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
+  }
+
+  getNotifications() {
+    return this.httpClient.get(`${this.notificationsUrl}`, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
+      .subscribe(data => {
+        if (data.notifications) {
+          this.notifications = data.notifications;
+          console.log(this.notifications);
+        }
+      })
   }
 }

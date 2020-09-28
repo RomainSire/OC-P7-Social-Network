@@ -1,0 +1,19 @@
+<main class="main-wrapper notifications">
+  <h1>Notifications</h1>
+  <div class="container">
+    <section class="notifications--delete-all">
+      <button class="btn--danger">Supprimer tout</button>
+    </section>
+    <section class="notifications--list">
+      <!-- Penser à ajouter le lien vers le post ! -->
+      <a href="#"
+        *ngFor="let notification of authService.notifications">
+        <p *ngIf="notification.type === 'reaction'">{{notification.initiator}} a réagi à votre post</p>
+        <p *ngIf="notification.type === 'comment'">{{notification.initiator}} a commenté votre post</p>
+        <p *ngIf="notification.type === 'answer'">{{notification.initiator}} a répondu à votre commentaire</p>
+        <button class="btn--danger"><i class="fas fa-trash"></i></button>
+      </a>
+    </section>
+  </div>
+</main>
+

@@ -56,18 +56,7 @@ export class SigninComponent implements OnInit {
         if (data.message === "Utilisateur créé") {
           // utilisateur créé, il faut maintenant se connecter !
           this.authService.loginUser(email, password)
-            .subscribe(data => {
-              if (data.message === "Utilisateur loggé") {
-                this.authService.user = data;
-                if (data.pictureUrl === null) {
-                  this.authService.user.pictureUrl = "./assets/anonymousUser.svg"
-                }
-                this.messagesService.add(`Bienvenue ${this.authService.user.name} !`);
-                this.router.navigate(['/home']);
-              } else {
-                this.messagesService.add(`Erreur de connexion: ${data.error.error}`);
-              }
-            });
+            
         } else {
           // Problème lors de l'ajout d'utilisateur
           this.messagesService.add(`Erreur: ${data.error.error}`);

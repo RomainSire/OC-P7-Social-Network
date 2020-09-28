@@ -13,7 +13,8 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.authService.getCurrentUserInfo()
+    this.authService.getCurrentUserInfo();
+    this.authService.getNotifications();
   }
 
   onLogout() {

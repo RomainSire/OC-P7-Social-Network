@@ -3,6 +3,7 @@ import { catchError, map } from 'rxjs/operators';
 import { CanActivate, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from "./auth.service";
 
 
 @Injectable({
@@ -13,6 +14,7 @@ export class AuthGuardService implements CanActivate {
   constructor(
     private router: Router,
     private httpClient: HttpClient,
+    private authService: AuthService
     ) { }
 
   canActivate(): Observable<boolean>|Promise<boolean>|boolean {
@@ -20,6 +22,7 @@ export class AuthGuardService implements CanActivate {
       .pipe(
         catchError(err => {
           this.router.navigate(['/login']);
+          this.authService.user = undefined;
           return of(false);
         }),
         map(res => {

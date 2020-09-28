@@ -35,19 +35,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     const email = this.signInForm.get('email').value;
     const password = this.signInForm.get('password').value;
-    this.authService.loginUser(email, password)
-      .subscribe(data => {
-        if (data.message === "Utilisateur loggé") {
-          this.authService.user = data;
-          if (data.pictureUrl === null) {
-            this.authService.user.pictureUrl = "./assets/anonymousUser.svg"
-          }
-          this.messagesService.add(`Bienvenue ${this.authService.user.name} !`);
-          this.router.navigate(['/home']);
-        } else {
-          this.messagesService.add(`Erreur de connexion: ${data.error.error}`);
-        }
-      });
+    this.authService.loginUser(email, password);
   }
 
 }

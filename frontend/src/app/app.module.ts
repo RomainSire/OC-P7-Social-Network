@@ -16,6 +16,7 @@ import { HomeComponent } from './components/home/home.component';
 import { UsersComponent } from './components/users/users.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { PostComponent } from './components/post/post.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { NotificationsComponent } from './components/notifications/notifications
     HomeComponent,
     UsersComponent,
     ProfileComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    PostComponent
   ],
   imports: [
     BrowserModule,

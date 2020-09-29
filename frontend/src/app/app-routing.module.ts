@@ -9,6 +9,7 @@ import { HomeComponent } from './components/home/home.component';
 import { UsersComponent } from './components/users/users.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { PostComponent } from './components/post/post.component';
 
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signin', component: SigninComponent },
   { path: 'home', canActivate:[AuthGuardService], component: HomeComponent },
+  { path: 'post/:id', canActivate:[AuthGuardService], component: PostComponent },
   { path: 'users', canActivate:[AuthGuardService], component: UsersComponent },
   { path: 'profile/:id', canActivate:[AuthGuardService], component: ProfileComponent },
   { path: 'notifs', canActivate:[AuthGuardService], component: NotificationsComponent },

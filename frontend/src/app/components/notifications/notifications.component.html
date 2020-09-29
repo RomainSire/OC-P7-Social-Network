@@ -6,7 +6,7 @@
     </section>
     <section class="notifications--list" *ngIf="notificationsService.notifications.length > 0">
       <!-- Penser à ajouter le lien vers le post ! -->
-      <a href="#"
+      <a [routerLink]="'/post/' + notification.postId"
         *ngFor="let notification of notificationsService.notifications">
         <p *ngIf="notification.type === 'reaction'">{{notification.initiator}} a réagi à votre post</p>
         <p *ngIf="notification.type === 'comment'">{{notification.initiator}} a commenté votre post</p>

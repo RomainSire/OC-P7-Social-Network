@@ -94,7 +94,7 @@ exports.deleteComment = (req, res, next) => {
   const connection = database.connect();
   const cryptedCookie = new Cookies(req, res).get('snToken');
   const cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
-  const userId = connection.escape(cookie.userId);
+  const userId = cookie.userId;
   const sql = "SELECT isadmin FROM Users WHERE id=?";
   const sqlParams = [userId];
   connection.execute(sql, sqlParams, (error, results, fields) => {
@@ -130,4 +130,36 @@ exports.deleteComment = (req, res, next) => {
       }
     }
   });
+}
+
+
+/**
+ * Vérifier les autorisations pour la suppression d'une notification
+ * id utilisateur = userId de la notification
+ */
+exports.deleteNotification = (req, res, next) => {
+  const connection = database.connect();
+
+  const cryptedCookie = new Cookies(req, res).get('snToken');
+  const userId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
+  const notificationId = req.params.id;
+
+  const sql = "SELECT user_id FROM Notifications WHERE id = ?";
+  const sqlParams = [notificationId]
+
+  connection.execute(sql, sqlParams, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else if (results.length === 0) {
+      res.status(422).json({ "error": "Cette notification n'existe pas" });
+    } else {
+      const notificationUserId = results[0].user_id;
+      if (notificationUserId === parseInt(userId, 10)) {
+        // l'utilisateur est bien le "destinataire" de la notification
+        next();
+      } else {
+        res.status(403).json({ error: 'Accès refusé' });
+      }
+    }
+  })
 }

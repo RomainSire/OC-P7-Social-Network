@@ -44,3 +44,18 @@ exports.deleteAllNotifs = (req, res, next) => {
   });
   connection.end();
 }
+
+exports.deleteOneNotif = (req, res, next) => {
+  const connection = database.connect();
+  const notificationId = req.params.id;
+  const sql = "DELETE FROM Notifications WHERE id=?;";
+  const sqlParams = [notificationId];
+  connection.execute(sql, sqlParams, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ "error": error.sqlMessage });
+    } else {
+      res.status(201).json({ message: 'Notification supprimée' });
+    }
+  });
+  connection.end();
+}

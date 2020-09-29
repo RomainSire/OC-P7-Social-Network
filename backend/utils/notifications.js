@@ -81,5 +81,4 @@ exports.addAnswer = (initiatorId, postId) => {
       }))
     }
   });
-  // connection.end();
 }

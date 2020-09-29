@@ -24,4 +24,11 @@ export class NotificationsComponent implements OnInit {
       })
   }
 
+  onDeleteOne(id: number) {
+    this.notificationsService.deleteOneNotification(id)
+      .subscribe(data => {
+        this.notificationsService.getNotifications();
+      })
+  }
+
 }

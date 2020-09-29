@@ -4,15 +4,16 @@
     <section class="notifications--delete-all">
       <button class="btn--danger" (click)="onDeleteAll()">Supprimer tout</button>
     </section>
-    <section class="notifications--list" *ngIf="notificationsService.notifications.length > 0">
+    <section *ngIf="notificationsService.notifications.length > 0">
       <!-- Penser à ajouter le lien vers le post ! -->
-      <a [routerLink]="'/post/' + notification.postId"
-        *ngFor="let notification of notificationsService.notifications">
-        <p *ngIf="notification.type === 'reaction'">{{notification.initiator}} a réagi à votre post</p>
-        <p *ngIf="notification.type === 'comment'">{{notification.initiator}} a commenté votre post</p>
-        <p *ngIf="notification.type === 'answer'">{{notification.initiator}} a répondu à votre commentaire</p>
-        <button class="btn--danger"><i class="fas fa-trash"></i></button>
-      </a>
+      <div *ngFor="let notification of notificationsService.notifications" class="notifications--list">
+        <a [routerLink]="'/post/' + notification.postId">
+          <p *ngIf="notification.type === 'reaction'">{{notification.initiator}} a réagi à votre post</p>
+          <p *ngIf="notification.type === 'comment'">{{notification.initiator}} a commenté votre post</p>
+          <p *ngIf="notification.type === 'answer'">{{notification.initiator}} a répondu à votre commentaire</p>
+        </a>
+        <button class="btn--danger" (click)="onDeleteOne(notification.id)"><i class="fas fa-trash"></i></button>
+      </div>
     </section>
     <p *ngIf="notificationsService.notifications.length === 0">Vous n'avez pas de nouvelles notifications</p>
   </div>

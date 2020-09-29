@@ -41,7 +41,11 @@ export class NotificationsService {
   }
 
   deleteOneNotification(notificationId: number) {
-
+    return this.httpClient.delete(`${this.notificationsUrl}/${notificationId}`, { withCredentials: true })
+      .pipe(catchError(err => {
+        this.log(`Erreur: ${err.statusText}`);
+        return of(err);
+      }))
   }
 
   deleteAllNotifications() {

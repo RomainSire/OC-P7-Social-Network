@@ -4,6 +4,7 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
+const helmet = require('helmet');
 
 // DEVELOPEMENT : Pour le log !
 const Cookies = require('cookies');
@@ -31,24 +32,25 @@ app.use((req, res, next) => {
 });
 // Parse le body des requetes en json
 app.use(bodyParser.json());
+// Sécurisation des headers
+app.use(helmet());
 // Log toutes les requêtes passées au serveur
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
-app.use(morgan(':method :url :status [:date[clf]] (REQ: :req[content-length]) (RES: :res[content-length])', { stream: accessLogStream }));
-
-// DEVELOPEMENT : log de la requete en console
-app.use((req, res, next) => {
-  const cryptedCookie = new Cookies(req, res).get('snToken');
-  const cookie = cryptedCookie ? JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)) : undefined;
-  const toBeDisplayed = {
-    date: new Date().toString(),
-    method: req.method,
-    url: req.url,
-    body: req.body,
-    cookie: cookie
-  }
-  console.log(toBeDisplayed);
-  next();
-})
+app.use(morgan('combined', { stream: accessLogStream }));
+// // DEVELOPEMENT : log de la requete en console
+// app.use((req, res, next) => {
+//   const cryptedCookie = new Cookies(req, res).get('snToken');
+//   const cookie = cryptedCookie ? JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)) : undefined;
+//   const toBeDisplayed = {
+//     date: new Date().toString(),
+//     method: req.method,
+//     url: req.url,
+//     body: req.body,
+//     cookie: cookie
+//   }
+//   console.log(toBeDisplayed);
+//   next();
+// })
 
 
 /**

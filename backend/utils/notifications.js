@@ -7,21 +7,35 @@ const database = require ('./database');
  */
 exports.addReaction = (initiatorId, postId) => {
   const connection = database.connect();
-  
-  const sql = "INSERT INTO Notifications (user_id, initiator_id, post_id, type_id)\
-  VALUES ((SELECT user_id FROM Posts WHERE id = ? ), ?, ?, (SELECT id FROM `Notification_types` WHERE name = 'reaction' ));"
-  // userId est déduit à partir de postId
-  // typeId est récupéré dans la table notification_types
-  const sqlParams = [postId, initiatorId, postId];
+  // Recherche de l'auteur du post (utilisé pour éviter de s'auto-notifier..!)
+  const sql = "SELECT user_id FROM Posts WHERE id = ?;";
+  const sqlParams = [postId];
   return new Promise((resolve, reject) => {
     connection.execute(sql, sqlParams, (error, result, fields) => {
       if (error) {
         reject({ "error": error.sqlMessage });
+        connection.end();
       } else {
-        resolve({ 'message': 'Notification ajoutée' });
+        const userId = result[0].user_id;
+        if (userId === initiatorId) {
+          resolve({ 'message': 'Notification pas ajoutée' }); // pas d'auto-notification !
+          connection.end();
+        } else {
+          const sql2 = "INSERT INTO Notifications (user_id, initiator_id, post_id, type_id)\
+          VALUES (?, ?, ?, (SELECT id FROM `Notification_types` WHERE name = 'reaction' ));"
+          // typeId est récupéré dans la table notification_types
+          const sqlParams2 = [userId, initiatorId, postId];
+          connection.execute(sql2, sqlParams2, (error, result, fields) => {
+            if (error) {
+              reject({ "error": error.sqlMessage });
+            } else {
+              resolve({ 'message': 'Notification ajoutée' });
+            }
+          });
+          connection.end();
+        }
       }
-    });
-    connection.end();
+    })
   })
 }
 
@@ -32,18 +46,35 @@ exports.addReaction = (initiatorId, postId) => {
  */
 exports.addComment = (initiatorId, postId) => {
   const connection = database.connect();
-  const sql = "INSERT INTO Notifications (user_id, initiator_id, post_id, type_id)\
-  VALUES ((SELECT user_id FROM Posts WHERE id = ? ), ?, ?, (SELECT id FROM `Notification_types` WHERE name = 'comment' ));";
-  const sqlParams = [postId, initiatorId, postId];
+  // Recherche de l'auteur du post (utilisé pour éviter de s'auto-notifier..!)
+  const sql = "SELECT user_id FROM Posts WHERE id = ?;";
+  const sqlParams = [postId];
   return new Promise((resolve, reject) => {
     connection.execute(sql, sqlParams, (error, result, fields) => {
       if (error) {
         reject({ "error": error.sqlMessage });
+        connection.end();
       } else {
-        resolve({ 'message': 'Notification ajoutée' });
+        const userId = result[0].user_id;
+        if (userId === initiatorId) {
+          resolve({ 'message': 'Notification pas ajoutée' }); // pas d'auto-notification !
+          connection.end();
+        } else {
+          const sql2 = "INSERT INTO Notifications (user_id, initiator_id, post_id, type_id)\
+          VALUES (?, ?, ?, (SELECT id FROM `Notification_types` WHERE name = 'comment' ));"
+          // typeId est récupéré dans la table notification_types
+          const sqlParams2 = [userId, initiatorId, postId];
+          connection.execute(sql2, sqlParams2, (error, result, fields) => {
+            if (error) {
+              reject({ "error": error.sqlMessage });
+            } else {
+              resolve({ 'message': 'Notification ajoutée' });
+            }
+          });
+          connection.end();
+        }
       }
-    });
-    connection.end();
+    })
   })
 }
 
@@ -55,7 +86,7 @@ exports.addComment = (initiatorId, postId) => {
 exports.addAnswer = (initiatorId, postId) => {
   const connection = database.connect();
   // Récupération de la liste des utilisateurs, en excluant :
-  // les doublons, l'auteur de la publication (qui sera notifié avec addComment()!), et l'initiateur !
+  // les doublons, l'auteur de la publication (qui sera notifié avec addComment()), et l'initiateur (pour ne pas s'auto-notifier!)
   const sql = "SELECT DISTINCT user_id FROM Comments WHERE (post_id = ? AND user_id != (SELECT user_id FROM Posts WHERE id = ?) AND user_id != ?);";
   const sqlParams = [postId, postId, initiatorId];
   connection.execute(sql, sqlParams, (error, results, fields) => {

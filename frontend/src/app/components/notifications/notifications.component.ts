@@ -17,14 +17,14 @@ export class NotificationsComponent implements OnInit {
     this.notificationsService.getNotifications();
   }
 
-  onDeleteAll() {
+  onDeleteAll(): void {
     this.notificationsService.deleteAllNotifications()
       .subscribe(data => {
         this.notificationsService.getNotifications();
       })
   }
 
-  onDeleteOne(id: number) {
+  onDeleteOne(id: number): void {
     this.notificationsService.deleteOneNotification(id)
       .subscribe(data => {
         this.notificationsService.getNotifications();

@@ -19,7 +19,7 @@ export class CommentsService {
   ) { }
 
   /** Log a message with the MessageService */
-  private log(message: string) {
+  private log(message: string): void {
     this.messagesService.add(message);
   }
 
@@ -31,7 +31,7 @@ export class CommentsService {
       }))
   }
 
-  deleteComment(commentId) {
+  deleteComment(commentId: number) {
     return this.httpClient.delete(`${this.commentUrl}/${commentId}`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);

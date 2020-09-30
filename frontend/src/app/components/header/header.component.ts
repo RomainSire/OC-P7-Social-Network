@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit {
     this.notificationsService.getNotifications();
   }
 
-  onLogout() {
+  onLogout(): void {
     this.authService.logoutUser();
   }
 }

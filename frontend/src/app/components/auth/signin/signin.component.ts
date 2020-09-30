@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { AuthService } from "../../../services/auth.service";
 import { MessagesService } from "../../../services/messages.service";
@@ -18,14 +17,13 @@ export class SigninComponent implements OnInit {
     private authService: AuthService,
     private messagesService: MessagesService,
     private formBuilder: FormBuilder,
-    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.initForm();
   }
 
-  initForm() {
+  initForm(): void {
     this.signInForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.pattern(/[A-Za-zÀ-ÖØ-öø-ÿ ]{3,50}/)]],
       email: ['', [Validators.required, Validators.email]],
@@ -48,15 +46,14 @@ export class SigninComponent implements OnInit {
   }
 
   onSubmit() {
-    const name = this.signInForm.get('name').value;
-    const email = this.signInForm.get('email').value;
-    const password = this.signInForm.get('password').value;
+    const name: string = this.signInForm.get('name').value;
+    const email: string = this.signInForm.get('email').value;
+    const password: string = this.signInForm.get('password').value;
     this.authService.createNewUser(name, email, password)
-      .subscribe(data => {
+      .subscribe((data: {message?: string, error?: any}) => {
         if (data.message === "Utilisateur créé") {
           // utilisateur créé, il faut maintenant se connecter !
           this.authService.loginUser(email, password)
-            
         } else {
           // Problème lors de l'ajout d'utilisateur
           this.messagesService.add(`Erreur: ${data.error.error}`);

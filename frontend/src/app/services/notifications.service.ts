@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { MessagesService } from "./messages.service";
 
-import { Notification } from "../models/Notification";
+import { Notification } from "../interfaces/Notification";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class NotificationsService {
   ) { }
 
   /** Log a message with the MessageService */
-  private log(message: string) {
+  private log(message: string): void {
     this.messagesService.add(`Authentification: ${message}`);
   }
 
@@ -33,7 +33,7 @@ export class NotificationsService {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
-      .subscribe(data => {
+      .subscribe((data: {notifications: Notification[]}) => {
         if (data.notifications) {
           this.notifications = data.notifications;
         }

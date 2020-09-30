@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 
-import { UserDetails } from "../../models/UserDetails";
+import { UserDetails } from "../../interfaces/UserDetails";
 import { UsersService } from "../../services/users.service";
 import { AuthService } from "../../services/auth.service";
 import { MessagesService } from "../../services/messages.service";
@@ -35,12 +35,12 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false; // force  à récupérer les infos user, même si on on ne change que le paramètre de la route.
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false; // force  à récupérer les infos user, même si on on ne change que le paramètre de la route (= id utilisateur).
     this.initForm();
   }
 
   // Initialisation des formulaires
-  initForm() {
+  initForm(): void {
     this.passwordChangeForm = this.formBuilder.group({
       oldPassword: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]],
       newPassword: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]]
@@ -50,10 +50,10 @@ export class ProfileComponent implements OnInit {
   /**
    * Récupération des informations de l'utilisateur affiché
    */
-  getUser() {
+  getUser(): void {
     const id = +this.route.snapshot.paramMap.get('id');
     this.usersService.getOneUser(id)
-      .subscribe(fetchedUser => {
+      .subscribe((fetchedUser: UserDetails) => {
         this.userDetails = fetchedUser;
         if (fetchedUser.pictureurl === null) {
           this.userDetails.pictureurl = "./assets/anonymousUser.svg";
@@ -68,11 +68,11 @@ export class ProfileComponent implements OnInit {
   /**
    * Mise à jour de la description du profil utilisateur
    */
-  onUpdateOutline(event: any) {
+  onUpdateOutline(event: Event): void {
     if (event.target[0].value && event.target[0].value !== "") {
-      const newOutline = event.target[0].value;
+      const newOutline: string = event.target[0].value;
       this.usersService.updateOutline(this.userDetails.id, newOutline)
-        .subscribe(data => {
+        .subscribe((data: {message?: string}) => {
           if (data.message === "Description du profil modifiée") {
             this.getUser();
             event.target[0].value = "";
@@ -86,12 +86,12 @@ export class ProfileComponent implements OnInit {
   /**
    * Changement du mot de passe de l'utilisateur
    */
-  onChangePassword() {
+  onChangePassword(): void {
     const newPassword = this.passwordChangeForm.get('oldPassword').value;
     const oldPassword = this.passwordChangeForm.get('newPassword').value;
     if (newPassword && newPassword != "" && oldPassword && oldPassword != "") {
       this.usersService.updatePassword(this.userDetails.id, newPassword, oldPassword)
-        .subscribe(data => {
+        .subscribe((data: {message?: string, error?: any}) => {
           if (data.message === "Mot de passe modifié") {
             this.passwordChangeForm.reset();
             this.messagesService.add(`Votre mot de passe a bien été modifié`);
@@ -107,12 +107,12 @@ export class ProfileComponent implements OnInit {
    * - Click pour la suppression
    * - Click pour confirmer la suppressions
    */
-  onDeleteClicked() {
+  onDeleteClicked(): void {
     document.getElementById('delete-confirm').classList.remove("profile--delete-confirm__hidden");
   }
-  onDeleteConfirmed() {
+  onDeleteConfirmed(): void {
     this.usersService.deleteUser(this.userDetails.id)
-      .subscribe(data => {
+      .subscribe((data: {message?: string, error?: any}) => {
         if (data.message === "Utilisateur supprimé") {
           this.messagesService.add(`Vous avez bien supprimé votre compte`);
           this.router.navigate(['/login']);
@@ -125,9 +125,9 @@ export class ProfileComponent implements OnInit {
   /**
    * Donner / Supprimer les droits d'admin
    */
-  onChangeAdmin(isAdmin) {
+  onChangeAdmin(isAdmin: number): void {
     this.usersService.updateAdminRights(this.userDetails.id, isAdmin)
-      .subscribe(data => {
+      .subscribe((data: {message?: string, error?: any}) => {
         if (data.message === "Droits d'administrateur modifiée") {
         } else {
           this.messagesService.add(`Erreur: ${data.error.error}`);
@@ -142,7 +142,7 @@ export class ProfileComponent implements OnInit {
    * Utilisation de la librairie "ngx-image-cropper"
    */
   // Nouveau fichier sélectionné
-  onChangeProfilePicture(event) {
+  onChangeProfilePicture(event: any) {
     this.imageChangedEvent = event;
     this.initialImage = event.target.files[0];
   }
@@ -156,7 +156,7 @@ export class ProfileComponent implements OnInit {
     this.messagesService.add(`Erreur lors du chargement de l'image`);
   }
   // Transformation de l'image base64 (donnée par "ngx-image-cropper") en fichier exploitable
-  base64ToFile(dataurl, filename) {
+  base64ToFile(dataurl: string, filename: string) {
     const arr = dataurl.split(',')
     const mime = arr[0].match(/:(.*?);/)[1]
     const bstr = atob(arr[1])
@@ -168,13 +168,13 @@ export class ProfileComponent implements OnInit {
     return new File([u8arr], filename, {type:mime});
   }
   // à la validation, après le redimensionnement de l'image = envoi du fichier vers le backend
-  onCroppedImageDone() {    
+  onCroppedImageDone(): void {    
     const base64Image = this.croppedImage;
     const image = this.base64ToFile(base64Image, this.initialImage.name);
     const uploadData = new FormData();
     uploadData.append('image', image);
     this.usersService.updatePicture(this.userDetails.id, uploadData)
-      .subscribe(data => {        
+      .subscribe((data: {message?: string}) => {        
         if (data.message === "Photo de profil modifiée") {
           this.getUser();
           this.authService.getCurrentUserInfo();

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PublicationsService } from 'src/app/services/publications.service';
-import { Post } from 'src/app/models/Post';
+import { Post } from 'src/app/interfaces/Post';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessagesService } from 'src/app/services/messages.service';
 import { LikesService } from 'src/app/services/likes.service';
@@ -33,16 +33,15 @@ export class PostComponent implements OnInit {
     this.getPublication();
   }
 
-  getPublication() {
+  getPublication(): void {
     this.publicationsService.getOnePublication(this.postId)
       .subscribe(data => {
         this.post = data.post[0];
       })
   }
 
-  onDeletePublication() {
-    const postId = this.postId;
-    this.publicationsService.deletePublication(postId)
+  onDeletePublication(): void {
+    this.publicationsService.deletePublication(this.postId)
       .subscribe(data => {
         if (data.message === 'Publication supprimée') {
           this.messagesService.add(`Publication supprimée`);
@@ -53,11 +52,11 @@ export class PostComponent implements OnInit {
       })
   }
 
-  onlike(event) {
+  onlike(event: Event) {
     const postId = this.postId;
-    const rate = parseInt(event.target[1].value,10);
+    const rate: number = parseInt(event.target[1].value,10);
     this.likesService.newRatePublication(postId, rate)
-      .subscribe(data => {
+      .subscribe((data: {message?: string}) => {
         if (data.message === 'Like ou dislike pris en compte') {
           this.getPublication();
         } else {
@@ -67,10 +66,10 @@ export class PostComponent implements OnInit {
   }
 
   onAddComment(event) {
-    const content = event.target[0].value;
-    const postId = event.target[1].value;
+    const content: string = event.target[0].value;
+    const postId: number = parseInt(event.target[1].value);
     this.commentsService.newComment(postId, content)
-      .subscribe(data => {
+      .subscribe((data: {message?: string}) => {
         if (data.message === 'Commentaire ajoutée') {
           this.getPublication();
         } else {
@@ -80,9 +79,9 @@ export class PostComponent implements OnInit {
   }
 
   onDeleteComment(event) {
-    const commentId = event.target[0].value;
+    const commentId: number = parseInt(event.target[0].value);
     this.commentsService.deleteComment(commentId)
-      .subscribe(data => {
+      .subscribe((data: {message?: string}) => {
         if (data.message === 'Commentaire supprimée') {
           this.getPublication();
         } else {

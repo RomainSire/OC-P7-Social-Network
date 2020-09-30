@@ -19,7 +19,7 @@ export class PublicationsService {
   ) { }
 
   /** Log a message with the MessageService */
-  private log(message: string) {
+  private log(message: string): void {
     this.messagesService.add(message);
   }
 

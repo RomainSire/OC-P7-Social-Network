@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { MessagesService } from "./messages.service";
 import { NotificationsService } from "./notifications.service";
 
-import { User } from "../models/User";
+import { User } from "../interfaces/User";
 
 
 @Injectable({
@@ -15,7 +15,6 @@ import { User } from "../models/User";
 })
 export class AuthService {
   user: User;
-  
 
   private userUrl = 'http://localhost:3000/api/user';
 
@@ -27,7 +26,7 @@ export class AuthService {
   ) { }
 
   /** Log a message with the MessageService */
-  private log(message: string) {
+  private log(message: string): void {
     this.messagesService.add(`Authentification: ${message}`);
   }
 
@@ -37,12 +36,12 @@ export class AuthService {
    * @param password mot de passe de l'utilisateur
    */
   loginUser(email: string, password: string) {
-    return this.httpClient.post<User>(`${this.userUrl}/login`, {email, password}, { withCredentials: true })
+    return this.httpClient.post(`${this.userUrl}/login`, {email, password}, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur lors du Login: ${err.statusText}`);
         return of(err);
       }))
-      .subscribe(data => {
+      .subscribe((data: User & {message: string, error?: any}): void => {
         if (data.message === "Utilisateur loggé") {
           this.user = data;
           if (data.pictureUrl === null) {
@@ -63,7 +62,7 @@ export class AuthService {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
-      .subscribe(() => {
+      .subscribe((): void => {
         this.user = undefined;
         this.log(`Vous êtes déconnecté`);
         this.router.navigate(['/login']);
@@ -76,7 +75,7 @@ export class AuthService {
         this.log(`Veuillez vous identifier`);
         return of(err);
       }))
-      .subscribe(data => {
+      .subscribe((data: User) => {
         if (data.userId) {
           this.user = data;
           if (data.pictureUrl === null) {
@@ -92,7 +91,5 @@ export class AuthService {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
-  }
-
-  
+  }  
 }

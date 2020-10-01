@@ -4,8 +4,7 @@
 - Création d'utilisateurs (CRUD)
 - Les utilisateurs pourront
   - Voir les derniers posts de tous les utilisateurs
-  - Voir les derniers posts d'un utilisateur en particulier
-  - Publier des images/gif
+  - Publier des images
   - Publier du texte
 - Sur chaque posts, les utilisateurs pourront
   - Liker / disliker
@@ -44,8 +43,8 @@
 - Git et GitHub utilisés
 - Workflow:
 ```bash
-________________________________________  # Branche Master
- \______/____/_________/_______/_____/__  # Branche Development
-  \___/   \_/  \__/\__/  \____/ \_/       # Branches Features
+________________________________________  # Branche Master (dispo sur Github)
+ \______/____/_________/_______/_____/__  # Branche Development (dispo sur Github)
+  \___/   \_/  \__/\__/  \____/ \_/       # Branches Features (seulement en local)
 
 ```

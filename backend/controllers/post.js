@@ -43,10 +43,10 @@ getCommentsOfEachPosts = (posts, connection) => {
                 INNER JOIN Users ON Comments.user_id = Users.id\
                 WHERE Comments.post_id = ?";
     const sqlParams = [post.postId];
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       connection.execute(sql, sqlParams, (error, comments, fields) => {
         if (error) {
-          res.status(500).json({ "error": error.sqlMessage });
+          reject(error);
         } else {
           resolve({ ...post, comments });
         }
@@ -66,10 +66,10 @@ getLikesOfEachPosts = (posts, userId, connection) => {
                 (SELECT COUNT(*) FROM Likes WHERE (post_id=? AND rate=-1)) AS DislikesNumber,\
                 (SELECT rate FROM Likes WHERE (post_id=? AND user_id=?)) AS currentUserReaction";
     const sqlParams = [postId, postId, postId, userId];
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       connection.execute(sql, sqlParams, (error, result, fields) => {
         if (error) {
-          res.status(500).json({ "error": error.sqlMessage });
+          reject(error);
         } else {
           resolve({ ...post, likes: result[0] });
         }
@@ -101,7 +101,13 @@ exports.getAllPosts = (req, res, next) => {
             .then(posts => {
               res.status(200).json({ posts });
             })
-        }) // pas besoin de catch, les erreurs sont gérée par les fonctions getCommentsOfEachPosts() et getLikesOfEachPosts()
+            .catch(err => {
+              res.status(500).json({ "error": "Un problème est survenu" });
+            })
+        })
+        .catch(err => {
+          res.status(500).json({ "error": "Un problème est survenu" });
+        })
     }
   });
 }

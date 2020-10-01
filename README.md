@@ -48,7 +48,7 @@ mysql -u socialadmin -p social_network
 SOURCE docs/CreationBDD.sql  -- remplacer par le chemin d'accès correct vers le fichier
 ```
 ### 3. Backend
-- Ajouter le fichier .env, avec les variables :
+- Ajouter le fichier .env dans le dossier ./backend/, avec les variables :
 ```
 DB_HOST='localhost'
 DB_BASENAME='social_network'
@@ -65,9 +65,13 @@ npm install # Installer les dépendances
 node server # lancer le backend
 ```
 ### 4. Frontend
+- Ouvrir un nouveau terminal
 - initialisation et démarrage du frontend (Angular doit être installé sur la machine)
 ```bash
 cd frontend # Aller dans le dossier "frontend"
 npm install # Installer les dépendances
 ng serve # lancer le frontend
 ```
+### 5. Test
+- Le réseau social est normalement accessible à l'adresse : localhost:4200
+- Pour tester plus en détail le backend (avec postman par exemple), ce dernier devrait répondre à l'adresse : localhost:3000

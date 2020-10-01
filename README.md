@@ -72,6 +72,6 @@ cd frontend # Aller dans le dossier "frontend"
 npm install # Installer les dépendances
 ng serve # lancer le frontend
 ```
-### 5. Test
+### 5. Utilisation
 - Le réseau social est normalement accessible à l'adresse : localhost:4200
 - Pour tester plus en détail le backend (avec postman par exemple), ce dernier devrait répondre à l'adresse : localhost:3000

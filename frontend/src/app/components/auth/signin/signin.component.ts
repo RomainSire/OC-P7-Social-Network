@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from "../../../services/auth.service";
 import { MessagesService } from "../../../services/messages.service";
 
+import { HttpResponse } from "../../../interfaces/HttpResponse.interface";
+
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -50,13 +52,13 @@ export class SigninComponent implements OnInit {
     const email: string = this.signInForm.get('email').value;
     const password: string = this.signInForm.get('password').value;
     this.authService.createNewUser(name, email, password)
-      .subscribe((data: {message?: string, error?: any}) => {
-        if (data.message === "Utilisateur créé") {
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
           // utilisateur créé, il faut maintenant se connecter !
           this.authService.loginUser(email, password)
         } else {
           // Problème lors de l'ajout d'utilisateur
-          this.messagesService.add(`Erreur: ${data.error.error}`);
+          this.messagesService.add(`Erreur: ${response.error.error}`);
         }
       });
   }

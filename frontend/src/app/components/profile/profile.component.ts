@@ -3,10 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 
-import { UserDetails } from "../../interfaces/UserDetails";
 import { UsersService } from "../../services/users.service";
 import { AuthService } from "../../services/auth.service";
 import { MessagesService } from "../../services/messages.service";
+import { ImageService } from "../../services/image.service";
+
+import { UserDetails } from "../../interfaces/UserDetails.interface";
+import { HttpResponse } from "../../interfaces/HttpResponse.interface";
 
 @Component({
   selector: 'app-profile',
@@ -19,18 +22,14 @@ export class ProfileComponent implements OnInit {
   id: number;
   passwordChangeForm: FormGroup;
 
-  initialImage: any = '';
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
-
-
   constructor(
     private route: ActivatedRoute,
     private usersService: UsersService,
     public authService: AuthService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private messagesService: MessagesService
+    private messagesService: MessagesService,
+    public imageService: ImageService
   ) { }
 
   ngOnInit(): void {
@@ -72,8 +71,8 @@ export class ProfileComponent implements OnInit {
     if (event.target[0].value && event.target[0].value !== "") {
       const newOutline: string = event.target[0].value;
       this.usersService.updateOutline(this.userDetails.id, newOutline)
-        .subscribe((data: {message?: string}) => {
-          if (data.message === "Description du profil modifiée") {
+        .subscribe((response: HttpResponse) => {
+          if (response.status === 201) {
             this.getUser();
             event.target[0].value = "";
           } else {
@@ -87,16 +86,15 @@ export class ProfileComponent implements OnInit {
    * Changement du mot de passe de l'utilisateur
    */
   onChangePassword(): void {
-    const newPassword = this.passwordChangeForm.get('oldPassword').value;
-    const oldPassword = this.passwordChangeForm.get('newPassword').value;
+    const { newPassword, oldPassword } = this.passwordChangeForm.value;
     if (newPassword && newPassword != "" && oldPassword && oldPassword != "") {
       this.usersService.updatePassword(this.userDetails.id, newPassword, oldPassword)
-        .subscribe((data: {message?: string, error?: any}) => {
-          if (data.message === "Mot de passe modifié") {
+        .subscribe((response: HttpResponse) => {
+          if (response.status === 201) {
             this.passwordChangeForm.reset();
             this.messagesService.add(`Votre mot de passe a bien été modifié`);
           } else {
-            this.messagesService.add(`Erreur: ${data.error.error}`);
+            this.messagesService.add(`Erreur: ${response.error.error}`);
           }
         })
     }
@@ -108,16 +106,16 @@ export class ProfileComponent implements OnInit {
    * - Click pour confirmer la suppressions
    */
   onDeleteClicked(): void {
-    document.getElementById('delete-confirm').classList.remove("profile--delete-confirm__hidden");
+    document.getElementById('delete-confirm').classList.toggle("profile--delete-confirm__hidden");
   }
   onDeleteConfirmed(): void {
     this.usersService.deleteUser(this.userDetails.id)
-      .subscribe((data: {message?: string, error?: any}) => {
-        if (data.message === "Utilisateur supprimé") {
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
           this.messagesService.add(`Vous avez bien supprimé votre compte`);
           this.router.navigate(['/login']);
         } else {
-          this.messagesService.add(`Erreur: ${data.error.error}`);
+          this.messagesService.add(`Erreur: ${response.error.error}`);
         }
       })
   }
@@ -127,10 +125,9 @@ export class ProfileComponent implements OnInit {
    */
   onChangeAdmin(isAdmin: number): void {
     this.usersService.updateAdminRights(this.userDetails.id, isAdmin)
-      .subscribe((data: {message?: string, error?: any}) => {
-        if (data.message === "Droits d'administrateur modifiée") {
-        } else {
-          this.messagesService.add(`Erreur: ${data.error.error}`);
+      .subscribe((response: HttpResponse) => {
+        if (response.status !== 201) {
+          this.messagesService.add(`Erreur: ${response.error.error}`);
         }
         this.getUser();
       })
@@ -141,47 +138,26 @@ export class ProfileComponent implements OnInit {
    * Mise à jour de la photo de profil utilisateur
    * Utilisation de la librairie "ngx-image-cropper"
    */
-  // Nouveau fichier sélectionné
-  onChangeProfilePicture(event: any) {
-    this.imageChangedEvent = event;
-    this.initialImage = event.target.files[0];
-  }
-  imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.base64;
-  }
-  imageLoaded() {
-    document.getElementById('cropper').classList.remove('hidden');
-  }
-  loadImageFailed() {
-    this.messagesService.add(`Erreur lors du chargement de l'image`);
-  }
-  // Transformation de l'image base64 (donnée par "ngx-image-cropper") en fichier exploitable
-  base64ToFile(dataurl: string, filename: string) {
-    const arr = dataurl.split(',')
-    const mime = arr[0].match(/:(.*?);/)[1]
-    const bstr = atob(arr[1])
-    let n = bstr.length
-    const u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type:mime});
-  }
+
   // à la validation, après le redimensionnement de l'image = envoi du fichier vers le backend
+  // Donc la méthode onCroppedImage du service imageService ne sera pas utilisé
   onCroppedImageDone(): void {    
-    const base64Image = this.croppedImage;
-    const image = this.base64ToFile(base64Image, this.initialImage.name);
+    const base64Image = this.imageService.croppedImage;
+    const image = this.imageService.base64ToFile(base64Image, this.imageService.initialImage.name);
     const uploadData = new FormData();
     uploadData.append('image', image);
     this.usersService.updatePicture(this.userDetails.id, uploadData)
-      .subscribe((data: {message?: string}) => {        
-        if (data.message === "Photo de profil modifiée") {
+      .subscribe((response: HttpResponse) => {        
+        if (response.status === 201) {
           this.getUser();
           this.authService.getCurrentUserInfo();
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
         }
         document.getElementById('cropper').classList.add('hidden');
+        this.imageService.initialImage = '';
+        this.imageService.imageChangedEvent = '';
+        this.imageService.croppedImage = '';
       })
   }
 }

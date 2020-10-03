@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PublicationsService } from 'src/app/services/publications.service';
-import { Post } from 'src/app/interfaces/Post';
+import { Post } from 'src/app/interfaces/Post.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessagesService } from 'src/app/services/messages.service';
 import { LikesService } from 'src/app/services/likes.service';
 import { CommentsService } from 'src/app/services/comments.service';
+
+import { HttpResponse } from "../../interfaces/HttpResponse.interface";
 
 @Component({
   selector: 'app-post',
@@ -42,8 +44,8 @@ export class PostComponent implements OnInit {
 
   onDeletePublication(): void {
     this.publicationsService.deletePublication(this.postId)
-      .subscribe(data => {
-        if (data.message === 'Publication supprimée') {
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
           this.messagesService.add(`Publication supprimée`);
           this.router.navigate(['/home']);
         } else {
@@ -56,8 +58,8 @@ export class PostComponent implements OnInit {
     const postId = this.postId;
     const rate: number = parseInt(event.target[1].value,10);
     this.likesService.newRatePublication(postId, rate)
-      .subscribe((data: {message?: string}) => {
-        if (data.message === 'Like ou dislike pris en compte') {
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
           this.getPublication();
         } else {
           this.messagesService.add(`Erreur: votre like/dislike n'a pas été pris en compte`);
@@ -69,8 +71,8 @@ export class PostComponent implements OnInit {
     const content: string = event.target[0].value;
     const postId: number = parseInt(event.target[1].value);
     this.commentsService.newComment(postId, content)
-      .subscribe((data: {message?: string}) => {
-        if (data.message === 'Commentaire ajoutée') {
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
           this.getPublication();
         } else {
           this.messagesService.add(`Erreur: impossible d'ajouter ce commentaire`);
@@ -81,8 +83,8 @@ export class PostComponent implements OnInit {
   onDeleteComment(event) {
     const commentId: number = parseInt(event.target[0].value);
     this.commentsService.deleteComment(commentId)
-      .subscribe((data: {message?: string}) => {
-        if (data.message === 'Commentaire supprimée') {
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
           this.getPublication();
         } else {
           this.messagesService.add(`Erreur: impossible de supprimer ce commentaire`);

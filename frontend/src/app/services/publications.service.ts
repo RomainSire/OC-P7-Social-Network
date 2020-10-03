@@ -41,7 +41,7 @@ export class PublicationsService {
   }
 
   newPublication(formData: FormData) {
-    return this.httpClient.post(`${this.postsUrl}`, formData, { withCredentials: true })
+    return this.httpClient.post(`${this.postsUrl}`, formData, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
@@ -49,7 +49,7 @@ export class PublicationsService {
   }
 
   deletePublication(postId: Number) {
-    return this.httpClient.delete(`${this.postsUrl}/${postId}`, { withCredentials: true })
+    return this.httpClient.delete(`${this.postsUrl}/${postId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);

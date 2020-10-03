@@ -51,7 +51,7 @@ export class UsersService {
   }
 
   updateOutline(id: number, outline: string) {
-    return this.httpClient.put(`${this.userUrl}/${id}/outline`, {outline}, { withCredentials: true })
+    return this.httpClient.put(`${this.userUrl}/${id}/outline`, {outline}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
@@ -59,7 +59,7 @@ export class UsersService {
   }
 
   updatePassword(id: number, oldPassword: string, newPassword: string) {
-    return this.httpClient.put(`${this.userUrl}/${id}/password`, {oldPassword, newPassword}, { withCredentials: true })
+    return this.httpClient.put(`${this.userUrl}/${id}/password`, {oldPassword, newPassword}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
@@ -67,7 +67,7 @@ export class UsersService {
   }
 
   updateAdminRights(id: number, isadmin: number) {
-    return this.httpClient.put(`${this.userUrl}/${id}/admin`, {isadmin}, { withCredentials: true })
+    return this.httpClient.put(`${this.userUrl}/${id}/admin`, {isadmin}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
@@ -75,7 +75,7 @@ export class UsersService {
   }
 
   deleteUser(id: number) {
-    return this.httpClient.delete(`${this.userUrl}/${id}`, { withCredentials: true })
+    return this.httpClient.delete(`${this.userUrl}/${id}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
@@ -83,7 +83,7 @@ export class UsersService {
   }
 
   updatePicture(id: number, uploadData: FormData) {
-    return this.httpClient.put(`${this.userUrl}/${id}/picture`, uploadData, { withCredentials: true })
+    return this.httpClient.put(`${this.userUrl}/${id}/picture`, uploadData, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);

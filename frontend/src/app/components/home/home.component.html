@@ -7,14 +7,14 @@
     <form (submit)="onSubmitNewPost($event)">
       <h2>Exprimez-vous...</h2>
       <p>
-        <img [src]="croppedImage" class="image-preview"/>
+        <img [src]="imageService.croppedImage" class="image-preview"/>
       </p>
       <p>
         <textarea name="addPub-content" placeholder="Ajouter un texte"></textarea>
       </p>
       <p class="buttons">
         <label for="addPub-image" class="btn">Choisir une image
-          <input type="file" id="addPub-image" (change)="fileChangeEvent($event)">
+          <input type="file" id="addPub-image" (change)="imageService.fileChangeEvent($event)">
         </label>
         <button type="submit" class="btn">Publier !</button>
       </p>
@@ -23,15 +23,15 @@
     <div id="cropper" class="cropper hidden">
       <image-cropper
         class="profile--cropper--preview"
-        [imageChangedEvent]="imageChangedEvent"
+        [imageChangedEvent]="imageService.imageChangedEvent"
         [maintainAspectRatio]="false"
         format="png"
         resizeToWidth="800"
-        (imageCropped)="imageCropped($event)"
-        (imageLoaded)="imageLoaded()"
-        (loadImageFailed)="loadImageFailed()"
+        (imageCropped)="imageService.imageCropped($event)"
+        (imageLoaded)="imageService.imageLoaded()"
+        (loadImageFailed)="imageService.loadImageFailed()"
     ></image-cropper>
-    <button class="btn" (click)="onCroppedImageDone()">Ok</button>
+    <button class="btn" (click)="imageService.onCroppedImageDone()">Ok</button>
     </div>
   </section>
 

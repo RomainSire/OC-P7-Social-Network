@@ -13,7 +13,7 @@
             accept="image/*"
             id="picture"
             class="input-file"
-            (change)="onChangeProfilePicture($event)">
+            (change)="imageService.fileChangeEvent($event)">
         </form>
       </div>
       <div class="profile--description">
@@ -62,14 +62,14 @@
     <div id="cropper" class="profile--cropper hidden">
       <image-cropper
         class="profile--cropper--preview"
-        [imageChangedEvent]="imageChangedEvent"
+        [imageChangedEvent]="imageService.imageChangedEvent"
         [maintainAspectRatio]="true"
         [aspectRatio]="1 / 1"
         format="png"
         resizeToWidth="400"
-        (imageCropped)="imageCropped($event)"
-        (imageLoaded)="imageLoaded()"
-        (loadImageFailed)="loadImageFailed()"
+        (imageCropped)="imageService.imageCropped($event)"
+        (imageLoaded)="imageService.imageLoaded()"
+        (loadImageFailed)="imageService.loadImageFailed()"
     ></image-cropper>
     <button class="btn" (click)="onCroppedImageDone()">Valider</button>
     </div>

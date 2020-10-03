@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { MessagesService } from "./messages.service";
 
-import { Notification } from "../interfaces/Notification";
+import { Notification } from "../interfaces/Notification.interface";
 
 @Injectable({
   providedIn: 'root'

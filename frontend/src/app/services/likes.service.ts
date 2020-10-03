@@ -25,7 +25,7 @@ export class LikesService {
   }
 
   newRatePublication(postId: number, rate: number) {
-    return this.httpClient.post(`${this.likeUrl}`, {postId, rate}, { withCredentials: true })
+    return this.httpClient.post(`${this.likeUrl}`, {postId, rate}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);

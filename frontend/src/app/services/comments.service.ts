@@ -24,7 +24,7 @@ export class CommentsService {
   }
 
   newComment(postId: number, content: string) {
-    return this.httpClient.post(`${this.commentUrl}`, {postId, content}, { withCredentials: true })
+    return this.httpClient.post(`${this.commentUrl}`, {postId, content}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
@@ -32,7 +32,7 @@ export class CommentsService {
   }
 
   deleteComment(commentId: number) {
-    return this.httpClient.delete(`${this.commentUrl}/${commentId}`, { withCredentials: true })
+    return this.httpClient.delete(`${this.commentUrl}/${commentId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);

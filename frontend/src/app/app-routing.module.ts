@@ -16,11 +16,11 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signin', component: SigninComponent },
-  { path: 'home', canActivate:[AuthGuardService], component: HomeComponent },
-  { path: 'post/:id', canActivate:[AuthGuardService], component: PostComponent },
-  { path: 'users', canActivate:[AuthGuardService], component: UsersComponent },
-  { path: 'profile/:id', canActivate:[AuthGuardService], component: ProfileComponent },
-  { path: 'notifs', canActivate:[AuthGuardService], component: NotificationsComponent },
+  { path: 'home', canActivate: [AuthGuardService], component: HomeComponent },
+  { path: 'post/:id', canActivate: [AuthGuardService], component: PostComponent },
+  { path: 'users', canActivate: [AuthGuardService], component: UsersComponent },
+  { path: 'profile/:id', canActivate: [AuthGuardService], component: ProfileComponent },
+  { path: 'notifs', canActivate: [AuthGuardService], component: NotificationsComponent },
   { path: '**', redirectTo: 'home' }
 ];
 

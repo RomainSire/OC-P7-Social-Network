@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 import { MessagesService } from "./messages.service";
 import { NotificationsService } from "./notifications.service";
 
-import { User } from "../interfaces/User";
+import { User } from "../interfaces/User.interface";
+import { HttpResponse } from "../interfaces/HttpResponse.interface";
 
 
 @Injectable({
@@ -36,36 +37,38 @@ export class AuthService {
    * @param password mot de passe de l'utilisateur
    */
   loginUser(email: string, password: string) {
-    return this.httpClient.post(`${this.userUrl}/login`, {email, password}, { withCredentials: true })
+    return this.httpClient.post(`${this.userUrl}/login`, {email, password}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
-        this.log(`Erreur lors du Login: ${err.statusText}`);
         return of(err);
       }))
-      .subscribe((data: User & {message: string, error?: any}): void => {
-        if (data.message === "Utilisateur loggé") {
-          this.user = data;
-          if (data.pictureUrl === null) {
+      .subscribe((response: HttpResponse): void => {
+        if (response.status === 200) {
+          this.user = response.body;
+          if (response.body.pictureUrl === null) {
             this.user.pictureUrl = "./assets/anonymousUser.svg"
           }
           this.messagesService.add(`Bienvenue ${this.user.name} !`);
           this.router.navigate(['/home']);
           this.notificationService.getNotifications();
         } else {
-          this.log(data.error.error);
+          this.log(`Erreur lors du Login: ${response.error.error}`);
         }
       });
   }
 
   logoutUser() {
-    return this.httpClient.get(`${this.userUrl}/logout`, { withCredentials: true })
+    return this.httpClient.get(`${this.userUrl}/logout`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
-        this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
-      .subscribe((): void => {
-        this.user = undefined;
-        this.log(`Vous êtes déconnecté`);
-        this.router.navigate(['/login']);
+      .subscribe((response: HttpResponse): void => {
+        if (response.status === 200) {
+          this.user = undefined;
+          this.log(`Vous êtes déconnecté`);
+          this.router.navigate(['/login']);
+        } else {
+          this.log(`Erreur: Une erreur s'est produite!`)
+        }
       })
   }
 
@@ -86,9 +89,8 @@ export class AuthService {
   }
 
   createNewUser(name: string, email: string, password: string) {
-    return this.httpClient.post(`${this.userUrl}/new`, {name, email, password}, { withCredentials: true })
+    return this.httpClient.post(`${this.userUrl}/new`, {name, email, password}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
-        this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
   }  

@@ -1,6 +1,5 @@
 backend/node_modules
-backend/.env
-backend/images/*
+backend/.env-localhost
 backend/access.log
 
 frontend/node_modules

@@ -22,11 +22,32 @@ Le dossier "docs" contient :
 - **Guidelines API.ods** : Les guidelines de l'API backend : résumé des routes avec les entrées/sorties
 
 ## Installation
-### 1. Cloner ce dépot Github
+### Methode1 (conseillée) : Avec Docker
+1. **Cloner le dépot Github**
 ```bash
 git clone https://github.com/RomainSire/OC-P7-Social-Network.git
 ```
-### 2. Préparer la base de données MySQL
+2. **Lancer les différents éléments avec docker-compose**
+```bash
+cd OC-P7-Social-Network
+docker-compose up --build -d
+```
+3. **Essayer l'application**
+- Le réseau social est normalement accessible à l'adresse : localhost:4200
+- Pour tester plus en détail le backend (avec postman par exemple), ce dernier devrait répondre à l'adresse : localhost:3000
+
+NB:
+- J'ai déjà inclus quelques utilisateurs et publications, pour ne pas arriver sur un réseau social vide..
+- Tous les utilisateurs sont utilisable avec le login: "prenom.nom@email.com" et le mot de passe: "motdepasse"
+- Le premier utilisateur créé a automatiquement les droits d'admin. Pour tester ce compte, utiliser le login "mr.admin@email.com" et le mot de passe "motdepasse"
+- La persistance des données (base de données et images) est fonctionnelle, tant que les volumes sn-mysql-data et sn-images ne sont pas supprimés.
+
+### Methode2 (déconseillée) : Manuellement
+1. **Cloner ce dépot Github**
+```bash
+git clone https://github.com/RomainSire/OC-P7-Social-Network.git
+```
+2. **Préparer la base de données MySQL**
 - Se connecter à MySQL :
 ```bash
 mysql -u root -p # remplacer root par votre nom d'utilisateur, puis saisir le mot de passe
@@ -47,7 +68,7 @@ mysql -u socialadmin -p social_network
 ```sql
 SOURCE docs/CreationBDD.sql  -- remplacer par le chemin d'accès correct vers le fichier
 ```
-### 3. Backend
+3. **Backend**
 - Ajouter le fichier .env dans le dossier ./backend/, avec les variables :
 ```
 DB_HOST='localhost'
@@ -64,7 +85,7 @@ cd backend # Aller dans le dossier "backend"
 npm install # Installer les dépendances
 node server # lancer le backend
 ```
-### 4. Frontend
+4. **Frontend**
 - Ouvrir un nouveau terminal
 - initialisation et démarrage du frontend (Angular doit être installé sur la machine)
 ```bash
@@ -72,6 +93,6 @@ cd frontend # Aller dans le dossier "frontend"
 npm install # Installer les dépendances
 ng serve # lancer le frontend
 ```
-### 5. Test
+5. **Essayer l'application**
 - Le réseau social est normalement accessible à l'adresse : localhost:4200
 - Pour tester plus en détail le backend (avec postman par exemple), ce dernier devrait répondre à l'adresse : localhost:3000

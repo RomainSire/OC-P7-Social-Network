@@ -4,6 +4,8 @@ import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+import { environment } from '../../environments/environment';
+
 import { MessagesService } from "./messages.service";
 import { NotificationsService } from "./notifications.service";
 
@@ -16,8 +18,8 @@ import { HttpResponse } from "../interfaces/HttpResponse.interface";
 })
 export class AuthService {
   user: User;
+  private userUrl = `${environment.backendServer}/api/user`;
 
-  private userUrl = 'http://localhost:3000/api/user';
 
   constructor(
     private httpClient: HttpClient,

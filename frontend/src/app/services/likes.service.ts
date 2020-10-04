@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+
+import { environment } from '../../environments/environment';
 
 import { MessagesService } from "./messages.service";
 
@@ -12,7 +13,7 @@ import { MessagesService } from "./messages.service";
 })
 export class LikesService {
 
-  private likeUrl = 'http://localhost:3000/api/like';
+  private likeUrl = `${environment.backendServer}/api/like`;
 
   constructor(
     private httpClient: HttpClient,

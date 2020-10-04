@@ -3,6 +3,8 @@ import { catchError, map } from 'rxjs/operators';
 import { CanActivate, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+
+import { environment } from '../../environments/environment';
 import { AuthService } from "./auth.service";
 
 
@@ -11,6 +13,8 @@ import { AuthService } from "./auth.service";
 })
 export class AuthGuardService implements CanActivate {
 
+  private backendServer = environment.backendServer;
+
   constructor(
     private router: Router,
     private httpClient: HttpClient,
@@ -18,7 +22,7 @@ export class AuthGuardService implements CanActivate {
     ) { }
 
   canActivate(): Observable<boolean>|Promise<boolean>|boolean {
-    return this.httpClient.get('http://localhost:3000/api/user/isauth', { withCredentials: true })
+    return this.httpClient.get(`${this.backendServer}/api/user/isauth`, { withCredentials: true })
       .pipe(
         catchError(err => {
           this.router.navigate(['/login']);

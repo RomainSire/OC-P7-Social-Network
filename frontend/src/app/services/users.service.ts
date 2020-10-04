@@ -3,6 +3,8 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
+
 import { MessagesService } from "./messages.service";
 
 @Injectable({
@@ -10,7 +12,7 @@ import { MessagesService } from "./messages.service";
 })
 export class UsersService {
 
-  private userUrl = 'http://localhost:3000/api/user';
+  private userUrl = `${environment.backendServer}/api/user`;
 
   constructor(
     private httpClient: HttpClient,

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+
+import { environment } from '../../environments/environment';
 
 import { MessagesService } from "./messages.service";
 
@@ -11,7 +12,7 @@ import { MessagesService } from "./messages.service";
 })
 export class PublicationsService {
 
-  private postsUrl = 'http://localhost:3000/api/post';
+  private postsUrl = `${environment.backendServer}/api/post`;
 
   constructor(
     private httpClient: HttpClient,

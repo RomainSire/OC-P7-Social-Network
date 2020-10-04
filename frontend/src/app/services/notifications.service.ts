@@ -3,8 +3,9 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
-import { MessagesService } from "./messages.service";
+import { environment } from '../../environments/environment';
 
+import { MessagesService } from "./messages.service";
 import { Notification } from "../interfaces/Notification.interface";
 
 @Injectable({
@@ -14,7 +15,7 @@ export class NotificationsService {
 
   notifications: Notification[];
 
-  private notificationsUrl = 'http://localhost:3000/api/notif';
+  private notificationsUrl = `${environment.backendServer}/api/notif`;
 
   constructor(
     private httpClient: HttpClient,

@@ -1,14 +1,14 @@
 export interface HttpResponse {
-  headers: any,
-  ok: boolean,
-  status: number,
-  statusText: string,
-  url: string
+  headers: any;
+  ok: boolean;
+  status: number;
+  statusText: string;
+  url: string;
 
-  body?: any,
-  type?: number,
+  body?: any;
+  type?: number;
 
-  error?: any,
-  message?: string,
-  name?: string,
+  error?: any;
+  message?: string;
+  name?: string;
 }

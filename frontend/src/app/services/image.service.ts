@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 
-import { MessagesService } from "./messages.service";
+import { MessagesService } from './messages.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class ImageService {
     this.imageChangedEvent = event;
     this.initialImage = event.target.files[0];
   }
-  imageCropped(event: ImageCroppedEvent) {
+  imageCropped(event: ImageCroppedEvent): void {
     this.croppedImage = event.base64;
   }
   imageLoaded(): void {
@@ -31,15 +31,15 @@ export class ImageService {
   }
   // Transformation de l'image base64 (donnée par "ngx-image-cropper") en fichier exploitable
   base64ToFile(dataurl: string, filename: string): File {
-    const arr = dataurl.split(',')
-    const mime = arr[0].match(/:(.*?);/)[1]
-    const bstr = atob(arr[1])
-    let n = bstr.length
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
     const u8arr = new Uint8Array(n);
-    while(n--){
+    while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
     }
-    return new File([u8arr], filename, {type:mime});
+    return new File([u8arr], filename, {type: mime});
   }
   onCroppedImageDone(): void {
     document.getElementById('cropper').classList.add('hidden');

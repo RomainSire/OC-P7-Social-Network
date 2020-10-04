@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-import { PublicationsService } from "../../services/publications.service";
-import { AuthService } from "../../services/auth.service";
-import { MessagesService } from "../../services/messages.service";
-import { CommentsService } from "../../services/comments.service";
-import { LikesService } from "../../services/likes.service";
-import { ImageService } from "../../services/image.service";
+import { PublicationsService } from '../../services/publications.service';
+import { AuthService } from '../../services/auth.service';
+import { MessagesService } from '../../services/messages.service';
+import { CommentsService } from '../../services/comments.service';
+import { LikesService } from '../../services/likes.service';
+import { ImageService } from '../../services/image.service';
 
-import { Post } from "../../interfaces/Post.interface";
-import { HttpResponse } from "../../interfaces/HttpResponse.interface";
+import { Post } from '../../interfaces/Post.interface';
+import { HttpResponse } from '../../interfaces/HttpResponse.interface';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
 
   public posts: Post[]; // Posts affichés actuellement
   // NB: this.posts.length = nombre de posts actuellement affichés
-  private postsBatch: number = 2; // Nombre de post supplémentaires qui seront chargés lorsqu'on arrive en bas de page (infinite scroll)
+  private postsBatch = 2; // Nombre de post supplémentaires qui seront chargés lorsqu'on arrive en bas de page (infinite scroll)
 
 
   constructor(
@@ -38,12 +38,12 @@ export class HomeComponent implements OnInit {
   /**
    * Récupérer tous les posts, avec leurs commentaires et leur likes/dislikes
    */
-  //Récupérer tous les posts depuis le début jusqu'au chargement actuel
-  getPostsFromStart(numberOfPosts: number) {
+  // Récupérer tous les posts depuis le début jusqu'au chargement actuel
+  getPostsFromStart(numberOfPosts: number): void {
     this.publicationsService.getPublications(numberOfPosts, 0)
       .subscribe((response: {posts: Post[]}) => {
         this.posts = response.posts;
-      })
+      });
   }
   // charger de nouveaux posts petit à petit
   getOtherPosts(limit: number, offset: number): void {
@@ -52,14 +52,14 @@ export class HomeComponent implements OnInit {
         const oldPosts: Post[] = this.posts;
         const newPosts: Post[] = response.posts;
         this.posts = oldPosts.concat(newPosts);
-      })
+      });
   }
 
   /**
    * Récupération des posts au scroll de la page (pour infinite scroll)
    */
   onScroll(): void {
-    this.getOtherPosts(this.postsBatch, this.posts.length)
+    this.getOtherPosts(this.postsBatch, this.posts.length);
   }
 
   /**
@@ -77,28 +77,28 @@ export class HomeComponent implements OnInit {
       formData.append('image', image);
     }
     formData.append('content', content);
-    
+
     this.publicationsService.newPublication(formData)
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
           this.getPostsFromStart(this.posts.length);
           this.messagesService.add(`Publication ajoutée`);
           // reset du formulaire
-          event.target[0].value = "";
+          event.target[0].value = '';
           this.imageService.initialImage = '';
           this.imageService.imageChangedEvent = '';
           this.imageService.croppedImage = '';
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
         }
-      })
+      });
   }
 
   /**
    * Suppression d'une publication
    */
   onDeletePublication(event: Event): void {
-    const postId: number = parseInt(event.target[0].value,10);
+    const postId: number = parseInt(event.target[0].value, 10);
     this.publicationsService.deletePublication(postId)
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
@@ -107,16 +107,16 @@ export class HomeComponent implements OnInit {
         } else {
           this.messagesService.add(`Une erreur s'est produite`);
         }
-      })
+      });
   }
 
 
   /**
    * Ajout d'un commentaire
    */
-  onAddComment(event: Event) {
+  onAddComment(event: Event): void {
     const content: string = event.target[0].value;
-    const postId: number = parseInt(event.target[1].value,10);
+    const postId: number = parseInt(event.target[1].value, 10);
     this.commentsService.newComment(postId, content)
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
@@ -124,14 +124,14 @@ export class HomeComponent implements OnInit {
         } else {
           this.messagesService.add(`Erreur: impossible d'ajouter ce commentaire`);
         }
-      })
+      });
   }
 
   /**
    * Suppression d'un commentaire
    */
-  onDeleteComment(event: Event) {
-    const commentId: number = parseInt(event.target[0].value,10);
+  onDeleteComment(event: Event): void {
+    const commentId: number = parseInt(event.target[0].value, 10);
     this.commentsService.deleteComment(commentId)
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
@@ -139,15 +139,15 @@ export class HomeComponent implements OnInit {
         } else {
           this.messagesService.add(`Erreur: impossible de supprimer ce commentaire`);
         }
-      })
+      });
   }
 
   /**
    * Like/dislike/annulation d'une publication
    */
-  onlike(event: Event) {
-    const postId: number = parseInt(event.target[0].value,10);
-    const rate: number = parseInt(event.target[1].value,10);
+  onlike(event: Event): void {
+    const postId: number = parseInt(event.target[0].value, 10);
+    const rate: number = parseInt(event.target[1].value, 10);
     this.likesService.newRatePublication(postId, rate)
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
@@ -155,7 +155,6 @@ export class HomeComponent implements OnInit {
         } else {
           this.messagesService.add(`Erreur: votre like/dislike n'a pas été pris en compte`);
         }
-      })
+      });
   }
-
 }

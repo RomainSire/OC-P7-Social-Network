@@ -5,8 +5,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
-import { MessagesService } from "./messages.service";
-import { Notification } from "../interfaces/Notification.interface";
+import { MessagesService } from './messages.service';
+import { Notification } from '../interfaces/Notification.interface';
+import { HttpResponse } from '../interfaces/HttpResponse.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -28,32 +29,34 @@ export class NotificationsService {
     this.messagesService.add(`Authentification: ${message}`);
   }
 
-  getNotifications() {
-    return this.httpClient.get(`${this.notificationsUrl}`, { withCredentials: true })
+  getNotifications(): void {
+    this.httpClient.get(`${this.notificationsUrl}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }))
-      .subscribe((data: {notifications: Notification[]}) => {
-        if (data.notifications) {
-          this.notifications = data.notifications;
+      .subscribe((response: HttpResponse) => { // A MODIFIER !!!! C'est MOCHE !
+        if (response.status === 201) {
+          this.notifications = response.body.notifications;
+        } else {
+          this.messagesService.add(`Erreur: Impossible de récupérer les notifications`);
         }
-      })
+      });
   }
 
-  deleteOneNotification(notificationId: number) {
-    return this.httpClient.delete(`${this.notificationsUrl}/${notificationId}`, { withCredentials: true })
+  deleteOneNotification(notificationId: number): Observable<HttpResponse> {
+    return this.httpClient.delete(`${this.notificationsUrl}/${notificationId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
-  deleteAllNotifications() {
-    return this.httpClient.delete(`${this.notificationsUrl}`, { withCredentials: true })
+  deleteAllNotifications(): Observable<HttpResponse> {
+    return this.httpClient.delete(`${this.notificationsUrl}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 }

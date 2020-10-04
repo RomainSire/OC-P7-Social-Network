@@ -13,7 +13,7 @@ import { Notification } from "../interfaces/Notification.interface";
 })
 export class NotificationsService {
 
-  notifications: Notification[];
+  public notifications: Notification[];
 
   private notificationsUrl = `${environment.backendServer}/api/notif`;
 

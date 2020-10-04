@@ -13,7 +13,7 @@ import { HttpResponse } from "../../../interfaces/HttpResponse.interface";
 })
 export class SigninComponent implements OnInit {
 
-  signInForm: FormGroup;
+  public signInForm: FormGroup;
 
   constructor(
     private authService: AuthService,

@@ -18,7 +18,7 @@ interface User {
 })
 export class UsersComponent implements OnInit {
 
-  users;
+  public users: User[];
   private searchTerms = new Subject<string>();
 
   constructor(

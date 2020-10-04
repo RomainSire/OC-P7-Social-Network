@@ -17,9 +17,9 @@ import { HttpResponse } from "../../interfaces/HttpResponse.interface";
 })
 export class HomeComponent implements OnInit {
 
-  posts: Post[]; // Posts affichés actuellement
+  public posts: Post[]; // Posts affichés actuellement
   // NB: this.posts.length = nombre de posts actuellement affichés
-  postsBatch: number = 2; // Nombre de post supplémentaires qui seront chargés lorsqu'on arrive en bas de page (infinite scroll)
+  private postsBatch: number = 2; // Nombre de post supplémentaires qui seront chargés lorsqu'on arrive en bas de page (infinite scroll)
 
 
   constructor(

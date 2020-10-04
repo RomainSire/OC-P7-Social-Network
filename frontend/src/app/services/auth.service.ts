@@ -17,7 +17,7 @@ import { HttpResponse } from "../interfaces/HttpResponse.interface";
   providedIn: 'root'
 })
 export class AuthService {
-  user: User;
+  public user: User;
   private userUrl = `${environment.backendServer}/api/user`;
 
 

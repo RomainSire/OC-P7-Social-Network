@@ -17,8 +17,8 @@ import { HttpResponse } from "../../interfaces/HttpResponse.interface";
 })
 export class PostComponent implements OnInit {
 
-  postId: number;
-  post: Post;
+  private postId: number;
+  public post: Post;
 
   constructor(
     private route: ActivatedRoute,

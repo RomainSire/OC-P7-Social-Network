@@ -8,9 +8,9 @@ import { MessagesService } from "./messages.service";
 })
 export class ImageService {
 
-  initialImage: any = ''; // Image avant le crop/resize
-  imageChangedEvent: any = '';
-  croppedImage: any = ''; // Image après le crop/resize (envoyée au backend)
+  public initialImage: any = ''; // Image avant le crop/resize
+  public imageChangedEvent: any = '';
+  public croppedImage: any = ''; // Image après le crop/resize (envoyée au backend)
 
   constructor(
     private messagesService: MessagesService

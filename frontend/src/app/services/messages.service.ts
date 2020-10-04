@@ -7,7 +7,7 @@ export class MessagesService {
 
   constructor() { }
   
-  messages: string[] = [];
+  public messages: string[] = [];
 
   add(message: string): void {
     this.messages.push(message);

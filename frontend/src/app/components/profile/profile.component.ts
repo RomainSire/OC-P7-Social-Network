@@ -18,9 +18,9 @@ import { HttpResponse } from "../../interfaces/HttpResponse.interface";
 })
 export class ProfileComponent implements OnInit {
 
-  userDetails: UserDetails;
-  id: number;
-  passwordChangeForm: FormGroup;
+  public userDetails: UserDetails;
+  private id: number;
+  public passwordChangeForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,

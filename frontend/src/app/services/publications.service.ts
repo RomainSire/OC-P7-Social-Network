@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
-import { MessagesService } from './messages.service';
+import { MessagesService } from "./messages.service";
 
 @Injectable({
   providedIn: 'root'
@@ -25,36 +25,36 @@ export class PublicationsService {
   }
 
 
-  getPublications(limit: number, offset: number): Observable<any> {
+  getPublications(limit: number, offset: number) {
     return this.httpClient.get(`${this.postsUrl}/${limit}/${offset}`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }));
+      }))
   }
 
-  getOnePublication(id: number): Observable<any> {
+  getOnePublication(id: number) {
     return this.httpClient.get(`${this.postsUrl}/${id}`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }));
+      }))
   }
 
-  newPublication(formData: FormData): Observable<any> {
+  newPublication(formData: FormData) {
     return this.httpClient.post(`${this.postsUrl}`, formData, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }));
+      }))
   }
 
-  deletePublication(postId: number): Observable<any> {
+  deletePublication(postId: Number) {
     return this.httpClient.delete(`${this.postsUrl}/${postId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }));
+      }))
   }
 
 }

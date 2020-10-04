@@ -5,8 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
-import { MessagesService } from './messages.service';
-import { HttpResponse } from '../interfaces/HttpResponse.interface';
+import { MessagesService } from "./messages.service";
 
 @Injectable({
   providedIn: 'root'
@@ -25,19 +24,19 @@ export class CommentsService {
     this.messagesService.add(message);
   }
 
-  newComment(postId: number, content: string): Observable<HttpResponse> {
+  newComment(postId: number, content: string) {
     return this.httpClient.post(`${this.commentUrl}`, {postId, content}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }));
+      }))
   }
 
-  deleteComment(commentId: number): Observable<HttpResponse> {
+  deleteComment(commentId: number) {
     return this.httpClient.delete(`${this.commentUrl}/${commentId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }));
+      }))
   }
 }

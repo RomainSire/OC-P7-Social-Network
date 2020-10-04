@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- for NgModel
 import { HttpClientModule } from '@angular/common/http';
-import { ImageCropperModule } from 'ngx-image-cropper';
+import { ImageCropperModule } from "ngx-image-cropper";
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { AppRoutingModule } from './app-routing.module';

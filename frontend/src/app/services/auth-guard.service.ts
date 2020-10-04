@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
+import { AuthService } from "./auth.service";
 
 
 @Injectable({
@@ -32,6 +32,6 @@ export class AuthGuardService implements CanActivate {
         map(res => {
           return true;
         })
-      );
+      )
   }
 }

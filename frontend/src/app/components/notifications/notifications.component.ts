@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from 'src/app/interfaces/HttpResponse.interface';
-import { MessagesService } from 'src/app/services/messages.service';
 
-import { NotificationsService } from '../../services/notifications.service';
+import { NotificationsService } from "../../services/notifications.service";
 
 @Component({
   selector: 'app-notifications',
@@ -13,7 +11,6 @@ export class NotificationsComponent implements OnInit {
 
   constructor(
     public notificationsService: NotificationsService,
-    private messagesService: MessagesService
   ) { }
 
   ngOnInit(): void {
@@ -22,24 +19,16 @@ export class NotificationsComponent implements OnInit {
 
   onDeleteAll(): void {
     this.notificationsService.deleteAllNotifications()
-      .subscribe((response: HttpResponse) => {
-        if (response.status === 201) {
-          this.notificationsService.getNotifications();
-        } else {
-          this.messagesService.add(`Erreur: Impossible de supprimer les notifications`);
-        }
-      });
+      .subscribe(data => {
+        this.notificationsService.getNotifications();
+      })
   }
 
   onDeleteOne(id: number): void {
     this.notificationsService.deleteOneNotification(id)
-      .subscribe((response: HttpResponse) => {
-        if (response.status === 201) {
-          this.notificationsService.getNotifications();
-        } else {
-          this.messagesService.add(`Erreur: Impossible de supprimer la notification`);
-        }
-      });
+      .subscribe(data => {
+        this.notificationsService.getNotifications();
+      })
   }
 
 }

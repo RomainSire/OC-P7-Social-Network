@@ -25,9 +25,11 @@ exports.newuser = (req, res, next) => {
 
       connection.query(preliminarySql, (error, result, fields) => {
         if (error) {
+          console.log(error);
           connection.end();
           res.status(500).json({ "error": error.sqlMessage });
         } else {
+          console.log(result);
           if (result[0].numberOfUsers === 0) {
             isAdmin = 1;
           } else {

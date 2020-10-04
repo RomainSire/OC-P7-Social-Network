@@ -6,11 +6,11 @@ import { Router } from '@angular/router';
 
 import { environment } from '../../environments/environment';
 
-import { MessagesService } from './messages.service';
-import { NotificationsService } from './notifications.service';
+import { MessagesService } from "./messages.service";
+import { NotificationsService } from "./notifications.service";
 
-import { User } from '../interfaces/User.interface';
-import { HttpResponse } from '../interfaces/HttpResponse.interface';
+import { User } from "../interfaces/User.interface";
+import { HttpResponse } from "../interfaces/HttpResponse.interface";
 
 
 @Injectable({
@@ -38,8 +38,8 @@ export class AuthService {
    * @param email email de l'utilisateur
    * @param password mot de passe de l'utilisateur
    */
-  loginUser(email: string, password: string): void {
-    this.httpClient.post(`${this.userUrl}/login`, {email, password}, { withCredentials: true, observe: 'response' })
+  loginUser(email: string, password: string) {
+    return this.httpClient.post(`${this.userUrl}/login`, {email, password}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         return of(err);
       }))
@@ -47,7 +47,7 @@ export class AuthService {
         if (response.status === 200) {
           this.user = response.body;
           if (response.body.pictureUrl === null) {
-            this.user.pictureUrl = './assets/anonymousUser.svg';
+            this.user.pictureUrl = "./assets/anonymousUser.svg"
           }
           this.messagesService.add(`Bienvenue ${this.user.name} !`);
           this.router.navigate(['/home']);
@@ -58,8 +58,8 @@ export class AuthService {
       });
   }
 
-  logoutUser(): void {
-    this.httpClient.get(`${this.userUrl}/logout`, { withCredentials: true, observe: 'response' })
+  logoutUser() {
+    return this.httpClient.get(`${this.userUrl}/logout`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         return of(err);
       }))
@@ -69,13 +69,13 @@ export class AuthService {
           this.log(`Vous êtes déconnecté`);
           this.router.navigate(['/login']);
         } else {
-          this.log(`Erreur: Une erreur s'est produite!`);
+          this.log(`Erreur: Une erreur s'est produite!`)
         }
-      });
+      })
   }
 
-  getCurrentUserInfo(): void {
-    this.httpClient.get(`${this.userUrl}/currentuser`, { withCredentials: true })
+  getCurrentUserInfo() {
+    return this.httpClient.get(`${this.userUrl}/currentuser`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Veuillez vous identifier`);
         return of(err);
@@ -84,16 +84,16 @@ export class AuthService {
         if (data.userId) {
           this.user = data;
           if (data.pictureUrl === null) {
-            this.user.pictureUrl = './assets/anonymousUser.svg';
+            this.user.pictureUrl = "./assets/anonymousUser.svg"
           }
         }
-      });
+      })
   }
 
-  createNewUser(name: string, email: string, password: string): Observable<HttpResponse> {
+  createNewUser(name: string, email: string, password: string) {
     return this.httpClient.post(`${this.userUrl}/new`, {name, email, password}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         return of(err);
-      }));
-  }
+      }))
+  }  
 }

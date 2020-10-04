@@ -37,8 +37,12 @@ export class PostComponent implements OnInit {
 
   getPublication(): void {
     this.publicationsService.getOnePublication(this.postId)
-      .subscribe(data => {
-        this.post = data.post[0];
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 200) {
+          this.post = response.body.post[0];
+        } else {
+          this.messagesService.add(`Erreur: Impossible de récupérer la publication`);
+        }
       });
   }
 

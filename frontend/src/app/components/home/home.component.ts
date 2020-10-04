@@ -41,17 +41,25 @@ export class HomeComponent implements OnInit {
   // Récupérer tous les posts depuis le début jusqu'au chargement actuel
   getPostsFromStart(numberOfPosts: number): void {
     this.publicationsService.getPublications(numberOfPosts, 0)
-      .subscribe((response: {posts: Post[]}) => {
-        this.posts = response.posts;
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 200) {
+          this.posts = response.body.posts;
+        } else {
+          this.messagesService.add('Erreur: Impossible de récupérer les publications');
+        }
       });
   }
   // charger de nouveaux posts petit à petit
   getOtherPosts(limit: number, offset: number): void {
     this.publicationsService.getPublications(limit, offset)
-      .subscribe((response: {posts: Post[]}) => {
-        const oldPosts: Post[] = this.posts;
-        const newPosts: Post[] = response.posts;
-        this.posts = oldPosts.concat(newPosts);
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 200) {
+          const oldPosts: Post[] = this.posts;
+          const newPosts: Post[] = response.body.posts;
+          this.posts = oldPosts.concat(newPosts);
+        } else {
+          this.messagesService.add('Erreur: Impossible de récupérer les publications');
+        }
       });
   }
 

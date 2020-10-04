@@ -26,16 +26,16 @@ export class PublicationsService {
   }
 
 
-  getPublications(limit: number, offset: number) {
-    return this.httpClient.get(`${this.postsUrl}/${limit}/${offset}`, { withCredentials: true })
+  getPublications(limit: number, offset: number): Observable<HttpResponse> {
+    return this.httpClient.get(`${this.postsUrl}/${limit}/${offset}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
       }));
   }
 
-  getOnePublication(id: number) {
-    return this.httpClient.get(`${this.postsUrl}/${id}`, { withCredentials: true })
+  getOnePublication(id: number): Observable<HttpResponse> {
+    return this.httpClient.get(`${this.postsUrl}/${id}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);

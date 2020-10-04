@@ -39,7 +39,7 @@ export class NotificationsService {
         if (response.status === 200) {
           this.notifications = response.body.notifications;
         } else {
-          this.log('Impossible de charger les notifications')
+          this.log('Impossible de charger les notifications');
         }
       });
   }

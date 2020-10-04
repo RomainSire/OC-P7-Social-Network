@@ -46,9 +46,6 @@ export class AuthService {
       .subscribe((response: HttpResponse): void => {
         if (response.status === 200) {
           this.user = response.body;
-          if (response.body.pictureUrl === null) {
-            this.user.pictureUrl = './assets/anonymousUser.svg';
-          }
           this.messagesService.add(`Bienvenue ${this.user.name} !`);
           this.router.navigate(['/home']);
           this.notificationService.getNotifications();
@@ -75,17 +72,16 @@ export class AuthService {
   }
 
   getCurrentUserInfo(): void {
-    this.httpClient.get(`${this.userUrl}/currentuser`, { withCredentials: true })
+    this.httpClient.get(`${this.userUrl}/currentuser`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Veuillez vous identifier`);
         return of(err);
       }))
-      .subscribe((data: User) => {
-        if (data.userId) {
-          this.user = data;
-          if (data.pictureUrl === null) {
-            this.user.pictureUrl = './assets/anonymousUser.svg';
-          }
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 200) {
+          this.user = response.body;
+        } else {
+          this.log(`Erreur: Une erreur s'est produite!`);
         }
       });
   }

@@ -10,7 +10,7 @@
       (input)="searchUser(searchBox.value)">
   </section>
   <section class="users--display">
-    <a *ngFor="let user of users"
+    <a *ngFor="let user of usersService.users"
       [routerLink]="'/profile/' + user.id"
       class="users--display--card" >
       <img [src]="user.pictureurl===null ? './assets/anonymousUser.svg' : user.pictureurl "

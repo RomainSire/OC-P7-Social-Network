@@ -4,8 +4,9 @@
     <hr>
     <div class="profile--top">
       <div class="profile--image">
+        <!--  ################### PHOTO DE PROFIL ################### -->
         <h2>Photo de profil</h2>
-        <img [src]="userDetails.pictureurl" alt="Photo de profil de {{userDetails.name}}">
+        <img [src]="userDetails.pictureurl === null ? './assets/anonymousUser.svg' : userDetails.pictureurl" alt="Photo de profil de {{userDetails.name}}">
         <form *ngIf="userDetails.id === authService.user.userId">
           <label for="picture" class="btn label-file" aria-label="Changer sa photo de profil">Changer ma photo de profil</label>
           <input 
@@ -17,10 +18,12 @@
         </form>
       </div>
       <div class="profile--description">
+        <!--  ################### EMAIL ################### -->
         <h2>E-mail</h2>
         <p class="profile--email">{{userDetails.email}}</p>
+        <!--  ################### DESCRIPTION ################### -->
         <h2 class="mt">Description</h2>
-        <p>{{userDetails.outline}}</p>
+        <p>{{userDetails.outline === null ? 'Pas de description' : userDetails.outline}}</p>
         <form (submit)="onUpdateOutline($event)" *ngIf="userDetails.id === authService.user.userId">
           <textarea name="outline" placeholder="Votre nouvelle description"></textarea>
           <button type="submit" class="btn description-btn">
@@ -28,6 +31,7 @@
           </button>
         </form>
         <div *ngIf="authService.user.isAdmin === 1">
+          <!--  ################### DROITS d'ADMIN ################### -->
           <h2 class="mt">Droits d'administration</h2>
           <p *ngIf="this.userDetails.isadmin === 1">{{userDetails.name}} est admin</p>
           <p *ngIf="this.userDetails.isadmin === 0">{{userDetails.name}} n'est pas admin</p>
@@ -39,18 +43,20 @@
     <hr *ngIf="userDetails.id === authService.user.userId">
     <div class="profile--bottom" *ngIf="userDetails.id === authService.user.userId">
       <div>
+        <!--  ################### MOT DE PASSE ################### -->
         <h2>Changer de mot de passe</h2>
         <form  [formGroup]='passwordChangeForm' (ngSubmit)="onChangePassword()">
-          <label for="password">Mot de passe actuel
-            <input type="password" id="password" formControlName="oldPassword">
+          <label for="oldPassword">Mot de passe actuel
+            <input type="password" id="oldPassword" formControlName="oldPassword">
           </label>
-          <label for="password">Nouveau mot de passe
-            <input type="password" id="password" formControlName="newPassword">
+          <label for="newPassword">Nouveau mot de passe
+            <input type="password" id="newPassword" formControlName="newPassword">
           </label>
           <button type="submit" class="btn"  [disabled]="passwordChangeForm.invalid">Enregistrer</button>
         </form>
       </div>
       <div>
+        <!--  ################### SUPPRESSION COMPTE ################### -->
         <h2>Supprimer mon compte</h2>
         <button class="btn btn-danger" (click)="onDeleteClicked()">Supprimer</button>
         <div id="delete-confirm" class="profile--delete-confirm profile--delete-confirm__hidden">

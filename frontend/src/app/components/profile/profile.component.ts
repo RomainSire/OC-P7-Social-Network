@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 import { UsersService } from '../../services/users.service';
 import { AuthService } from '../../services/auth.service';
@@ -53,13 +52,11 @@ export class ProfileComponent implements OnInit {
   getUser(): void {
     const id = +this.route.snapshot.paramMap.get('id');
     this.usersService.getOneUser(id)
-      .subscribe((fetchedUser: UserDetails) => {
-        this.userDetails = fetchedUser;
-        if (fetchedUser.pictureurl === null) {
-          this.userDetails.pictureurl = './assets/anonymousUser.svg';
-        }
-        if (fetchedUser.outline === null) {
-          this.userDetails.outline = 'Pas de description';
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 200) {
+          this.userDetails = response.body;
+        } else {
+          this.messagesService.add('Erreur: Impossible de charger le détail de cet utilisateur');
         }
       });
   }
@@ -86,9 +83,9 @@ export class ProfileComponent implements OnInit {
    * Changement du mot de passe de l'utilisateur
    */
   onChangePassword(): void {
-    const { newPassword, oldPassword } = this.passwordChangeForm.value;
+    const { oldPassword, newPassword } = this.passwordChangeForm.value;
     if (newPassword && newPassword !== '' && oldPassword && oldPassword !== '') {
-      this.usersService.updatePassword(this.userDetails.id, newPassword, oldPassword)
+      this.usersService.updatePassword(this.userDetails.id, oldPassword, newPassword)
         .subscribe((response: HttpResponse) => {
           if (response.status === 201) {
             this.passwordChangeForm.reset();
@@ -114,6 +111,7 @@ export class ProfileComponent implements OnInit {
         if (response.status === 201) {
           this.messagesService.add(`Vous avez bien supprimé votre compte`);
           this.router.navigate(['/login']);
+          this.authService.user = null;
         } else {
           this.messagesService.add(`Erreur: ${response.error.error}`);
         }

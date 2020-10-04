@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { HttpResponse } from 'src/app/interfaces/HttpResponse.interface';
+import { MessagesService } from 'src/app/services/messages.service';
 
 
 import { UsersService } from '../../services/users.service';
 
-interface User {
-  id: number;
-  name: string;
-  pictureurl: string;
-}
 
 @Component({
   selector: 'app-users',
@@ -18,18 +15,15 @@ interface User {
 })
 export class UsersComponent implements OnInit {
 
-  public users: User[];
   private searchTerms = new Subject<string>();
 
   constructor(
-    private usersService: UsersService
+    public usersService: UsersService,
+    private messagesService: MessagesService
   ) { }
 
   ngOnInit(): void {
-    this.usersService.getAllUsers()
-      .subscribe(data => {
-        this.users = data.users;
-      });
+    this.usersService.getAllUsers();
 
     this.searchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
@@ -38,8 +32,12 @@ export class UsersComponent implements OnInit {
       distinctUntilChanged(),
       // switch to new search observable each time the term changes
       switchMap((term: string) => this.usersService.searchUsers(term)),
-    ).subscribe(data => {
-      this.users = data.users;
+    ).subscribe((response: HttpResponse) => {
+      if (response.status === 200) {
+        this.usersService.users = response.body.users;
+      } else {
+        this.messagesService.add('Erreur: Recherche impossible');
+      }
     });
   }
 

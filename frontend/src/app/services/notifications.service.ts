@@ -5,8 +5,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
-import { MessagesService } from "./messages.service";
-import { Notification } from "../interfaces/Notification.interface";
+import { MessagesService } from './messages.service';
+import { Notification } from '../interfaces/Notification.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +28,8 @@ export class NotificationsService {
     this.messagesService.add(`Authentification: ${message}`);
   }
 
-  getNotifications() {
-    return this.httpClient.get(`${this.notificationsUrl}`, { withCredentials: true })
+  getNotifications(): void {
+    this.httpClient.get(`${this.notificationsUrl}`, { withCredentials: true })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
@@ -38,7 +38,7 @@ export class NotificationsService {
         if (data.notifications) {
           this.notifications = data.notifications;
         }
-      })
+      });
   }
 
   deleteOneNotification(notificationId: number) {
@@ -46,7 +46,7 @@ export class NotificationsService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   deleteAllNotifications() {
@@ -54,6 +54,6 @@ export class NotificationsService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 }

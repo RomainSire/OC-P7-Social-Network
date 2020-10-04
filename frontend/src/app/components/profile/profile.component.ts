@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 
-import { UsersService } from "../../services/users.service";
-import { AuthService } from "../../services/auth.service";
-import { MessagesService } from "../../services/messages.service";
-import { ImageService } from "../../services/image.service";
+import { UsersService } from '../../services/users.service';
+import { AuthService } from '../../services/auth.service';
+import { MessagesService } from '../../services/messages.service';
+import { ImageService } from '../../services/image.service';
 
-import { UserDetails } from "../../interfaces/UserDetails.interface";
-import { HttpResponse } from "../../interfaces/HttpResponse.interface";
+import { UserDetails } from '../../interfaces/UserDetails.interface';
+import { HttpResponse } from '../../interfaces/HttpResponse.interface';
 
 @Component({
   selector: 'app-profile',
@@ -34,7 +34,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false; // force  à récupérer les infos user, même si on on ne change que le paramètre de la route (= id utilisateur).
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    // ci dessus force  à récupérer les infos user, même si on on ne change que le paramètre de la route (= id utilisateur).
     this.initForm();
   }
 
@@ -43,7 +44,7 @@ export class ProfileComponent implements OnInit {
     this.passwordChangeForm = this.formBuilder.group({
       oldPassword: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]],
       newPassword: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]]
-    })
+    });
   }
 
   /**
@@ -55,30 +56,29 @@ export class ProfileComponent implements OnInit {
       .subscribe((fetchedUser: UserDetails) => {
         this.userDetails = fetchedUser;
         if (fetchedUser.pictureurl === null) {
-          this.userDetails.pictureurl = "./assets/anonymousUser.svg";
+          this.userDetails.pictureurl = './assets/anonymousUser.svg';
         }
         if (fetchedUser.outline === null) {
-          this.userDetails.outline = "Pas de description";
+          this.userDetails.outline = 'Pas de description';
         }
-      })
+      });
   }
-
 
   /**
    * Mise à jour de la description du profil utilisateur
    */
   onUpdateOutline(event: Event): void {
-    if (event.target[0].value && event.target[0].value !== "") {
+    if (event.target[0].value && event.target[0].value !== '') {
       const newOutline: string = event.target[0].value;
       this.usersService.updateOutline(this.userDetails.id, newOutline)
         .subscribe((response: HttpResponse) => {
           if (response.status === 201) {
             this.getUser();
-            event.target[0].value = "";
+            event.target[0].value = '';
           } else {
             this.messagesService.add(`Erreur: impossible de modifier votre description`);
           }
-        })
+        });
     }
   }
 
@@ -87,7 +87,7 @@ export class ProfileComponent implements OnInit {
    */
   onChangePassword(): void {
     const { newPassword, oldPassword } = this.passwordChangeForm.value;
-    if (newPassword && newPassword != "" && oldPassword && oldPassword != "") {
+    if (newPassword && newPassword !== '' && oldPassword && oldPassword !== '') {
       this.usersService.updatePassword(this.userDetails.id, newPassword, oldPassword)
         .subscribe((response: HttpResponse) => {
           if (response.status === 201) {
@@ -96,7 +96,7 @@ export class ProfileComponent implements OnInit {
           } else {
             this.messagesService.add(`Erreur: ${response.error.error}`);
           }
-        })
+        });
     }
   }
 
@@ -106,7 +106,7 @@ export class ProfileComponent implements OnInit {
    * - Click pour confirmer la suppressions
    */
   onDeleteClicked(): void {
-    document.getElementById('delete-confirm').classList.toggle("profile--delete-confirm__hidden");
+    document.getElementById('delete-confirm').classList.toggle('profile--delete-confirm__hidden');
   }
   onDeleteConfirmed(): void {
     this.usersService.deleteUser(this.userDetails.id)
@@ -117,7 +117,7 @@ export class ProfileComponent implements OnInit {
         } else {
           this.messagesService.add(`Erreur: ${response.error.error}`);
         }
-      })
+      });
   }
 
   /**
@@ -130,7 +130,7 @@ export class ProfileComponent implements OnInit {
           this.messagesService.add(`Erreur: ${response.error.error}`);
         }
         this.getUser();
-      })
+      });
   }
 
 
@@ -141,13 +141,13 @@ export class ProfileComponent implements OnInit {
 
   // à la validation, après le redimensionnement de l'image = envoi du fichier vers le backend
   // Donc la méthode onCroppedImage du service imageService ne sera pas utilisé
-  onCroppedImageDone(): void {    
+  onCroppedImageDone(): void {
     const base64Image = this.imageService.croppedImage;
     const image = this.imageService.base64ToFile(base64Image, this.imageService.initialImage.name);
     const uploadData = new FormData();
     uploadData.append('image', image);
     this.usersService.updatePicture(this.userDetails.id, uploadData)
-      .subscribe((response: HttpResponse) => {        
+      .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
           this.getUser();
           this.authService.getCurrentUserInfo();
@@ -158,6 +158,6 @@ export class ProfileComponent implements OnInit {
         this.imageService.initialImage = '';
         this.imageService.imageChangedEvent = '';
         this.imageService.croppedImage = '';
-      })
+      });
   }
 }

@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
-import { MessagesService } from "./messages.service";
+import { MessagesService } from './messages.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,7 @@ export class UsersService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   getOneUser(id: number) {
@@ -37,7 +37,7 @@ export class UsersService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   searchUsers(term: string) {
@@ -49,7 +49,7 @@ export class UsersService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   updateOutline(id: number, outline: string) {
@@ -57,7 +57,7 @@ export class UsersService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   updatePassword(id: number, oldPassword: string, newPassword: string) {
@@ -65,7 +65,7 @@ export class UsersService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   updateAdminRights(id: number, isadmin: number) {
@@ -73,7 +73,7 @@ export class UsersService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   deleteUser(id: number) {
@@ -81,7 +81,7 @@ export class UsersService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   updatePicture(id: number, uploadData: FormData) {
@@ -89,6 +89,6 @@ export class UsersService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 }

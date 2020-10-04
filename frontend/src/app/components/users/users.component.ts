@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 
-import { UsersService } from "../../services/users.service";
+import { UsersService } from '../../services/users.service';
 
 interface User {
   id: number;
@@ -28,9 +28,9 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.usersService.getAllUsers()
       .subscribe(data => {
-        this.users = data.users
-      })
-    
+        this.users = data.users;
+      });
+
     this.searchTerms.pipe(
       // wait 300ms after each keystroke before considering the term
       debounceTime(300),
@@ -40,7 +40,7 @@ export class UsersComponent implements OnInit {
       switchMap((term: string) => this.usersService.searchUsers(term)),
     ).subscribe(data => {
       this.users = data.users;
-    })
+    });
   }
 
   searchUser(term: string): void {

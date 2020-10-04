@@ -1,5 +1,8 @@
 backend/node_modules
 backend/.env-localhost
+backend/.env-docker
+backend/.env
+
 backend/access.log
 
 frontend/node_modules

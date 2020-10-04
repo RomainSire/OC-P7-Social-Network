@@ -5,7 +5,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
-import { MessagesService } from "./messages.service";
+import { MessagesService } from './messages.service';
+import { HttpResponse } from '../interfaces/HttpResponse.interface';
 
 
 @Injectable({
@@ -25,11 +26,11 @@ export class LikesService {
     this.messagesService.add(message);
   }
 
-  newRatePublication(postId: number, rate: number) {
+  newRatePublication(postId: number, rate: number): Observable<HttpResponse> {
     return this.httpClient.post(`${this.likeUrl}`, {postId, rate}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 }

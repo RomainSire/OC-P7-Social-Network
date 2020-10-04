@@ -5,7 +5,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
-import { MessagesService } from "./messages.service";
+import { MessagesService } from './messages.service';
+import { HttpResponse } from '../interfaces/HttpResponse.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class PublicationsService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
   getOnePublication(id: number) {
@@ -38,23 +39,23 @@ export class PublicationsService {
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
-  newPublication(formData: FormData) {
+  newPublication(formData: FormData): Observable<HttpResponse> {
     return this.httpClient.post(`${this.postsUrl}`, formData, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
-  deletePublication(postId: Number) {
+  deletePublication(postId: number): Observable<HttpResponse> {
     return this.httpClient.delete(`${this.postsUrl}/${postId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
         return of(err);
-      }))
+      }));
   }
 
 }

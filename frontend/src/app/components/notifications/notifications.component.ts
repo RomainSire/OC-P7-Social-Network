@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { NotificationsService } from "../../services/notifications.service";
+import { NotificationsService } from '../../services/notifications.service';
 
 @Component({
   selector: 'app-notifications',
@@ -21,14 +21,14 @@ export class NotificationsComponent implements OnInit {
     this.notificationsService.deleteAllNotifications()
       .subscribe(data => {
         this.notificationsService.getNotifications();
-      })
+      });
   }
 
   onDeleteOne(id: number): void {
     this.notificationsService.deleteOneNotification(id)
       .subscribe(data => {
         this.notificationsService.getNotifications();
-      })
+      });
   }
 
 }

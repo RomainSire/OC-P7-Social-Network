@@ -118,7 +118,7 @@
             </form>
           </div>
           <form class="comments--add" (submit)="onAddComment($event)">
-            <img [src]="authService.user.pictureUrl" alt="Votre photo de profil">
+            <img [src]="authService.user.pictureUrl===null ? './assets/anonymousUser.svg' : authService.user.pictureUrl" alt="Votre photo de profil">
             <input type="text" placeholder="Votre commentaire">
             <input type="hidden" name="postId" [value]="post.postId">
             <button type="submit" aria-label="Envoyer"><i class="fas fa-plus-circle"></i></button>

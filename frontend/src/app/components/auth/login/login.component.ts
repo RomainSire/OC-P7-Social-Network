@@ -17,18 +17,18 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.initForm();
   }
 
-  initForm(): void {
+  private initForm(): void {
     this.signInForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]]
     });
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     const { email, password } = this.signInForm.value;
     this.authService.loginUser(email, password);
   }

@@ -15,8 +15,10 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.authService.getCurrentUserInfo();
-    this.notificationsService.getNotifications();
+    if (this.authService.user) {
+      this.authService.getCurrentUserInfo();
+      this.notificationsService.getNotifications();
+    }
   }
 
   onLogout(): void {

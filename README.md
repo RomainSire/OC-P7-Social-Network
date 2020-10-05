@@ -3,7 +3,7 @@
 
 ## Scénario
 Développement (Frontend et Backend) d'un réseau social d'entreprise pour une société fictive Groupomania.  
-Une grande liberté est donnée pour développer ce projet.
+Une grande liberté est donnée pour développer ce projet: il faut simplement respecter la charte graphique fournie.
 
 ## Technologies utilisées
 - Backend

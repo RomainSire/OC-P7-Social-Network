@@ -5,7 +5,7 @@ SET NAMES utf8;
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Sam 03 Octobre 2020 à 11:13
+-- Généré le :  Lun 05 Octobre 2020 à 11:24
 -- Version du serveur :  5.7.31-0ubuntu0.18.04.1
 -- Version de PHP :  7.2.24-0ubuntu0.18.04.6
 
@@ -45,8 +45,8 @@ INSERT INTO `Comments` (`id`, `publication_date`, `content`, `user_id`, `post_id
 (9, '2020-09-23 12:21:11', 'Ishigaki, au sud !', 17, 15),
 (12, '2020-09-24 11:20:53', 'Pas mal pour travailler au calme...', 13, 11),
 (13, '2020-09-24 11:36:12', 'Omitto iuris dictionem in libera civitate contra leges senatusque consulta; caedes relinquo; libidines praetereo, quarum acerbissimum extat indicium et ad insignem memoriam turpitudinis et paene ad iustum odium imperii nostri, quod constat nobilissimas virgines se in puteos abiecisse et morte voluntaria necessariam turpitudinem depulisse. Nec haec idcirco omitto, quod non gravissima sint, sed quia nunc sine teste dico.', 13, 13),
-(17, '2020-09-28 11:34:38', 'Petit test', 13, 12),
-(26, '2020-09-28 14:40:31', 'Très joli bleu!..', 13, 15);
+(26, '2020-09-28 14:40:31', 'Très joli bleu!..', 13, 15),
+(28, '2020-10-03 20:17:37', 'test', 16, 10);
 
 -- --------------------------------------------------------
 
@@ -69,15 +69,16 @@ INSERT INTO `Likes` (`id`, `rate`, `user_id`, `post_id`) VALUES
 (9, 1, 16, 13),
 (10, -1, 16, 12),
 (24, 1, 13, 11),
-(36, 0, 13, 13),
 (45, 1, 13, 7),
 (47, 1, 13, 8),
 (51, 1, 15, 14),
 (57, 0, 16, 14),
-(61, 1, 16, 15),
 (69, 1, 13, 10),
 (73, 1, 13, 15),
-(74, 1, 13, 14);
+(74, 1, 13, 14),
+(87, 1, 16, 15),
+(88, -1, 13, 12),
+(89, 1, 13, 13);
 
 -- --------------------------------------------------------
 
@@ -104,10 +105,6 @@ INSERT INTO `Notifications` (`id`, `user_id`, `initiator_id`, `post_id`, `type_i
 (32, 16, 15, 14, 1),
 (36, 16, 13, 15, 3),
 (37, 16, 16, 14, 1),
-(39, 17, 13, 15, 1),
-(40, 17, 13, 15, 1),
-(41, 17, 13, 15, 1),
-(42, 17, 13, 15, 1),
 (43, 16, 13, 14, 1);
 
 -- --------------------------------------------------------
@@ -180,7 +177,7 @@ CREATE TABLE `Users` (
 
 INSERT INTO `Users` (`id`, `name`, `email`, `password`, `pictureurl`, `outline`, `isadmin`) VALUES
 (11, 'Mr Admin', 'mr.admin@email.com', 'U2FsdGVkX18FJljBPmEkRHS3no1WcAVKKqm/JymU9JBIWJxJ7Lr0/qkctgi1nXv+EhizDSokpiMdJ835Ax5z4M+eSL0/BOfFnO5bDtnaZR0=', NULL, NULL, 1),
-(13, 'Walter White', 'walter.white@email.com', 'U2FsdGVkX1/Jf7U04jO2FaQASaFG6kIWzdkfXveDkGlDdqMRXxlM3GnHfMngr00qeV5M1etgae7cVjoonZyETy1Q+slLvgW9W917sOJynuI=', 'http://localhost:3000/images/Walter_White_1601128055201.png', 'If you don’t know who I am, then maybe your best course would be to tread lightly.', 0),
+(13, 'Walter White', 'walter.white@email.com', 'U2FsdGVkX1/Jf7U04jO2FaQASaFG6kIWzdkfXveDkGlDdqMRXxlM3GnHfMngr00qeV5M1etgae7cVjoonZyETy1Q+slLvgW9W917sOJynuI=', 'http://localhost:3000/images/Walter_White_1601739021689.png', 'If you don’t know who I am, then maybe your best course would be to tread lightly.', 0),
 (14, 'Daryl Dixon', 'daryl.dixon@email.com', 'U2FsdGVkX1/M4WT7PItrnl5Y/cpEJQcDYrXQn7Zn8Y2fOx+bSG2wEFWodDvvdGx5S8RdI3LiRxvWOmNM/ViDNuDPEQNsuamLZ9E6i5xgXcQ=', 'http://localhost:3000/images/Daryl_Dixon_1600853872625.png', '\"Come on, people. What the hell?\" ', 0),
 (15, 'Arya Stark', 'arya.stark@email.com', 'U2FsdGVkX1/MV341seNB6ydWnZGvQg5daR2LxNuQsN8lQXp6HmxC4Tvg+O2j/uJ8eDTwJ/vBU92jXXLn+40fzdKxM5/SXQsHDfyZHee+8yQ=', 'http://localhost:3000/images/Arya_Stark_1600854667218.png', 'A girl has no name', 0),
 (16, 'Tyler Durden', 'tyler.durden@email.com', 'U2FsdGVkX1+vDCmGRAToZg543hqnWcnudkWAkZxHyc5ceUkxpJ5NV81MdeDFrKRv47yCbG0XcHYNVvzJFTTSBqnBTt5rUs6r7qPHHqJLtBg=', 'http://localhost:3000/images/Tyler_Durden_1600855300190.png', NULL, 0),
@@ -244,12 +241,12 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT pour la table `Comments`
 --
 ALTER TABLE `Comments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT pour la table `Likes`
 --
 ALTER TABLE `Likes`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 --
 -- AUTO_INCREMENT pour la table `Notifications`
 --

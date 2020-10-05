@@ -16,11 +16,11 @@ export class NotificationsComponent implements OnInit {
     private messagesService: MessagesService
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.notificationsService.getNotifications();
   }
 
-  onDeleteOne(id: number): void {
+  public onDeleteOne(id: number): void {
     this.notificationsService.deleteOneNotification(id)
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
@@ -31,7 +31,7 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
-  onDeleteAll(): void {
+  public onDeleteAll(): void {
     this.notificationsService.deleteAllNotifications()
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {

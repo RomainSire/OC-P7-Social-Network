@@ -21,7 +21,7 @@ export class AuthGuardService implements CanActivate {
     private authService: AuthService
     ) { }
 
-  canActivate(): Observable<boolean>|Promise<boolean>|boolean {
+  public canActivate(): Observable<boolean>|Promise<boolean>|boolean {
     return this.httpClient.get(`${this.backendServer}/api/user/isauth`, { withCredentials: true })
       .pipe(
         catchError(err => {

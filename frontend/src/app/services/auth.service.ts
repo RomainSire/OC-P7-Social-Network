@@ -38,7 +38,7 @@ export class AuthService {
    * @param email email de l'utilisateur
    * @param password mot de passe de l'utilisateur
    */
-  loginUser(email: string, password: string): void {
+  public loginUser(email: string, password: string): void {
     this.httpClient.post(`${this.userUrl}/login`, {email, password}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         return of(err);
@@ -55,7 +55,7 @@ export class AuthService {
       });
   }
 
-  logoutUser(): void {
+  public logoutUser(): void {
     this.httpClient.get(`${this.userUrl}/logout`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         return of(err);
@@ -71,7 +71,7 @@ export class AuthService {
       });
   }
 
-  getCurrentUserInfo(): void {
+  public getCurrentUserInfo(): void {
     this.httpClient.get(`${this.userUrl}/currentuser`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Veuillez vous identifier`);
@@ -86,7 +86,7 @@ export class AuthService {
       });
   }
 
-  createNewUser(name: string, email: string, password: string): Observable<HttpResponse> {
+  public createNewUser(name: string, email: string, password: string): Observable<HttpResponse> {
     return this.httpClient.post(`${this.userUrl}/new`, {name, email, password}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         return of(err);

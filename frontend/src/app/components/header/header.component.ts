@@ -14,14 +14,14 @@ export class HeaderComponent implements OnInit {
     public notificationsService: NotificationsService
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     if (this.authService.user) {
       this.authService.getCurrentUserInfo();
       this.notificationsService.getNotifications();
     }
   }
 
-  onLogout(): void {
+  public onLogout(): void {
     this.authService.logoutUser();
   }
 }

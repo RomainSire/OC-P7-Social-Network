@@ -9,11 +9,11 @@ export class MessagesService {
 
   public messages: string[] = [];
 
-  add(message: string): void {
+  public add(message: string): void {
     this.messages.push(message);
   }
 
-  clear(): void {
+  public clear(): void {
     this.messages = [];
   }
 }

@@ -31,7 +31,7 @@ export class ProfileComponent implements OnInit {
     public imageService: ImageService
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getUser();
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     // ci dessus force  à récupérer les infos user, même si on on ne change que le paramètre de la route (= id utilisateur).
@@ -39,7 +39,7 @@ export class ProfileComponent implements OnInit {
   }
 
   // Initialisation des formulaires
-  initForm(): void {
+  private initForm(): void {
     this.passwordChangeForm = this.formBuilder.group({
       oldPassword: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]],
       newPassword: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{8,}/)]]
@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
   /**
    * Récupération des informations de l'utilisateur affiché
    */
-  getUser(): void {
+  private getUser(): void {
     const id = +this.route.snapshot.paramMap.get('id');
     this.usersService.getOneUser(id)
       .subscribe((response: HttpResponse) => {
@@ -64,7 +64,7 @@ export class ProfileComponent implements OnInit {
   /**
    * Mise à jour de la description du profil utilisateur
    */
-  onUpdateOutline(event: Event): void {
+  public onUpdateOutline(event: Event): void {
     if (event.target[0].value && event.target[0].value !== '') {
       const newOutline: string = event.target[0].value;
       this.usersService.updateOutline(this.userDetails.id, newOutline)
@@ -82,7 +82,7 @@ export class ProfileComponent implements OnInit {
   /**
    * Changement du mot de passe de l'utilisateur
    */
-  onChangePassword(): void {
+  public onChangePassword(): void {
     const { oldPassword, newPassword } = this.passwordChangeForm.value;
     if (newPassword && newPassword !== '' && oldPassword && oldPassword !== '') {
       this.usersService.updatePassword(this.userDetails.id, oldPassword, newPassword)
@@ -102,10 +102,10 @@ export class ProfileComponent implements OnInit {
    * - Click pour la suppression
    * - Click pour confirmer la suppressions
    */
-  onDeleteClicked(): void {
+  public onDeleteClicked(): void {
     document.getElementById('delete-confirm').classList.toggle('profile--delete-confirm__hidden');
   }
-  onDeleteConfirmed(): void {
+  public onDeleteConfirmed(): void {
     this.usersService.deleteUser(this.userDetails.id)
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
@@ -121,7 +121,7 @@ export class ProfileComponent implements OnInit {
   /**
    * Donner / Supprimer les droits d'admin
    */
-  onChangeAdmin(isAdmin: number): void {
+  public onChangeAdmin(isAdmin: number): void {
     this.usersService.updateAdminRights(this.userDetails.id, isAdmin)
       .subscribe((response: HttpResponse) => {
         if (response.status !== 201) {
@@ -139,7 +139,7 @@ export class ProfileComponent implements OnInit {
 
   // à la validation, après le redimensionnement de l'image = envoi du fichier vers le backend
   // Donc la méthode onCroppedImage du service imageService ne sera pas utilisé
-  onCroppedImageDone(): void {
+  public onCroppedImageDone(): void {
     const base64Image = this.imageService.croppedImage;
     const image = this.imageService.base64ToFile(base64Image, this.imageService.initialImage.name);
     const uploadData = new FormData();

@@ -25,7 +25,7 @@ export class CommentsService {
     this.messagesService.add(message);
   }
 
-  newComment(postId: number, content: string): Observable<HttpResponse> {
+  public newComment(postId: number, content: string): Observable<HttpResponse> {
     return this.httpClient.post(`${this.commentUrl}`, {postId, content}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -33,7 +33,7 @@ export class CommentsService {
       }));
   }
 
-  deleteComment(commentId: number): Observable<HttpResponse> {
+  public deleteComment(commentId: number): Observable<HttpResponse> {
     return this.httpClient.delete(`${this.commentUrl}/${commentId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);

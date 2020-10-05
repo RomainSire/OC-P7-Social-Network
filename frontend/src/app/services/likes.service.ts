@@ -26,7 +26,7 @@ export class LikesService {
     this.messagesService.add(message);
   }
 
-  newRatePublication(postId: number, rate: number): Observable<HttpResponse> {
+  public newRatePublication(postId: number, rate: number): Observable<HttpResponse> {
     return this.httpClient.post(`${this.likeUrl}`, {postId, rate}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);

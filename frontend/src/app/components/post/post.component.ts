@@ -30,12 +30,12 @@ export class PostComponent implements OnInit {
     private commentsService: CommentsService
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.postId = +this.route.snapshot.paramMap.get('id');
     this.getPublication();
   }
 
-  getPublication(): void {
+  private getPublication(): void {
     this.publicationsService.getOnePublication(this.postId)
       .subscribe((response: HttpResponse) => {
         if (response.status === 200) {
@@ -46,7 +46,7 @@ export class PostComponent implements OnInit {
       });
   }
 
-  onDeletePublication(): void {
+  public onDeletePublication(): void {
     this.publicationsService.deletePublication(this.postId)
       .subscribe((response: HttpResponse) => {
         if (response.status === 201) {
@@ -58,7 +58,7 @@ export class PostComponent implements OnInit {
       });
   }
 
-  onlike(event: Event): void {
+  public onlike(event: Event): void {
     const postId = this.postId;
     const rate: number = parseInt(event.target[1].value, 10);
     this.likesService.newRatePublication(postId, rate)
@@ -71,7 +71,7 @@ export class PostComponent implements OnInit {
       });
   }
 
-  onAddComment(event): void {
+  public onAddComment(event): void {
     const content: string = event.target[0].value;
     const postId: number = parseInt(event.target[1].value, 10);
     this.commentsService.newComment(postId, content)
@@ -84,7 +84,7 @@ export class PostComponent implements OnInit {
       });
   }
 
-  onDeleteComment(event): void {
+  public onDeleteComment(event): void {
     const commentId: number = parseInt(event.target[0].value, 10);
     this.commentsService.deleteComment(commentId)
       .subscribe((response: HttpResponse) => {

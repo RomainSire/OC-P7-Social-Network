@@ -22,7 +22,7 @@ export class UsersComponent implements OnInit {
     private messagesService: MessagesService
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.usersService.getAllUsers();
 
     this.searchTerms.pipe(
@@ -41,7 +41,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  searchUser(term: string): void {
+  public searchUser(term: string): void {
     this.searchTerms.next(term);
   }
 

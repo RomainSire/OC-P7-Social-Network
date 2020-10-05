@@ -29,7 +29,7 @@ export class NotificationsService {
     this.messagesService.add(`Notifications: ${message}`);
   }
 
-  getNotifications(): void {
+  public getNotifications(): void {
     this.httpClient.get(`${this.notificationsUrl}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -44,7 +44,7 @@ export class NotificationsService {
       });
   }
 
-  deleteOneNotification(notificationId: number): Observable<HttpResponse> {
+  public deleteOneNotification(notificationId: number): Observable<HttpResponse> {
     return this.httpClient.delete(`${this.notificationsUrl}/${notificationId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -52,7 +52,7 @@ export class NotificationsService {
       }));
   }
 
-  deleteAllNotifications(): Observable<HttpResponse> {
+  public deleteAllNotifications(): Observable<HttpResponse> {
     return this.httpClient.delete(`${this.notificationsUrl}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);

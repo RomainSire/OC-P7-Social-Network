@@ -16,21 +16,21 @@ export class ImageService {
     private messagesService: MessagesService
   ) { }
 
-  fileChangeEvent(event: any): void {
+  public fileChangeEvent(event: any): void {
     this.imageChangedEvent = event;
     this.initialImage = event.target.files[0];
   }
-  imageCropped(event: ImageCroppedEvent): void {
+  public imageCropped(event: ImageCroppedEvent): void {
     this.croppedImage = event.base64;
   }
-  imageLoaded(): void {
+  public imageLoaded(): void {
     document.getElementById('cropper').classList.remove('hidden');
   }
-  loadImageFailed(): void {
+  public loadImageFailed(): void {
     this.messagesService.add(`Erreur lors du chargement de l'image`);
   }
   // Transformation de l'image base64 (donnée par "ngx-image-cropper") en fichier exploitable
-  base64ToFile(dataurl: string, filename: string): File {
+  public base64ToFile(dataurl: string, filename: string): File {
     const arr = dataurl.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]);
@@ -41,7 +41,7 @@ export class ImageService {
     }
     return new File([u8arr], filename, {type: mime});
   }
-  onCroppedImageDone(): void {
+  public onCroppedImageDone(): void {
     document.getElementById('cropper').classList.add('hidden');
   }
 }

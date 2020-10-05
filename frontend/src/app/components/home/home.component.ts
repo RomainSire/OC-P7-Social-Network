@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
     public imageService: ImageService
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getPostsFromStart(this.postsBatch);
   }
 
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
    * Récupérer tous les posts, avec leurs commentaires et leur likes/dislikes
    */
   // Récupérer tous les posts depuis le début jusqu'au chargement actuel
-  getPostsFromStart(numberOfPosts: number): void {
+  private getPostsFromStart(numberOfPosts: number): void {
     this.publicationsService.getPublications(numberOfPosts, 0)
       .subscribe((response: HttpResponse) => {
         if (response.status === 200) {
@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
       });
   }
   // charger de nouveaux posts petit à petit
-  getOtherPosts(limit: number, offset: number): void {
+  private getOtherPosts(limit: number, offset: number): void {
     this.publicationsService.getPublications(limit, offset)
       .subscribe((response: HttpResponse) => {
         if (response.status === 200) {
@@ -66,14 +66,14 @@ export class HomeComponent implements OnInit {
   /**
    * Récupération des posts au scroll de la page (pour infinite scroll)
    */
-  onScroll(): void {
+  public onScroll(): void {
     this.getOtherPosts(this.postsBatch, this.posts.length);
   }
 
   /**
    * Publication d'un nouveau post
    */
-  onSubmitNewPost(event: Event): void {
+  public onSubmitNewPost(event: Event): void {
     const content: string = event.target[0].value;
     const base64Image = this.imageService.croppedImage;
     const formData = new FormData();
@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit {
   /**
    * Suppression d'une publication
    */
-  onDeletePublication(event: Event): void {
+  public onDeletePublication(event: Event): void {
     const postId: number = parseInt(event.target[0].value, 10);
     this.publicationsService.deletePublication(postId)
       .subscribe((response: HttpResponse) => {
@@ -122,7 +122,7 @@ export class HomeComponent implements OnInit {
   /**
    * Ajout d'un commentaire
    */
-  onAddComment(event: Event): void {
+  public onAddComment(event: Event): void {
     const content: string = event.target[0].value;
     const postId: number = parseInt(event.target[1].value, 10);
     this.commentsService.newComment(postId, content)
@@ -138,7 +138,7 @@ export class HomeComponent implements OnInit {
   /**
    * Suppression d'un commentaire
    */
-  onDeleteComment(event: Event): void {
+  public onDeleteComment(event: Event): void {
     const commentId: number = parseInt(event.target[0].value, 10);
     this.commentsService.deleteComment(commentId)
       .subscribe((response: HttpResponse) => {
@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit {
   /**
    * Like/dislike/annulation d'une publication
    */
-  onlike(event: Event): void {
+  public onlike(event: Event): void {
     const postId: number = parseInt(event.target[0].value, 10);
     const rate: number = parseInt(event.target[1].value, 10);
     this.likesService.newRatePublication(postId, rate)

@@ -26,7 +26,7 @@ export class PublicationsService {
   }
 
 
-  getPublications(limit: number, offset: number): Observable<HttpResponse> {
+  public getPublications(limit: number, offset: number): Observable<HttpResponse> {
     return this.httpClient.get(`${this.postsUrl}/${limit}/${offset}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -34,7 +34,7 @@ export class PublicationsService {
       }));
   }
 
-  getOnePublication(id: number): Observable<HttpResponse> {
+  public getOnePublication(id: number): Observable<HttpResponse> {
     return this.httpClient.get(`${this.postsUrl}/${id}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -42,7 +42,7 @@ export class PublicationsService {
       }));
   }
 
-  newPublication(formData: FormData): Observable<HttpResponse> {
+  public newPublication(formData: FormData): Observable<HttpResponse> {
     return this.httpClient.post(`${this.postsUrl}`, formData, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -50,7 +50,7 @@ export class PublicationsService {
       }));
   }
 
-  deletePublication(postId: number): Observable<HttpResponse> {
+  public deletePublication(postId: number): Observable<HttpResponse> {
     return this.httpClient.delete(`${this.postsUrl}/${postId}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);

@@ -31,7 +31,7 @@ export class UsersService {
     this.messagesService.add(message);
   }
 
-  getAllUsers(): void {
+  public getAllUsers(): void {
     this.httpClient.get(`${this.userUrl}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -46,7 +46,7 @@ export class UsersService {
       });
   }
 
-  searchUsers(term: string): Observable<HttpResponse> {
+  public searchUsers(term: string): Observable<HttpResponse> {
     if (!term.trim()) {
       // Si la recherche est vide, recherche la totalité des utilisateurs
       return this.httpClient.get(`${this.userUrl}`, { withCredentials: true, observe: 'response' })
@@ -63,7 +63,7 @@ export class UsersService {
     }
   }
 
-  getOneUser(id: number): Observable<HttpResponse> {
+  public getOneUser(id: number): Observable<HttpResponse> {
     return this.httpClient.get(`${this.userUrl}/${id}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -71,7 +71,7 @@ export class UsersService {
       }));
   }
 
-  updateOutline(id: number, outline: string): Observable<HttpResponse> {
+  public updateOutline(id: number, outline: string): Observable<HttpResponse> {
     return this.httpClient.put(`${this.userUrl}/${id}/outline`, {outline}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -79,7 +79,7 @@ export class UsersService {
       }));
   }
 
-  updatePassword(id: number, oldPassword: string, newPassword: string): Observable<HttpResponse> {
+  public updatePassword(id: number, oldPassword: string, newPassword: string): Observable<HttpResponse> {
     return this.httpClient.put(`${this.userUrl}/${id}/password`, {oldPassword, newPassword}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -87,7 +87,7 @@ export class UsersService {
       }));
   }
 
-  updateAdminRights(id: number, isadmin: number): Observable<HttpResponse> {
+  public updateAdminRights(id: number, isadmin: number): Observable<HttpResponse> {
     return this.httpClient.put(`${this.userUrl}/${id}/admin`, {isadmin}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -95,7 +95,7 @@ export class UsersService {
       }));
   }
 
-  updatePicture(id: number, uploadData: FormData): Observable<HttpResponse> {
+  public updatePicture(id: number, uploadData: FormData): Observable<HttpResponse> {
     return this.httpClient.put(`${this.userUrl}/${id}/picture`, uploadData, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);
@@ -103,7 +103,7 @@ export class UsersService {
       }));
   }
 
-  deleteUser(id: number): Observable<HttpResponse> {
+  public deleteUser(id: number): Observable<HttpResponse> {
     return this.httpClient.delete(`${this.userUrl}/${id}`, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {
         this.log(`Erreur: ${err.statusText}`);

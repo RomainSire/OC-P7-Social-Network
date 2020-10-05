@@ -21,11 +21,11 @@ export class SigninComponent implements OnInit {
     private formBuilder: FormBuilder,
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.initForm();
   }
 
-  initForm(): void {
+  private initForm(): void {
     this.signInForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.pattern(/[A-Za-zÀ-ÖØ-öø-ÿ ]{3,50}/)]],
       email: ['', [Validators.required, Validators.email]],
@@ -34,7 +34,7 @@ export class SigninComponent implements OnInit {
     }, {validator: this.checkIfMatchingPasswords('password', 'passwordConfirmation')});
   }
 
-  checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string): any {
+  private checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string): any {
     return (group: FormGroup) => {
       const passwordInput = group.controls[passwordKey];
       const passwordConfirmationInput = group.controls[passwordConfirmationKey];
@@ -47,7 +47,7 @@ export class SigninComponent implements OnInit {
     };
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     const name: string = this.signInForm.get('name').value;
     const email: string = this.signInForm.get('email').value;
     const password: string = this.signInForm.get('password').value;

@@ -50,6 +50,8 @@ Le dossier "docs" contient :
 - **CreationBDD.sql** : Permet de créer la base de données MySQL initiale (=vide)
 - **Guidelines API.ods** : Les guidelines de l'API backend : résumé des routes avec les entrées/sorties
 
+La documentation propre de l'API est également disponible à cette adresse : https://documenter.getpostman.com/view/12092226/TVRj5oa8
+
 ## Installation
 ### Methode1 (conseillée) : Avec Docker
 1. **Cloner le dépot Github**

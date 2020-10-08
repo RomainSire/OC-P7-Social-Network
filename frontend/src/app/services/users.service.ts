@@ -71,6 +71,14 @@ export class UsersService {
       }));
   }
 
+  public getAllPublicationsOfUser(id: number): Observable<HttpResponse> {
+    return this.httpClient.get(`${this.userUrl}/${id}/posts`, { withCredentials: true, observe: 'response' })
+    .pipe(catchError(err => {
+      this.log(`Erreur: ${err.statusText}`);
+      return of(err);
+    }));
+  }
+
   public updateOutline(id: number, outline: string): Observable<HttpResponse> {
     return this.httpClient.put(`${this.userUrl}/${id}/outline`, {outline}, { withCredentials: true, observe: 'response' })
       .pipe(catchError(err => {

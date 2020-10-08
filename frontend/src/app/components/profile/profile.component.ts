@@ -6,9 +6,13 @@ import { UsersService } from '../../services/users.service';
 import { AuthService } from '../../services/auth.service';
 import { MessagesService } from '../../services/messages.service';
 import { ImageService } from '../../services/image.service';
+import { PublicationsService } from 'src/app/services/publications.service';
 
 import { UserDetails } from '../../interfaces/UserDetails.interface';
 import { HttpResponse } from '../../interfaces/HttpResponse.interface';
+import { Post } from '../../interfaces/Post.interface';
+import { LikesService } from 'src/app/services/likes.service';
+import { CommentsService } from 'src/app/services/comments.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,8 +22,8 @@ import { HttpResponse } from '../../interfaces/HttpResponse.interface';
 export class ProfileComponent implements OnInit {
 
   public userDetails: UserDetails;
-  private id: number;
   public passwordChangeForm: FormGroup;
+  public posts: Post[];
 
   constructor(
     private route: ActivatedRoute,
@@ -28,7 +32,10 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private messagesService: MessagesService,
-    public imageService: ImageService
+    public imageService: ImageService,
+    private publicationsService: PublicationsService,
+    private likesService: LikesService,
+    private commentsService: CommentsService
   ) { }
 
   public ngOnInit(): void {
@@ -55,6 +62,7 @@ export class ProfileComponent implements OnInit {
       .subscribe((response: HttpResponse) => {
         if (response.status === 200) {
           this.userDetails = response.body;
+          this.getPostsOfUser();
         } else {
           this.messagesService.add('Erreur: Impossible de charger le détail de cet utilisateur');
         }
@@ -158,4 +166,81 @@ export class ProfileComponent implements OnInit {
         this.imageService.croppedImage = '';
       });
   }
+
+  /**
+   * Récupérer toutes les publications de l'utilisateur
+   */
+  public getPostsOfUser(): void {
+    this.usersService.getAllPublicationsOfUser(this.userDetails.id)
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 200) {
+          this.posts = response.body.posts;
+        } else {
+          this.messagesService.add(`Erreur: impossible de récupérer les publications de l'utilisateur`);
+        }
+      })
+  }
+  /**
+   * Suppression d'une publication
+   */
+  public onDeletePublication(event: Event): void {
+    const postId: number = parseInt(event.target[0].value, 10);
+    this.publicationsService.deletePublication(postId)
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
+          this.getPostsOfUser();
+          this.messagesService.add(`Publication supprimée`);
+        } else {
+          this.messagesService.add(`Une erreur s'est produite`);
+        }
+      });
+  }
+
+  /**
+   * Ajout d'un commentaire
+   */
+  public onAddComment(event: Event): void {
+    const content: string = event.target[0].value;
+    const postId: number = parseInt(event.target[1].value, 10);
+    this.commentsService.newComment(postId, content)
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
+          this.getPostsOfUser();
+        } else {
+          this.messagesService.add(`Erreur: impossible d'ajouter ce commentaire`);
+        }
+      });
+  }
+
+  /**
+   * Suppression d'un commentaire
+   */
+  public onDeleteComment(event: Event): void {
+    const commentId: number = parseInt(event.target[0].value, 10);
+    this.commentsService.deleteComment(commentId)
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
+          this.getPostsOfUser();
+        } else {
+          this.messagesService.add(`Erreur: impossible de supprimer ce commentaire`);
+        }
+      });
+  }
+
+  /**
+   * Like/dislike/annulation d'une publication
+   */
+  public onlike(event: Event): void {
+    const postId: number = parseInt(event.target[0].value, 10);
+    const rate: number = parseInt(event.target[1].value, 10);
+    this.likesService.newRatePublication(postId, rate)
+      .subscribe((response: HttpResponse) => {
+        if (response.status === 201) {
+          this.getPostsOfUser();
+        } else {
+          this.messagesService.add(`Erreur: votre like/dislike n'a pas été pris en compte`);
+        }
+      });
+  }
+
 }

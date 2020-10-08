@@ -92,12 +92,12 @@ exports.getAllPosts = (req, res, next) => {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
       // 2: Pour chaque post, on va chercher tous les commentaires du post
-      getCommentsOfEachPosts(rawPosts, connection)
+      this.getCommentsOfEachPosts(rawPosts, connection)
         .then(postsWithoutLikes => {
           // 3: Pour chaque post, on rajoute les likes/dislikes
           const cryptedCookie = new Cookies(req, res).get('snToken');
           const userId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
-          getLikesOfEachPosts(postsWithoutLikes, userId, connection)
+          this.getLikesOfEachPosts(postsWithoutLikes, userId, connection)
             .then(posts => {
               res.status(200).json({ posts });
             })
@@ -132,15 +132,15 @@ exports.getSomePosts = (req, res, next) => {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
       // 2: Pour chaque post, on va chercher tous les commentaires du post
-      getCommentsOfEachPosts(rawPosts, connection)
+      this.getCommentsOfEachPosts(rawPosts, connection)
         .then(postsWithoutLikes => {
           // 3: Pour chaque post, on rajoute les likes/dislikes
           const cryptedCookie = new Cookies(req, res).get('snToken');
           const userId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
-          getLikesOfEachPosts(postsWithoutLikes, userId, connection)
+          this.getLikesOfEachPosts(postsWithoutLikes, userId, connection)
             .then(posts => {
               res.status(200).json({ posts });
-            }) // pas besoin de catch, les erreurs sont gérée par les fonctions getCommentsOfEachPosts() et getLikesOfEachPosts()
+            })
         })
     }
   });
@@ -162,15 +162,15 @@ exports.getOnePost = (req, res, next) => {
       res.status(500).json({ "error": error.sqlMessage });
     } else {
       // 2: on va chercher tous les commentaires du post
-      getCommentsOfEachPosts(rawPosts, connection)
+      this.getCommentsOfEachPosts(rawPosts, connection)
         .then(postsWithoutLikes => {
           // 3: Pour chaque post, on rajoute les likes/dislikes
           const cryptedCookie = new Cookies(req, res).get('snToken');
           const userId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
-          getLikesOfEachPosts(postsWithoutLikes, userId, connection)
+          this.getLikesOfEachPosts(postsWithoutLikes, userId, connection)
             .then(post => {
               res.status(200).json({ post });
-            }) // pas besoin de catch, les erreurs sont gérée par les fonctions getCommentsOfEachPosts() et getLikesOfEachPosts()
+            })
         })
     }
   });

@@ -1,5 +1,5 @@
 <main class="main-wrapper">
-  <div class="profile">
+  <section class="profile">
     <h1>{{userDetails.name}}</h1>
     <hr>
     <div class="profile--top">
@@ -79,5 +79,99 @@
     ></image-cropper>
     <button class="btn" (click)="onCroppedImageDone()">Valider</button>
     </div>
-  </div>
+  </section>
+
+
+  <!-- ################### LISTE DES DERNIERES PUBLICATIONS ################### -->
+  <section class="publications--list">
+    <article *ngFor="let post of posts">
+      <!-- Header Publication : photo de profil, nom, date, et delete -->
+      <header>
+        <div>
+          <a routerLink="/profile/{{post.userId}}">
+            <img
+              [src]="post.userPicture===null ? './assets/anonymousUser.svg' : post.userPicture"
+              alt="Photo de profil de {{post.userName}}">
+          </a>
+        </div>
+        <div class="text">
+          <p class="name">
+            <a routerLink="/profile/{{post.userId}}">{{post.userName}}</a>
+          </p>
+          <p class="date">
+            Publié le {{post.postDate | date: "dd/MM/y à HH:mm" : "UTC+2"}}
+          </p>
+        </div>
+        <form
+          class="delete-post"
+          *ngIf="post.userId === authService.user.userId || authService.user.isAdmin === 1"
+          (submit)="onDeletePublication($event)">
+          <input type="hidden" name="PostId" [value]="post.postId">
+          <button type="submit"><i class="fas fa-trash"></i></button>
+        </form>
+      </header>
+      <!-- Main Publication : Photo et/ou contenu -->
+      <main>
+        <div *ngIf="post.postImage !== null" class="picture">
+          <img [src]="post.postImage" alt="Photo de la publication">
+        </div>
+        <div *ngIf="post.postContent !== null" class="content">
+          <p>{{post.postContent}}</p>
+        </div>
+      </main>
+      <!-- Footer Publication : likes et commentaires -->
+      <footer>
+        <div class="likes">
+          <form (submit)="onlike($event)">
+            <input type="hidden" name="postId" [value]="post.postId">
+            <input type="hidden" name="rate" [value]="post.likes.currentUserReaction === 1 ? 0 : 1">
+            <button type="submit" [ngClass]="post.likes.currentUserReaction === 1 ? 'alreadyLiked' : ''" aria-label="like la publication">
+              <i class="fas fa-thumbs-up"></i>
+              {{post.likes.LikesNumber}}
+            </button>
+          </form>
+          <form (submit)="onlike($event)">
+            <input type="hidden" name="postId" [value]="post.postId">
+            <input type="hidden" name="rate" [value]="post.likes.currentUserReaction === -1 ? 0 : -1">
+            <button type="submit" [ngClass]="post.likes.currentUserReaction === -1 ? 'alreadyDisliked' : ''" aria-label="dislike la publication">
+              <i class="fas fa-thumbs-down"></i>
+              {{post.likes.DislikesNumber}}
+            </button>
+          </form>
+        </div>
+        <div class="comments">
+          <h3>Commentaires</h3>
+          <div *ngFor="let comment of post.comments" class="comments--comment">
+            <div>
+              <img
+                [src]="comment.userPicture===null ? './assets/anonymousUser.svg' : comment.userPicture"
+                alt="Photo de profil de {{comment.userName}}">
+            </div>
+            <div class="comments--comment--fluid">
+              <p class="title">
+                <span>{{comment.userName}}</span> le {{comment.commentDate | date: "dd/MM/y à HH:mm" : "UTC+2"}}
+              </p>
+              <p>
+                {{comment.commentContent}}
+              </p>
+            </div>
+            <form
+              class="comments--comment--delete"
+              *ngIf="comment.userId === authService.user.userId || authService.user.isAdmin === 1"
+              (submit)="onDeleteComment($event)">
+              <input type="hidden" name="PostId" [value]="comment.commentId">
+              <button type="submit"><i class="fas fa-trash"></i></button>
+            </form>
+          </div>
+          <form class="comments--add" (submit)="onAddComment($event)">
+            <img [src]="authService.user.pictureUrl===null ? './assets/anonymousUser.svg' : authService.user.pictureUrl" alt="Votre photo de profil">
+            <input type="text" placeholder="Votre commentaire">
+            <input type="hidden" name="postId" [value]="post.postId">
+            <button type="submit" aria-label="Envoyer"><i class="fas fa-plus-circle"></i></button>
+          </form>
+        </div>
+      </footer>
+    </article>
+  </section>
+
 </main>

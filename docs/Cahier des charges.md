@@ -15,7 +15,7 @@
   - Donner/enlever les droits d'admin à un autre utilisateur
 - Autres
   - Session persistante au rechargement de la page
-  - Système de notification (facultatif)
+  - Système de notification
 
 ## Pages
 - Login

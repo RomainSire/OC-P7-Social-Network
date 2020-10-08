@@ -5,6 +5,35 @@
 Développement (Frontend et Backend) d'un réseau social d'entreprise pour une société fictive Groupomania.  
 Une grande liberté est donnée pour développer ce projet: il faut simplement respecter la charte graphique fournie.
 
+## Fonctionnalités implémentées
+- Création d'utilisateurs (CRUD)
+- Les utilisateurs pourront
+  - Voir les derniers posts de tous les utilisateurs
+  - Publier des images
+  - Publier du texte
+  - Modifier leur profil
+  - Voir la liste de tous les utilisateurs
+  - Rechercher un autre utilisateur dans la liste
+  - Accéder au profil public d'un autre utilisateur
+- Sur chaque posts, les utilisateurs pourront
+  - Liker / disliker
+  - Commenter
+  - Supprimer leur propre post/comment/like
+- Modération par des administrateurs qui peuvent
+  - Supprimer les posts/commentaires qu'ils jugent inappropriés.
+  - Donner/enlever les droits d'admin à un autre utilisateur
+- Autres
+  - Session persistante au rechargement de la page
+  - Système de notification lorsque
+    - Quelqu'un like/dislike un des posts de l'utilisateur
+    - Quelqu'un commente un des posts de l'utilisateur
+    - Quelqu'un répond à un des commentaire de l'utilisateur
+  - Chargement des posts au fur et à mesure du scroll (= infinite scroll)
+  - Crop et Resize des images à la volée, avant publication
+
+## Apperçu du rendu
+Voilà [une vidéo qui décrit rapidement le différentes fonctionnalités de l'application](https://youtu.be/OlGzsJ6PnZk)
+
 ## Technologies utilisées
 - Backend
   - Serveur **Node.js** avec Framework **Express**

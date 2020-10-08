@@ -4,6 +4,7 @@
 - Création d'utilisateurs (CRUD)
 - Les utilisateurs pourront
   - Voir les derniers posts de tous les utilisateurs
+  - Voir les derniers posts d'un utilisateur spécifique
   - Publier des images
   - Publier du texte
 - Sur chaque posts, les utilisateurs pourront

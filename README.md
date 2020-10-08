@@ -15,6 +15,7 @@ Une grande liberté est donnée pour développer ce projet: il faut simplement r
   - Voir la liste de tous les utilisateurs
   - Rechercher un autre utilisateur dans la liste
   - Accéder au profil public d'un autre utilisateur
+  - Voir les derniers posts publiés par cet utilisateur
 - Sur chaque posts, les utilisateurs pourront
   - Liker / disliker
   - Commenter

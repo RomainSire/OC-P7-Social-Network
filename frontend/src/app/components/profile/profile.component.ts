@@ -178,7 +178,7 @@ export class ProfileComponent implements OnInit {
         } else {
           this.messagesService.add(`Erreur: impossible de récupérer les publications de l'utilisateur`);
         }
-      })
+      });
   }
   /**
    * Suppression d'une publication

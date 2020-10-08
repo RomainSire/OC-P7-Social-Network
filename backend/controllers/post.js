@@ -36,7 +36,7 @@ exports.newPost = (req, res, next) => {
 // Fonction utilitaire : Récupérer les commentaires des posts
 // posts est un ARRAY de posts (sans commentaires)
 // connection : est la connection déjà ouverte précédemment
-getCommentsOfEachPosts = (posts, connection) => {
+exports.getCommentsOfEachPosts = (posts, connection) => {
   return Promise.all(posts.map(post => {
     const sql = "SELECT Comments.id AS commentId, Comments.publication_date AS commentDate, Comments.content As commentContent, Users.id AS userId, Users.name AS userName, Users.pictureurl AS userPicture\
                 FROM Comments\
@@ -58,7 +58,7 @@ getCommentsOfEachPosts = (posts, connection) => {
 // Fonction utilitaire : Récupérer les like/dislikes des posts
 // posts est un ARRAY de posts (sans like/dislikes)
 // connection : est la connection déjà ouverte précédemment
-getLikesOfEachPosts = (posts, userId, connection) => {
+exports.getLikesOfEachPosts = (posts, userId, connection) => {
   return Promise.all(posts.map(post => {
     const postId = post.postId;
     const sql = "SELECT\

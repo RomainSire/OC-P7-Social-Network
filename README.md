@@ -33,7 +33,7 @@ Une grande liberté est donnée pour développer ce projet: il faut simplement r
   - Crop et Resize des images à la volée, avant publication
 
 ## Apperçu du rendu
-Voilà [une vidéo qui décrit rapidement le différentes fonctionnalités de l'application](https://youtu.be/OlGzsJ6PnZk)
+Voilà [une vidéo qui décrit rapidement le différentes fonctionnalités de l'application](https://youtu.be/yH5dlMfwwHE)
 
 ## Technologies utilisées
 - Backend

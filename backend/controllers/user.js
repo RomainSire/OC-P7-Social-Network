@@ -15,21 +15,16 @@ const { sequelize, User } = require('../models/user');
 exports.newuser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      const name = req.body.name;
-      const email = req.body.email;
-      const password = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
       (async () => {
         try {
           await sequelize.sync();
           const amount = await User.count();
-          const isAdmin = amount === 0 ? 1 : 0;
           const user = await User.create({
-            name: name,
-            email: email,
-            password: password,
-            isAdmin: isAdmin
+            name: req.body.name,
+            email: req.body.email,
+            password: cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString(),
+            isAdmin: amount === 0 ? 1 : 0
           })
-          console.log(user.toJSON());
           res.status(201).json({ message: 'Utilisateur créé' });
         } catch (error) {
           res.status(500).json({ "error": error.errors[0].message });

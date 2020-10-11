@@ -38,60 +38,55 @@ exports.newuser = (req, res, next) => {
  * Login d'un utilisateur
  */
 exports.login = (req, res, next) => {
-  const connection = database.connect();
+  (async () => {
+    try {
+      await sequelize.sync();
+      const matchingUser = await User.findOne({
+        where: {
+          email: req.body.email
+        }
+      });
+      if (matchingUser === null) {
+        res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
+      } else {
+        const matchingHash = cryptojs.AES.decrypt(matchingUser.password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
+        bcrypt.compare(req.body.password, matchingHash)
+          .then(valid => {
+            if (!valid) {
+              return res.status(401).json({ error: 'Mot de passe incorrect!' });
+            }
 
-  const researchedEmail = req.body.email;
-  const sql = "SELECT id, email, password, name, pictureurl, isadmin FROM Users WHERE email= ?";
-  const sqlParams = [researchedEmail];
-  // requête préparée de mysql2
-  connection.execute(sql, sqlParams, (error, results, fields) => {
-    // SI : erreur SQL
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-    
-    // SI : Utilisateur non trouvé
-    } else if (results.length == 0) {
-      res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
+            const newToken = jwt.sign(
+              { userId: matchingUser.id },
+              process.env.JWT_KEY,
+              { expiresIn: '1h' }
+            );
+            
+            // Envoi du token & userId dans un cookie
+            const cookieContent = {
+              token: newToken,
+              userId: matchingUser.id
+            };
+            const cryptedCookie = cryptojs.AES.encrypt(JSON.stringify(cookieContent), process.env.COOKIE_KEY).toString();
+            new Cookies(req, res).set('snToken', cryptedCookie, {
+              httpOnly: true,
+              maxAge: 3600000  // cookie pendant 1 heure
+            })
 
-    // SI : Utilisateur trouvé
-    } else {
-      const matchingHash = cryptojs.AES.decrypt(results[0].password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
-
-      bcrypt.compare(req.body.password, matchingHash)
-        .then(valid => {
-          if (!valid) {
-            return res.status(401).json({ error: 'Mot de passe incorrect!' });
-          }
-
-          const newToken = jwt.sign(
-            { userId: results[0].id },
-            process.env.JWT_KEY,
-            { expiresIn: '24h' }
-          );
-          
-          // Envoi du token & userId dans un cookie
-          const cookieContent = {
-            token: newToken,
-            userId: results[0].id
-          };
-          const cryptedCookie = cryptojs.AES.encrypt(JSON.stringify(cookieContent), process.env.COOKIE_KEY).toString();
-          new Cookies(req, res).set('snToken', cryptedCookie, {
-            httpOnly: true,
-            maxAge: 3600000  // cookie pendant 1 heure
+            res.status(200).json({
+              message: 'Utilisateur loggé',
+              userId: matchingUser.id,
+              name: matchingUser.name,
+              pictureUrl: matchingUser.pictureurl,
+              isAdmin: matchingUser.isadmin
+            });
           })
-
-          res.status(200).json({
-            message: 'Utilisateur loggé',
-            userId: results[0].id,
-            name: results[0].name,
-            pictureUrl: results[0].pictureurl,
-            isAdmin: results[0].isadmin
-          });
-        })
-        .catch(error => res.status(500).json({ error })); 
+          .catch(error => res.status(500).json({ error })); 
+      }
+    } catch (error) {
+      res.status(500).json({ "error": error.errors[0].message });
     }
-  });
-  connection.end();
+  })();
 }
 
 /**

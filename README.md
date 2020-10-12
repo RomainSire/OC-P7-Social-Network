@@ -38,7 +38,7 @@ Voilà [une vidéo qui décrit rapidement le différentes fonctionnalités de l'
 ## Technologies utilisées
 - Backend
   - Serveur **Node.js** avec Framework **Express**
-  - Base de Données **MySQL**
+  - Base de Données **MySQL** (+ test de Sequelize avec SQLite sur le controller "user.js": voir la branche git "sequelize")
   - **API REST**
 - Frontend
   - Framework **Angular**

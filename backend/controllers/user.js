@@ -212,44 +212,73 @@ exports.searchUsers = (req, res, next) => {
  * Changer le mot de passe utilisateur
  */
 exports.changePassword = (req, res, next) => {
-  // Vérification que l'ancien mot de passe soit correct
-  const connection = database.connect();
-  const searchId = req.params.id;
-  const sql = "SELECT password FROM Users WHERE id=?";
-  const sqlParams = [searchId];
-  connection.execute(sql, sqlParams, (error, results, fields) => {
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-      connection.end();
-    } else {
-      const DBPasswordHash = cryptojs.AES.decrypt(results[0].password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
-      bcrypt.compare(req.body.oldPassword, DBPasswordHash)
-        .then(valid => {
-          if (!valid) {
-            connection.end();
-            return res.status(401).json({ error: 'Ancien mot de passe incorrect!' });
-          }
-          // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
-          bcrypt.hash(req.body.newPassword, 10)
-            .then(hash => {
-              const newPassword = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
-              const sql2 = "UPDATE Users SET password=? WHERE id=?";
-              const sqlParams2 = [newPassword, searchId];
-              connection.execute(sql2, sqlParams2, (error, results, fields) => {
-                if (error) {
-                  connection.end();
-                  res.status(500).json({ "error": error.sqlMessage });
-                } else {
-                  connection.end();
-                  res.status(201).json({ message: 'Mot de passe modifié' });
-                }
-              })
-            })
-            .catch(error => res.status(500).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
+  (async () => {
+    try {
+      await sequelize.sync();
+      // Vérification que l'ancien mot de passe soit correct
+      const user = await User.findOne({
+        attributes: ['password'],
+        where: {
+          id: req.params.id
+        }
+      })
+      const DBPasswordHash = cryptojs.AES.decrypt(user.password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
+      const valid = await bcrypt.compare(req.body.oldPassword, DBPasswordHash)
+      if (!valid) {
+        return res.status(401).json({ error: 'Ancien mot de passe incorrect!' });
+      }
+      // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
+      const hash = await bcrypt.hash(req.body.newPassword, 10)
+      const newPassword = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
+      await User.update({ password: newPassword }, {
+        where: {
+          id: req.params.id
+        }
+      });
+      res.status(201).json({ message: 'Mot de passe modifié' });
+    } catch (error) {
+      res.status(500).json({ error });
     }
-  });
+  })()
+
+  // // Vérification que l'ancien mot de passe soit correct
+  // const connection = database.connect();
+  // const searchId = req.params.id;
+  // const sql = "SELECT password FROM Users WHERE id=?";
+  // const sqlParams = [searchId];
+  // connection.execute(sql, sqlParams, (error, results, fields) => {
+  //   if (error) {
+  //     res.status(500).json({ "error": error.sqlMessage });
+  //     connection.end();
+  //   } else {
+  //     const DBPasswordHash = cryptojs.AES.decrypt(results[0].password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
+  //     bcrypt.compare(req.body.oldPassword, DBPasswordHash)
+  //       .then(valid => {
+  //         if (!valid) {
+  //           connection.end();
+  //           return res.status(401).json({ error: 'Ancien mot de passe incorrect!' });
+  //         }
+  //         // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
+  //         bcrypt.hash(req.body.newPassword, 10)
+  //           .then(hash => {
+  //             const newPassword = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
+  //             const sql2 = "UPDATE Users SET password=? WHERE id=?";
+  //             const sqlParams2 = [newPassword, searchId];
+  //             connection.execute(sql2, sqlParams2, (error, results, fields) => {
+  //               if (error) {
+  //                 connection.end();
+  //                 res.status(500).json({ "error": error.sqlMessage });
+  //               } else {
+  //                 connection.end();
+  //                 res.status(201).json({ message: 'Mot de passe modifié' });
+  //               }
+  //             })
+  //           })
+  //           .catch(error => res.status(500).json({ error }));
+  //       })
+  //       .catch(error => res.status(500).json({ error }));
+  //   }
+  // });
 }
 
 /**

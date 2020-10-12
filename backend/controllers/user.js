@@ -84,7 +84,7 @@ exports.login = (req, res, next) => {
           .catch(error => res.status(500).json({ error })); 
       }
     } catch (error) {
-      res.status(500).json({ "error": error.errors[0].message });
+      res.status(500).json({ "error": error });
     }
   })();
 }
@@ -133,7 +133,7 @@ exports.getCurrentUser = (req, res, next) => {
         });
       }
     } catch (error) {
-      res.status(500).json({ "error": error.errors[0].message });
+      res.status(500).json({ "error": error });
     }
   })()
 }
@@ -142,16 +142,17 @@ exports.getCurrentUser = (req, res, next) => {
  * Récupération de tous les utilisateurs
  */
 exports.getAllUsers = (req, res, next) => {
-  const connection = database.connect();
-  const sql = "SELECT id, name, pictureurl FROM Users;";
-  connection.query(sql, (error, users, fields) => {
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-    } else {
+  (async () => {
+    try {
+      await sequelize.sync();
+      const users = await User.findAll({
+        attributes: ['id', 'name', 'pictureurl']
+      })
       res.status(200).json({ users });
+    } catch (error) {
+      res.status(500).json({ "error": error });
     }
-  });
-  connection.end();
+  })()
 }
 
 /**

@@ -13,81 +13,69 @@ const { Op } = require('sequelize')
 /**
  * Ajout d'un nouvel utilisateur
  */
-exports.newuser = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
-    .then(hash => {
-      (async () => {
-        try {
-          await sequelize.sync();
-          const amount = await User.count();
-          const user = await User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString(),
-            isAdmin: amount === 0 ? 1 : 0
-          })
-          res.status(201).json({ message: 'Utilisateur créé' });
-        } catch (error) {
-          res.status(500).json({ error });
-        }
-      })();
+exports.newuser = async (req, res, next) => {
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10);
+    await sequelize.sync();
+    const amount = await User.count();
+    const user = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString(),
+      isAdmin: amount === 0 ? 1 : 0
     })
-    .catch(error => res.status(500).json({ error }));
+    res.status(201).json({ message: 'Utilisateur créé' });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**
  * Login d'un utilisateur
  */
-exports.login = (req, res, next) => {
-  (async () => {
-    try {
-      await sequelize.sync();
-      const matchingUser = await User.findOne({
-        where: {
-          email: req.body.email
-        }
-      });
-      if (matchingUser === null) {
-        res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
-      } else {
-        const matchingHash = cryptojs.AES.decrypt(matchingUser.password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
-        bcrypt.compare(req.body.password, matchingHash)
-          .then(valid => {
-            if (!valid) {
-              return res.status(401).json({ error: 'Mot de passe incorrect!' });
-            }
-
-            const newToken = jwt.sign(
-              { userId: matchingUser.id },
-              process.env.JWT_KEY,
-              { expiresIn: '1h' }
-            );
-            
-            // Envoi du token & userId dans un cookie
-            const cookieContent = {
-              token: newToken,
-              userId: matchingUser.id
-            };
-            const cryptedCookie = cryptojs.AES.encrypt(JSON.stringify(cookieContent), process.env.COOKIE_KEY).toString();
-            new Cookies(req, res).set('snToken', cryptedCookie, {
-              httpOnly: true,
-              maxAge: 3600000  // cookie pendant 1 heure
-            })
-
-            res.status(200).json({
-              message: 'Utilisateur loggé',
-              userId: matchingUser.id,
-              name: matchingUser.name,
-              pictureUrl: matchingUser.pictureurl,
-              isAdmin: matchingUser.isAdmin
-            });
-          })
-          .catch(error => res.status(500).json({ error })); 
+exports.login = async (req, res, next) => {
+  try {
+    await sequelize.sync();
+    const matchingUser = await User.findOne({
+      where: {
+        email: req.body.email
       }
-    } catch (error) {
-      res.status(500).json({ error });
+    });
+    if (matchingUser === null) {
+      res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
     }
-  })();
+    const matchingHash = cryptojs.AES.decrypt(matchingUser.password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
+    const valid = await bcrypt.compare(req.body.password, matchingHash)
+    if (!valid) {
+      return res.status(401).json({ error: 'Mot de passe incorrect!' });
+    }
+    const newToken = jwt.sign(
+      { userId: matchingUser.id },
+      process.env.JWT_KEY,
+      { expiresIn: '1h' }
+    );
+    
+    // Envoi du token & userId dans un cookie
+    const cookieContent = {
+      token: newToken,
+      userId: matchingUser.id
+    };
+    const cryptedCookie = cryptojs.AES.encrypt(JSON.stringify(cookieContent), process.env.COOKIE_KEY).toString();
+    new Cookies(req, res).set('snToken', cryptedCookie, {
+      httpOnly: true,
+      maxAge: 3600000  // cookie pendant 1 heure
+    })
+
+    res.status(200).json({
+      message: 'Utilisateur loggé',
+      userId: matchingUser.id,
+      name: matchingUser.name,
+      pictureUrl: matchingUser.pictureurl,
+      isAdmin: matchingUser.isAdmin
+    });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**
@@ -112,192 +100,141 @@ exports.isAuth = (req, res, next) => {
 /**
  * Renvoie les infos d'un utilisateur, en fonction de l'Id utilisateur stocké dans le cookie
  */
-exports.getCurrentUser = (req, res, next) => {
-  (async () => {
-    try {
-      const cryptedCookie = new Cookies(req, res).get('snToken');
-      const searchId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
-      await sequelize.sync();
-      const matchingUser = await User.findOne({
-        where: {
-          id: searchId
-        }
-      });
-      if (matchingUser === null) {
-        res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
-      } else {
-        res.status(200).json({
-          userId: matchingUser.id,
-          name: matchingUser.name,
-          pictureUrl: matchingUser.pictureurl,
-          isAdmin: matchingUser.isAdmin
-        });
+exports.getCurrentUser = async (req, res, next) => {
+  try {
+    const cryptedCookie = new Cookies(req, res).get('snToken');
+    const searchId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
+    await sequelize.sync();
+    const matchingUser = await User.findOne({
+      where: {
+        id: searchId
       }
-    } catch (error) {
-      res.status(500).json({ error });
+    });
+    if (matchingUser === null) {
+      res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
+    } else {
+      res.status(200).json({
+        userId: matchingUser.id,
+        name: matchingUser.name,
+        pictureUrl: matchingUser.pictureurl,
+        isAdmin: matchingUser.isAdmin
+      });
     }
-  })()
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**
  * Récupération de tous les utilisateurs
  */
-exports.getAllUsers = (req, res, next) => {
-  (async () => {
-    try {
-      await sequelize.sync();
-      const users = await User.findAll({
-        attributes: ['id', 'name', 'pictureurl']
-      })
-      res.status(200).json({ users });
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  })()
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    await sequelize.sync();
+    const users = await User.findAll({
+      attributes: ['id', 'name', 'pictureurl']
+    })
+    res.status(200).json({ users });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**
  * Récupération d'1 seul utilisateur
  */
-exports.getOneUser = (req, res, next) => {
-  (async () => {
-    try {
-      await sequelize.sync();
-      const user = await User.findOne({
-        where: {
-          id: req.params.id
-        }
-      });
-      if (user === null) {
-        res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
-      } else {
-        res.status(200).json({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          pictureurl: user.pictureurl,
-          outline: user.outline,
-          isadmin: user.isAdmin
-        });
+exports.getOneUser = async (req, res, next) => {
+  try {
+    await sequelize.sync();
+    const user = await User.findOne({
+      where: {
+        id: req.params.id
       }
-    } catch (error) {
-      res.status(500).json({ error });
+    });
+    if (user === null) {
+      res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
+    } else {
+      res.status(200).json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        pictureurl: user.pictureurl,
+        outline: user.outline,
+        isadmin: user.isAdmin
+      });
     }
-  })()
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**
  * Recherche d'utilisateurs
  */
-exports.searchUsers = (req, res, next) => {
-  (async () => {
-    try {
-      await sequelize.sync();
-      const users = await User.findAll({
-        attributes: ['id', 'name', 'pictureurl'],
-        where: {
-          name: {
-            [Op.like]: '%' + req.query.name + '%'
-          }
+exports.searchUsers = async (req, res, next) => {
+  try {
+    await sequelize.sync();
+    const users = await User.findAll({
+      attributes: ['id', 'name', 'pictureurl'],
+      where: {
+        name: {
+          [Op.like]: '%' + req.query.name + '%'
         }
-      })
-      res.status(200).json({ users });
-    } catch (error) {
-      res.status(500).json({ error });
-    }
-  })()
+      }
+    })
+    res.status(200).json({ users });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**
  * Changer le mot de passe utilisateur
  */
-exports.changePassword = (req, res, next) => {
-  (async () => {
-    try {
-      await sequelize.sync();
-      // Vérification que l'ancien mot de passe soit correct
-      const user = await User.findOne({
-        attributes: ['password'],
-        where: {
-          id: req.params.id
-        }
-      })
-      const DBPasswordHash = cryptojs.AES.decrypt(user.password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
-      const valid = await bcrypt.compare(req.body.oldPassword, DBPasswordHash)
-      if (!valid) {
-        return res.status(401).json({ error: 'Ancien mot de passe incorrect!' });
+exports.changePassword = async (req, res, next) => {
+  try {
+    await sequelize.sync();
+    // Vérification que l'ancien mot de passe soit correct
+    const user = await User.findOne({
+      attributes: ['password'],
+      where: {
+        id: req.params.id
       }
-      // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
-      const hash = await bcrypt.hash(req.body.newPassword, 10)
-      const newPassword = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
-      await User.update({ password: newPassword }, {
-        where: {
-          id: req.params.id
-        }
-      });
-      res.status(201).json({ message: 'Mot de passe modifié' });
-    } catch (error) {
-      res.status(500).json({ error });
+    })
+    const DBPasswordHash = cryptojs.AES.decrypt(user.password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
+    const valid = await bcrypt.compare(req.body.oldPassword, DBPasswordHash)
+    if (!valid) {
+      return res.status(401).json({ error: 'Ancien mot de passe incorrect!' });
     }
-  })()
-
-  // // Vérification que l'ancien mot de passe soit correct
-  // const connection = database.connect();
-  // const searchId = req.params.id;
-  // const sql = "SELECT password FROM Users WHERE id=?";
-  // const sqlParams = [searchId];
-  // connection.execute(sql, sqlParams, (error, results, fields) => {
-  //   if (error) {
-  //     res.status(500).json({ "error": error.sqlMessage });
-  //     connection.end();
-  //   } else {
-  //     const DBPasswordHash = cryptojs.AES.decrypt(results[0].password, process.env.CRYPT_USER_INFO).toString(cryptojs.enc.Utf8);
-  //     bcrypt.compare(req.body.oldPassword, DBPasswordHash)
-  //       .then(valid => {
-  //         if (!valid) {
-  //           connection.end();
-  //           return res.status(401).json({ error: 'Ancien mot de passe incorrect!' });
-  //         }
-  //         // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
-  //         bcrypt.hash(req.body.newPassword, 10)
-  //           .then(hash => {
-  //             const newPassword = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
-  //             const sql2 = "UPDATE Users SET password=? WHERE id=?";
-  //             const sqlParams2 = [newPassword, searchId];
-  //             connection.execute(sql2, sqlParams2, (error, results, fields) => {
-  //               if (error) {
-  //                 connection.end();
-  //                 res.status(500).json({ "error": error.sqlMessage });
-  //               } else {
-  //                 connection.end();
-  //                 res.status(201).json({ message: 'Mot de passe modifié' });
-  //               }
-  //             })
-  //           })
-  //           .catch(error => res.status(500).json({ error }));
-  //       })
-  //       .catch(error => res.status(500).json({ error }));
-  //   }
-  // });
+    // L'ancien mot de passe est correct, donc mise à jour du mot de passe :
+    const hash = await bcrypt.hash(req.body.newPassword, 10)
+    const newPassword = cryptojs.AES.encrypt(hash, process.env.CRYPT_USER_INFO).toString();
+    await User.update({ password: newPassword }, {
+      where: {
+        id: req.params.id
+      }
+    });
+    res.status(201).json({ message: 'Mot de passe modifié' });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**
  * Changer la photo de profil d'un utilisateur
  */
-exports.changeProfilePicture = (req, res, next) => {
-  const connection = database.connect();
-  const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-  const userId = req.params.id;
-  const sql = "UPDATE Users SET pictureurl=? WHERE id=?";
-  const sqlParams = [imageUrl, userId];
-  connection.execute(sql, sqlParams, (error, results, fields) => {
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-    } else {
-      res.status(201).json({ message: 'Photo de profil modifiée' });
-    }
-  });
-  connection.end();
+exports.changeProfilePicture = async (req, res, next) => {
+  try {
+    const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    await User.update({ pictureurl: imageUrl }, {
+      where: {
+        id: req.params.id
+      }
+    });
+    res.status(201).json({ message: 'Photo de profil modifiée' });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**

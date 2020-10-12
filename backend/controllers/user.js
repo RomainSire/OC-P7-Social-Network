@@ -78,7 +78,7 @@ exports.login = (req, res, next) => {
               userId: matchingUser.id,
               name: matchingUser.name,
               pictureUrl: matchingUser.pictureurl,
-              isAdmin: matchingUser.isadmin
+              isAdmin: matchingUser.isAdmin
             });
           })
           .catch(error => res.status(500).json({ error })); 
@@ -112,32 +112,30 @@ exports.isAuth = (req, res, next) => {
  * Renvoie les infos d'un utilisateur, en fonction de l'Id utilisateur stocké dans le cookie
  */
 exports.getCurrentUser = (req, res, next) => {
-  const connection = database.connect();
-  const cryptedCookie = new Cookies(req, res).get('snToken');
-  const cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
-  const searchId = cookie.userId;
-  const sql = "SELECT id, name, pictureurl, isadmin FROM Users WHERE id=?";
-  const sqlParams = [searchId];
-  connection.execute(sql, sqlParams, (error, results, fields) => {
-    // SI : erreur SQL
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-
-    // SI : Utilisateur non trouvé
-    } else if (results.length === 0) {
-      res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
-
-    // SI : Utilisateur trouvé
-    } else {
-      res.status(200).json({
-        userId: results[0].id,
-        name: results[0].name,
-        pictureUrl: results[0].pictureurl,
-        isAdmin: results[0].isadmin
+  (async () => {
+    try {
+      const cryptedCookie = new Cookies(req, res).get('snToken');
+      const searchId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
+      await sequelize.sync();
+      const matchingUser = await User.findOne({
+        where: {
+          id: searchId
+        }
       });
+      if (matchingUser === null) {
+        res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
+      } else {
+        res.status(200).json({
+          userId: matchingUser.id,
+          name: matchingUser.name,
+          pictureUrl: matchingUser.pictureurl,
+          isAdmin: matchingUser.isAdmin
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ "error": error.errors[0].message });
     }
-  });
-  connection.end();
+  })()
 }
 
 /**

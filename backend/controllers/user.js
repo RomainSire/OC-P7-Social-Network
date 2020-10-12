@@ -8,6 +8,7 @@ const database = require('../utils/database');
 const { getCommentsOfEachPosts, getLikesOfEachPosts } = require('./post');
 
 const { sequelize, User } = require('../models/user');
+const { Op } = require('sequelize')
 
 /**
  * Ajout d'un nouvel utilisateur
@@ -27,7 +28,7 @@ exports.newuser = (req, res, next) => {
           })
           res.status(201).json({ message: 'Utilisateur créé' });
         } catch (error) {
-          res.status(500).json({ "error": error.errors[0].message });
+          res.status(500).json({ error });
         }
       })();
     })
@@ -84,7 +85,7 @@ exports.login = (req, res, next) => {
           .catch(error => res.status(500).json({ error })); 
       }
     } catch (error) {
-      res.status(500).json({ "error": error });
+      res.status(500).json({ error });
     }
   })();
 }
@@ -133,7 +134,7 @@ exports.getCurrentUser = (req, res, next) => {
         });
       }
     } catch (error) {
-      res.status(500).json({ "error": error });
+      res.status(500).json({ error });
     }
   })()
 }
@@ -150,7 +151,7 @@ exports.getAllUsers = (req, res, next) => {
       })
       res.status(200).json({ users });
     } catch (error) {
-      res.status(500).json({ "error": error });
+      res.status(500).json({ error });
     }
   })()
 }
@@ -159,50 +160,52 @@ exports.getAllUsers = (req, res, next) => {
  * Récupération d'1 seul utilisateur
  */
 exports.getOneUser = (req, res, next) => {
-  const connection = database.connect();
-  const searchId = req.params.id;
-  const sql = "SELECT id, name, email, pictureurl, outline, isadmin FROM Users WHERE id=?";
-  const sqlParams = [searchId];
-  connection.execute(sql, sqlParams, (error, results, fields) => {
-    // SI : erreur SQL
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-
-    // SI : Utilisateur non trouvé
-    } else if (results.length === 0) {
-      res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
-
-    // SI : Utilisateur trouvé
-    } else {
-      res.status(200).json({
-        id: results[0].id,
-        name: results[0].name,
-        email: results[0].email,
-        pictureurl: results[0].pictureurl,
-        outline: results[0].outline,
-        isadmin: results[0].isadmin
+  (async () => {
+    try {
+      await sequelize.sync();
+      const user = await User.findOne({
+        where: {
+          id: req.params.id
+        }
       });
+      if (user === null) {
+        res.status(401).json({ error: 'Cet utilisateur n\'existe pas' });
+      } else {
+        res.status(200).json({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          pictureurl: user.pictureurl,
+          outline: user.outline,
+          isadmin: user.isAdmin
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ error });
     }
-  });
-  connection.end();
+  })()
 }
 
 /**
  * Recherche d'utilisateurs
  */
 exports.searchUsers = (req, res, next) => {
-  const connection = database.connect();
-  const searchTerm = "%" + req.query.name + "%";
-  const sql = "SELECT id, name, pictureurl FROM Users WHERE name LIKE ?;";
-  const sqlParams = [searchTerm];
-  connection.execute(sql, sqlParams, (error, users, fields) => {
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-    } else {
+  (async () => {
+    try {
+      await sequelize.sync();
+      const users = await User.findAll({
+        attributes: ['id', 'name', 'pictureurl'],
+        where: {
+          name: {
+            [Op.like]: '%' + req.query.name + '%'
+          }
+        }
+      })
       res.status(200).json({ users });
+    } catch (error) {
+      res.status(500).json({ error });
     }
-  });
-  connection.end();
+  })()
 }
 
 /**

@@ -3,6 +3,7 @@ const Cookies = require('cookies');
 const cryptojs = require('crypto-js');
 const database = require('../utils/database');
 
+const { sequelize, User } = require('../models/user');
 
 /**
  * Vérifie que l'id utilisateur en paramètre et le même que l'id stocké dans le cookie
@@ -21,24 +22,25 @@ exports.sameUser = (req, res, next) => {
 /**
  * Vérifie que l'utilisateur a bien les droits administrateur
  */
-exports.isAdmin = (req, res, next) => {
-  const connection = database.connect();
-  const cryptedCookie = new Cookies(req, res).get('snToken');
-  const cookie = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8));
-  const userId = cookie.userId;
-  const sql = "SELECT isadmin FROM Users WHERE id=?";
-  const sqlParams = [userId]
-  connection.execute(sql, sqlParams, (error, results, fields) => {
-    if (error) {
-      res.status(500).json({ "error": error.sqlMessage });
-    } else {
-      if (results[0].isadmin === 1) {
-        next();
-      } else {
-        res.status(403).json({ error: 'Accès refusé' });
+exports.isAdmin = async (req, res, next) => {
+  try {
+    const cryptedCookie = new Cookies(req, res).get('snToken');
+    const userId = JSON.parse(cryptojs.AES.decrypt(cryptedCookie, process.env.COOKIE_KEY).toString(cryptojs.enc.Utf8)).userId;
+    await sequelize.sync();
+    const user = await User.findOne({
+      attributes: ['isAdmin'],
+      where: {
+        id: userId
       }
+    });
+    if (user.isAdmin === 1) {
+      next()
+    } else {
+      res.status(403).json({ error: 'Accès refusé' });
     }
-  });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
 
 /**

@@ -7,11 +7,11 @@ $color-primary: #234982;
 $color-primary-light: lighten($color-primary, 45%);
 $color-primary-lighter: lighten($color-primary, 60%);
 
-$color-danger: #d1515a;
+$color-danger: #bb2b35;
 $color-danger-light: lighten($color-danger, 30%);
-$color-danger-lighter: lighten($color-danger, 40%);
+$color-danger-lighter: lighten($color-danger, 50%);
 
-$color-like-neutral: #888;
+$color-like-neutral: #656565;
 $color-like-like: $color-primary;
 $color-like-dislike: $color-danger;
 

@@ -1,5 +1,8 @@
 @import "../../../variables.scss";
 
+.hidden {
+  display: none;
+}
 article {
   background: $color-cards-background;
   box-shadow: $shadow;

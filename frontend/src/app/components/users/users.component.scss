@@ -1,5 +1,7 @@
 @import "../../../variables.scss";
-
+.hidden {
+  display: none;
+}
 .users {
   h1 {
     text-align: center;

@@ -23,7 +23,7 @@
         *ngIf="post.userId === authService.user.userId || authService.user.isAdmin === 1"
         (submit)="onDeletePublication()">
         <input type="hidden" name="PostId" [value]="post.postId">
-        <button type="submit"><i class="fas fa-trash"></i></button>
+        <button type="submit" aria-label="Supprimer la publication"><i class="fas fa-trash"></i></button>
       </form>
     </header>
     <!-- Main Publication : Photo et/ou contenu -->
@@ -76,12 +76,13 @@
             *ngIf="comment.userId === authService.user.userId || authService.user.isAdmin === 1"
             (submit)="onDeleteComment($event)">
             <input type="hidden" name="PostId" [value]="comment.commentId">
-            <button type="submit"><i class="fas fa-trash"></i></button>
+            <button type="submit" aria-label="Supprimer le commentaire"><i class="fas fa-trash"></i></button>
           </form>
         </div>
         <form class="comments--add" (submit)="onAddComment($event)">
           <img [src]="authService.user.pictureUrl===null ? './assets/anonymousUser.svg' : authService.user.pictureUrl" alt="Votre photo de profil">
-          <input type="text" placeholder="Votre commentaire">
+          <label for="ajout-commentaire" class="hidden">votre commentaire</label>
+          <input id="ajout-commentaire" type="text" placeholder="Votre commentaire">
           <input type="hidden" name="postId" [value]="post.postId">
           <button type="submit" aria-label="Envoyer"><i class="fas fa-plus-circle"></i></button>
         </form>

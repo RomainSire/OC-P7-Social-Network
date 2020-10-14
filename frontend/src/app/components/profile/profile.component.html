@@ -25,7 +25,8 @@
         <h2 class="mt">Description</h2>
         <p>{{userDetails.outline === null ? 'Pas de description' : userDetails.outline}}</p>
         <form (submit)="onUpdateOutline($event)" *ngIf="userDetails.id === authService.user.userId">
-          <textarea name="outline" placeholder="Votre nouvelle description"></textarea>
+          <label for="update-description" class="hidden">Description</label>
+          <textarea id="update-description" name="outline" placeholder="Votre nouvelle description"></textarea>
           <button type="submit" class="btn description-btn">
             Changer ma description
           </button>
@@ -107,7 +108,7 @@
           *ngIf="post.userId === authService.user.userId || authService.user.isAdmin === 1"
           (submit)="onDeletePublication($event)">
           <input type="hidden" name="PostId" [value]="post.postId">
-          <button type="submit"><i class="fas fa-trash"></i></button>
+          <button type="submit" aria-label="Supprimer la publication"><i class="fas fa-trash"></i></button>
         </form>
       </header>
       <!-- Main Publication : Photo et/ou contenu -->
@@ -160,12 +161,13 @@
               *ngIf="comment.userId === authService.user.userId || authService.user.isAdmin === 1"
               (submit)="onDeleteComment($event)">
               <input type="hidden" name="PostId" [value]="comment.commentId">
-              <button type="submit"><i class="fas fa-trash"></i></button>
+              <button type="submit" aria-label="Supprimer du commentaire"><i class="fas fa-trash"></i></button>
             </form>
           </div>
           <form class="comments--add" (submit)="onAddComment($event)">
             <img [src]="authService.user.pictureUrl===null ? './assets/anonymousUser.svg' : authService.user.pictureUrl" alt="Votre photo de profil">
-            <input type="text" placeholder="Votre commentaire">
+            <label [for]="'add-comment-' + post.postId" class="hidden">Votre commentaire</label>
+            <input [id]="'add-comment-' + post.postId" type="text" placeholder="Votre commentaire">
             <input type="hidden" name="postId" [value]="post.postId">
             <button type="submit" aria-label="Envoyer"><i class="fas fa-plus-circle"></i></button>
           </form>

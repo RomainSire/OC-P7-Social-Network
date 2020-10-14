@@ -1,5 +1,8 @@
 @import "../../../variables.scss";
 
+.hidden {
+  display: none;
+}
 .profile {
   margin: 2rem 0;
   padding: 2rem;
@@ -23,6 +26,9 @@
     border-radius: 5px;
     &:hover {
       background: $color-primary-light;
+    }
+    &:disabled {
+      color: #555;
     }
   }
   .btn-danger {
